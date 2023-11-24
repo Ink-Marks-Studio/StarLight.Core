@@ -11,15 +11,15 @@ namespace Aurora_Star.Core.Utilities
         {
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync(url);
+                HttpResponseMessage res = await client.GetAsync(url);
 
-                if (response.IsSuccessStatusCode)
+                if (res.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsStringAsync();
+                    return await res.Content.ReadAsStringAsync();
                 }
                 else
                 {
-                    throw new HttpRequestException($"HTTP GET 请求失败，状态代码 {response.StatusCode}");
+                    throw new HttpRequestException($"HTTP GET 请求失败，状态代码 {res.StatusCode}");
                 }
             }
         }
@@ -31,15 +31,33 @@ namespace Aurora_Star.Core.Utilities
             {
                 StringContent content = new StringContent(postData, Encoding.UTF8, contentType);
 
-                HttpResponseMessage response = await client.PostAsync(url, content);
+                HttpResponseMessage res = await client.PostAsync(url, content);
 
-                if (response.IsSuccessStatusCode)
+                if (res.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsStringAsync();
+                    return await res.Content.ReadAsStringAsync();
                 }
                 else
                 {
-                    throw new HttpRequestException($"HTTP POST 请求失败，状态代码 {response.StatusCode}");
+                    throw new HttpRequestException($"HTTP POST 请求失败，状态代码 {res.StatusCode}");
+                }
+            }
+        }
+        
+        // Json 请求下载
+        public static async Task<string> GetJsonAsync(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage res = await client.GetAsync(url);
+                if (res.IsSuccessStatusCode)
+                {
+                    string json = await res.Content.ReadAsStringAsync();
+                    return json; // 返回下载的 JSON 数据
+                }
+                else
+                {
+                    throw new HttpRequestException($"Json 下载失败，错误代码 {res.StatusCode}");
                 }
             }
         }
