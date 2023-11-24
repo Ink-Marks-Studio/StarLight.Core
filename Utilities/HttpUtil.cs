@@ -25,11 +25,11 @@ namespace Aurora_Star.Core.Utilities
         }
         
         // POST 请求
-        public static async Task<string> SendHttpPostRequest(string url, string postData)
+        public static async Task<string> SendHttpPostRequest(string url, string postData, string contentType = "application/x-www-form-urlencoded")
         {
             using (HttpClient client = new HttpClient())
             {
-                StringContent content = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
+                StringContent content = new StringContent(postData, Encoding.UTF8, contentType);
 
                 HttpResponseMessage response = await client.PostAsync(url, content);
 
