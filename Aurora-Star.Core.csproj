@@ -8,10 +8,4 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Authentication\" />
-    <Folder Include="Installer\" />
-    <Folder Include="Launch\" />
-  </ItemGroup>
-
 </Project>
