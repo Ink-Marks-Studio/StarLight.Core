@@ -12,7 +12,6 @@
     <Folder Include="Authentication\" />
     <Folder Include="Installer\" />
     <Folder Include="Launch\" />
-    <Folder Include="Utilities\" />
   </ItemGroup>
 
 </Project>
