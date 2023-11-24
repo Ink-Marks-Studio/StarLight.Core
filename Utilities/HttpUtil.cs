@@ -1,10 +1,12 @@
 ﻿using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora_Star.Core.Utilities
 {
     public static class HttpUtil
     {
+        // GET 请求
         public static async Task<string> SendHttpGetRequest(string url)
         {
             using (HttpClient client = new HttpClient())
@@ -17,7 +19,27 @@ namespace Aurora_Star.Core.Utilities
                 }
                 else
                 {
-                    throw new HttpRequestException($"HTTP 请求失败，状态代码 {response.StatusCode}");
+                    throw new HttpRequestException($"HTTP GET 请求失败，状态代码 {response.StatusCode}");
+                }
+            }
+        }
+        
+        // POST 请求
+        public static async Task<string> SendHttpPostRequest(string url, string postData)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                StringContent content = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
+
+                HttpResponseMessage response = await client.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new HttpRequestException($"HTTP POST 请求失败，状态代码 {response.StatusCode}");
                 }
             }
         }
