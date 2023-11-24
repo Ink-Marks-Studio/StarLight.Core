@@ -1,6 +1,8 @@
-﻿namespace Aurora_Star.Core.Installer;
-
-public class MinecraftInstaller
+﻿namespace Aurora_Star.Core.Installer
 {
-    
+    public static class MinecraftInstaller
+    {
+        
+    }
 }
+

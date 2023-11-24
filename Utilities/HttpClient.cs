@@ -1,6 +1,8 @@
-﻿namespace Aurora_Star.Core.Utilities;
-
-public class HttpClient
+﻿namespace Aurora_Star.Core.Utilities
 {
+    public static class HttpClient
+    {
     
+    }
 }
+
