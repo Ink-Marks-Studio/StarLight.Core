@@ -141,7 +141,7 @@ namespace Aurora_Star.Core.Utilities
                         }
 
                         // 如果在循环中没有发生异常，并且已经成功下载了数据，则跳出循环（break;）  
-                        break; // Break the loop if download is successful  
+                        break;  
                     }
                 }
                 // 捕获IOException异常。当try块中的代码引发IOException时，此catch块将执行。  
