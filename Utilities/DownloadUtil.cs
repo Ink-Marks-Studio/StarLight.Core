@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
@@ -7,132 +9,100 @@ using Timer = System.Timers.Timer;
 
 namespace Aurora_Star.Core.Utilities
 {
-    /* 生怕你们不会用
-        var downloader = new DownloadUtil("http://example.com/largefile.zip", 4); // 分成4部分下载
-
-        downloader.SpeedReported += (sender, speed) => 
-        {
-            Console.WriteLine($"Speed: {speed} bytes/sec");
-        };
-
-        downloader.ProgressReported += (sender, progress) => 
-        {
-            Console.WriteLine($"Progress: {progress}%");
-        };
-
-        await downloader.DownloadFileAsync("C:\\Downloads\\largefile.zip");
-    */
     public class DownloadUtil
     {
-        private HttpClient _client;
-        private int _numberOfParts;
-        private long _totalBytesDownloaded = 0;
-        private DateTime _downloadStartTime;
-        private long _fileSize;
-        private string _fileUrl;
-        static Timer timer;
+        public event Action<int> ProgressChanged;
+        public event Action<double> SpeedChanged;
 
-        public event EventHandler<double> SpeedReported;
-        public event EventHandler<double> ProgressReported;
+        private string url;
+        private string destination;
+        private int threadCount;
+        private long totalSize;
+        private long totalDownloaded;
+        private double speed;
 
-        public DownloadUtil(string fileUrl, int numberOfParts)
+        public DownloadUtil(string url, string destination, int threadCount)
         {
-            _client = new HttpClient();
-            _numberOfParts = numberOfParts;
-            _fileUrl = fileUrl;
+            this.url = url;
+            this.destination = destination;
+            this.threadCount = threadCount;
         }
 
-        public async Task DownloadFileAsync(string savePath)
+        public void StartDownload()
         {
-            _fileSize = await GetFileSizeAsync(_fileUrl);
-            _downloadStartTime = DateTime.Now;
-
-            long partSize = _fileSize / _numberOfParts;
-            var tasks = new List<Task>();
-            for (int i = 0; i < _numberOfParts; i++)
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "HEAD";
+            using (HttpWebResponse resp = (HttpWebResponse)request.GetResponse())
             {
-                long start = i * partSize;
-                long end = (i < _numberOfParts - 1) ? start + partSize - 1 : _fileSize;
-                tasks.Add(DownloadPartAsync(_fileUrl, savePath, i, start, end));
+                totalSize = resp.ContentLength;
             }
 
-            timer = new Timer(1000);
-            timer.Elapsed += (sender, e) =>
+            long partSize = totalSize / threadCount;
+            long leftOver = totalSize % threadCount;
+
+            for (int i = 0; i < threadCount; i++)
             {
-                ReportSpeed();
-                ReportProgress();
-            };
-            timer.Start();
-            
-            await Task.WhenAll(tasks);
-            MergeFiles(savePath);
-        }
+                long from = i * partSize;
+                long to = (i < threadCount - 1) ? from + partSize - 1 : from + partSize + leftOver - 1;
 
-        private async Task<long> GetFileSizeAsync(string url)
-        {
-            using var response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
-            response.EnsureSuccessStatusCode();
-            return long.Parse(response.Content.Headers.ContentLength.ToString());
-        }
-
-        private async Task DownloadPartAsync(string url, string savePath, int partIndex, long start, long end)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(start, end);
-
-            using (var response = await _client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-
-                string partPath = $"{savePath}.part{partIndex}";
-                var fileBytes = await response.Content.ReadAsByteArrayAsync();
-                await File.WriteAllBytesAsync(partPath, fileBytes);
+                Thread thread = new Thread(() => DownloadPart(from, to, i));
+                thread.Start();
             }
-            
-            _totalBytesDownloaded += end - start + 1;
-            ReportSpeed();
-            ReportProgress();
         }
 
-        private void ReportSpeed()
+        private void DownloadPart(long from, long to, int partIndex)
         {
-            var elapsedTime = DateTime.Now - _downloadStartTime;
-            double speed = _totalBytesDownloaded / elapsedTime.TotalSeconds;
-            SpeedReported?.Invoke(this, speed);
-        }
+            int retryCount = 0;
+            int maxRetries = 3;
 
-        private void ReportProgress()
-        {
-            double progress = (double)_totalBytesDownloaded / _fileSize * 100;
-            ProgressReported?.Invoke(this, progress);
-        }
-
-        private void MergeFiles(string savePath)
-        {
-            using var outputStream = File.Create(savePath);
-            for (int i = 0; i < _numberOfParts; i++)
+            while (retryCount < maxRetries)
             {
-                string partPath = $"{savePath}.part{i}";
                 try
                 {
-                    timer.Stop();
-                    using var inputStream = File.OpenRead(partPath);
-                    inputStream.CopyTo(outputStream);
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.AddRange(from, to);
+
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    using (Stream responseStream = response.GetResponseStream())
+                    using (FileStream fileStream = new FileStream(destination, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+                    {
+                        fileStream.Position = from;
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
+                        long totalRead = 0;
+
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
+                        while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            fileStream.Write(buffer, 0, bytesRead);
+                            totalRead += bytesRead;
+                            Interlocked.Add(ref totalDownloaded, bytesRead);
+
+                            if (stopwatch.ElapsedMilliseconds > 1000)
+                            {
+                                speed = totalRead / (stopwatch.ElapsedMilliseconds / 1000.0);
+                                SpeedChanged?.Invoke(speed);
+                                ProgressChanged?.Invoke((int)((totalDownloaded * 100) / totalSize));
+                                stopwatch.Restart();
+                            }
+                        }
+
+                        break; // Break the loop if download is successful
+                    }
                 }
                 catch (IOException ex)
                 {
-                    timer.Stop();
-                    Console.WriteLine(ex);
-                }
-                finally
-                {
-                    timer.Stop();
-                    if (File.Exists(partPath))
+                    retryCount++;
+                    Thread.Sleep(2000); // Wait for 2 seconds before retrying
+                    if (retryCount >= maxRetries)
                     {
-                        File.Delete(partPath);
+                        throw; // Re-throw the exception if max retries are exceeded
                     }
                 }
             }
         }
+
     }
 }
