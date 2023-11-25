@@ -2,6 +2,8 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace Aurora_Star.Core.Utilities
 {
@@ -28,6 +30,7 @@ namespace Aurora_Star.Core.Utilities
         private DateTime _downloadStartTime;
         private long _fileSize;
         private string _fileUrl;
+        static Timer timer;
 
         public event EventHandler<double> SpeedReported;
         public event EventHandler<double> ProgressReported;
@@ -53,6 +56,14 @@ namespace Aurora_Star.Core.Utilities
                 tasks.Add(DownloadPartAsync(_fileUrl, savePath, i, start, end));
             }
 
+            timer = new Timer(1000);
+            timer.Elapsed += (sender, e) =>
+            {
+                ReportSpeed();
+                ReportProgress();
+            };
+            timer.Start();
+            
             await Task.WhenAll(tasks);
             MergeFiles(savePath);
         }
@@ -77,7 +88,7 @@ namespace Aurora_Star.Core.Utilities
                 var fileBytes = await response.Content.ReadAsByteArrayAsync();
                 await File.WriteAllBytesAsync(partPath, fileBytes);
             }
-
+            
             _totalBytesDownloaded += end - start + 1;
             ReportSpeed();
             ReportProgress();
@@ -104,15 +115,18 @@ namespace Aurora_Star.Core.Utilities
                 string partPath = $"{savePath}.part{i}";
                 try
                 {
+                    timer.Stop();
                     using var inputStream = File.OpenRead(partPath);
                     inputStream.CopyTo(outputStream);
                 }
                 catch (IOException ex)
                 {
+                    timer.Stop();
                     Console.WriteLine(ex);
                 }
                 finally
                 {
+                    timer.Stop();
                     if (File.Exists(partPath))
                     {
                         File.Delete(partPath);
