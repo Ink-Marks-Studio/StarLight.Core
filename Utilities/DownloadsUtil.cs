@@ -13,13 +13,13 @@ namespace Aurora_Star.Core.Utilities
 
         var downloader = new MultithreadedDownloader(url, destinationPath);
 
-        // 订阅下载进度事件
+        // 下载进度
         downloader.ProgressChanged += (sender, progress) =>
         {
             Console.WriteLine($"Download progress: {progress:P}");
         };
 
-        // 订阅实时下载速度事件
+        // 下载速度
         downloader.SpeedChanged += (sender, speed) =>
         {
             Console.WriteLine($"Download speed: {speed:F} KB/s");
