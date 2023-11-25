@@ -88,76 +88,75 @@ namespace Aurora_Star.Core.Utilities
                 thread.Start();
             }
         }
-        // 定义一个私有的下载部分的方法，接受起始位置、结束位置和部分索引作为参数  
+        
+        // 下载部分，接受起始位置、结束位置和部分索引作为参数
         private void DownloadPart(long from, long to, int partIndex)
         {
-            // 定义重试次数和最大重试次数  
             int retryCount = 0;
             int maxRetries = 3;
+            long totalRead = 0; // 追踪当前线程读取的总字节数
 
-            // 当重试次数小于最大重试次数时，进入循环  
             while (retryCount < maxRetries)
             {
                 try
                 {
-                    // 根据url创建HttpWebRequest对象，并通过AddRange方法设置下载范围  
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                     request.AddRange(from, to);
 
-                    // 发送请求并获取响应，然后获取响应流并打开文件流以写入数据  
                     using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     using (Stream responseStream = response.GetResponseStream())
                     using (FileStream fileStream = new FileStream(destination, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
                     {
-                        // 将文件流的位置设置为起始位置，以便从该位置开始写入数据  
                         fileStream.Position = from;
-                        // 定义一个缓冲区，用于存储读取的数据  
-                        byte[] buffer = new byte[4096];
-                        // 定义一个变量，用于存储每次读取的字节数  
-                        int bytesRead;
-                        // 定义一个变量，用于存储总共读取的字节数  
-                        long totalRead = 0;
 
-                        // 创建一个Stopwatch对象，用于计时  
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
                         Stopwatch stopwatch = new Stopwatch();
-                        // 开始计时  
                         stopwatch.Start();
 
-                        // 当从响应流中读取的数据大于0时进入循环，读取数据并写入文件流，同时更新总共读取的字节数、总下载量和下载速度  
                         while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
                             fileStream.Write(buffer, 0, bytesRead);
                             totalRead += bytesRead;
-                            Interlocked.Add(ref totalDownloaded, bytesRead); // 原子性地对总下载量进行增加操作，防止多线程竞争条件下的数据竞争问题  
+                            Interlocked.Add(ref totalDownloaded, bytesRead);
 
-                            // 如果已经超过1秒，则计算当前的下载速度并通知SpeedChanged事件处理程序，同时计算进度并通知ProgressChanged事件处理程序，然后重新开始计时器  
-                            if (stopwatch.ElapsedMilliseconds > 1000)
-                            {
-                                speed = totalRead / (stopwatch.ElapsedMilliseconds / 1000.0); // 计算下载速度，单位是字节/秒或KB/s等，这取决于总读取的字节数和经过的时间（秒）  
-                                SpeedChanged?.Invoke(speed); // 如果有SpeedChanged事件处理程序注册，则通过调用事件来通知下载速度的变化  
-                                ProgressChanged?.Invoke((int)((totalDownloaded * 100) / totalSize)); // 如果有ProgressChanged事件处理程序注册，则通过调用事件来通知下载进度的变化，进度是总下载量除以总大小再乘以100得到百分比形式  
-                                stopwatch.Restart(); // 重置计时器，以便重新开始计时下一次循环迭代的时间间隔  
-                            }
+                            UpdateProgress(stopwatch, ref totalRead);
                         }
-
-                        // 如果在循环中没有发生异常，并且已经成功下载了数据，则跳出循环（break;）  
-                        break;  
                     }
+
+                    break; // 成功下载后退出循环
                 }
-                // 捕获IOException异常。当try块中的代码引发IOException时，此catch块将执行。  
                 catch (IOException ex)
                 {
-                    // retryCount变量加1。每次捕获异常时，都会增加此计数。  
                     retryCount++;
-                    // Thread.Sleep(2000);让当前线程休眠2000毫秒，也就是2秒。这是为了在重试之前等待一段时间，防止对服务器产生过大的压力。  
                     Thread.Sleep(2000);
-                    // 检查retryCount是否大于等于maxRetries。maxRetries是定义在方法或类级别的一个变量，表示最大的重试次数。  
                     if (retryCount >= maxRetries)
                     {
-                        // 如果已超过最大重试次数，则重新抛出异常。这样，异常可以在上层调用者中再次捕获和处理。  
                         throw;
                     }
                 }
+            }
+
+            // 下载完成时的最终更新
+            UpdateProgress(new Stopwatch(), ref totalRead, true);
+        }
+
+        private void UpdateProgress(Stopwatch stopwatch, ref long totalRead, bool forceUpdate = false)
+        {
+            if (stopwatch.ElapsedMilliseconds > 0)
+            {
+                double speed = totalRead / (stopwatch.ElapsedMilliseconds / 1000.0);
+                SpeedChanged?.Invoke(speed);
+                ProgressChanged?.Invoke((int)((totalDownloaded * 100) / totalSize));
+                stopwatch.Restart();
+
+                totalRead = 0; // 重置 totalRead 为下一次测量准备
+            }
+            else if (forceUpdate)
+            {
+                // 如果是强制更新但计时器时间为零，可以考虑跳过速度更新或设置默认值
+                SpeedChanged?.Invoke(0); // 或者根据实际情况设置其他默认值
+                ProgressChanged?.Invoke((int)((totalDownloaded * 100) / totalSize));
             }
         }
     }
