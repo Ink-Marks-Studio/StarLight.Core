@@ -98,7 +98,6 @@ namespace Aurora_Star.Core.Utilities
             // 当重试次数小于最大重试次数时，进入循环  
             while (retryCount < maxRetries)
             {
-                IOException ex;
                 try
                 {
                     // 根据url创建HttpWebRequest对象，并通过AddRange方法设置下载范围  
