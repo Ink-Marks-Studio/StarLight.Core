@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -29,7 +28,6 @@ namespace Aurora_Star.Core.Utilities
         private DateTime _downloadStartTime;
         private long _fileSize;
         private string _fileUrl;
-        private ConcurrentQueue<(long bytes, DateTime time)> _speedCalculationQueue = new ConcurrentQueue<(long, DateTime)>();
 
         public event EventHandler<double> SpeedReported;
         public event EventHandler<double> ProgressReported;
@@ -71,47 +69,24 @@ namespace Aurora_Star.Core.Utilities
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(start, end);
 
-            using var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            using (var response = await _client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
 
-            var fileBytes = await response.Content.ReadAsByteArrayAsync();
-            string partPath = $"{savePath}.part{partIndex}";
-            await File.WriteAllBytesAsync(partPath, fileBytes);
+                string partPath = $"{savePath}.part{partIndex}";
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                await File.WriteAllBytesAsync(partPath, fileBytes);
+            }
 
-            UpdateSpeed(fileBytes.Length);
+            _totalBytesDownloaded += end - start + 1;
             ReportSpeed();
             ReportProgress();
         }
 
-        private void UpdateSpeed(long recentBytes)
-        {
-            var now = DateTime.Now;
-            _speedCalculationQueue.Enqueue((recentBytes, now));
-            _totalBytesDownloaded += recentBytes;
-
-            // Keep only the last X seconds of data for speed calculation
-            while (_speedCalculationQueue.TryPeek(out var old) && (now - old.time).TotalSeconds > 5) // for example, last 5 seconds
-            {
-                _speedCalculationQueue.TryDequeue(out _);
-            }
-        }
-
         private void ReportSpeed()
         {
-            if (_speedCalculationQueue.IsEmpty) return;
-
-            var now = DateTime.Now;
-            long bytesInLastPeriod = 0;
-            DateTime earliestTime = now;
-
-            foreach (var (bytes, time) in _speedCalculationQueue)
-            {
-                bytesInLastPeriod += bytes;
-                if (time < earliestTime) earliestTime = time;
-            }
-
-            var elapsedTime = now - earliestTime;
-            double speed = elapsedTime.TotalSeconds > 0 ? bytesInLastPeriod / elapsedTime.TotalSeconds : 0;
+            var elapsedTime = DateTime.Now - _downloadStartTime;
+            double speed = _totalBytesDownloaded / elapsedTime.TotalSeconds;
             SpeedReported?.Invoke(this, speed);
         }
 
