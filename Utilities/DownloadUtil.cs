@@ -7,19 +7,37 @@ using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
-namespace Aurora_Star.Core.Utilities
+namespace Aurora_Star.Core.Utilities 
 {
-    public class DownloadUtil
+    public class DownloadUtil 
     {
+        //公有
+        //   声明一个名为ProgressChanged的公开事件，该事件可以触发一个Action<int>类型的回调函数  
         public event Action<int> ProgressChanged;
-        public event Action<double> SpeedChanged;
 
+        //   声明一个名为SpeedChanged的公开事件，该事件可以触发一个Action<double>类型的回调函数  
+        public event Action<double> SpeedChanged;
+        //公有
+
+        //私有
+        //   这是一个私有字符串变量，用于存储需要下载内容的URL地址  
         private string url;
+
+        //   这是一个私有字符串变量，用于存储下载内容的目标路径或目标位置  
         private string destination;
+
+        //   这是一个私有整型变量，用于存储用于并行下载的线程数量  
         private int threadCount;
+
+        //   这是一个私有长整型变量，用于存储需要下载的总数据量  
         private long totalSize;
+
+        //   这是一个私有长整型变量，用于存储已经下载的数据量  
         private long totalDownloaded;
+
+        //   这是一个私有双精度浮点型变量，用于存储当前的下载速度  
         private double speed;
+        //私有
 
         public DownloadUtil(string url, string destination, int threadCount)
         {
