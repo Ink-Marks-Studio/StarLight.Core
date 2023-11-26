@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurora-Star.Core", "Aurora-Star.Core.csproj", "{31804C47-220A-4EBA-85E4-041D2153D853}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.Core", "StarLight.Core.csproj", "{31804C47-220A-4EBA-85E4-041D2153D853}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

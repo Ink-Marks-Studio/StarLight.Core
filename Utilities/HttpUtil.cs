@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aurora_Star.Core.Utilities
+namespace StarLight.Core.Utilities
 {
     public static class HttpUtil
     {

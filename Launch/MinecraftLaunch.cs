@@ -1,4 +1,4 @@
-﻿namespace Aurora_Star.Core.Launch
+﻿namespace StarLight.Core.Launch
 {
     public static class MinecraftLaunch
     {

@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using Aurora_Star.Core.Models;
+using StarLight.Core.Models;
 using Microsoft.VisualBasic;
 
-namespace Aurora_Star.Core.Utilities
+namespace StarLight.Core.Utilities
 {
     public class JavaUtil
     {
