@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StarLight.Core.Utilities;
 using StarLight.Core.Models;
+using StarLight.Core.Enum;
 
 namespace StarLight.Core.Authentication
 {
@@ -63,6 +64,7 @@ namespace StarLight.Core.Authentication
             // 创建字典对象并返回
             Dictionary<string, string> result = new Dictionary<string, string>
             {
+                { "AuthType", AuthType.UnifiedPass.ToString() },
                 { "accessToken", authResponse.AccessToken },
                 { "clientToken", authResponse.ClientToken },
                 { "id", authResponse.SelectedProfile?.Id },
