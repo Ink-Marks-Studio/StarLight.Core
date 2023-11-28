@@ -7,6 +7,9 @@ public class RetrieveDeviceCode
     
     // 验证代码
     public string UserCode { get; set; }
+        
+    // 客户端Id
+    public string ClientId { get; set; }
     
     // 验证地址
     public string VerificationUri { get; set; }

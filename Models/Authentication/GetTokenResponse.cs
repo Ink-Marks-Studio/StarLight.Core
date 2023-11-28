@@ -8,6 +8,9 @@ public class GetTokenResponse
     // 刷新令牌
     public string RefreshToken { get; set; }
     
+    // 客户端Id
+    public string ClientId { get; set; }
+    
     // 过期时间
     public int ExpiresIn { get; set; }
 }
