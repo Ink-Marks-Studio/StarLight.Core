@@ -1,84 +1,72 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using StarLight.Core.Models.Authentication;
 using StarLight.Core.Utilities;
 
 namespace StarLight.Core.Authentication
 {
-    public class MicrosoftAuthentication
+    public static class MicrosoftAuthentication
     {
-        private const string ClientID = "e1e383f9-59d9-4aa2-bf5e-73fe83b15ba0"; // 替换为您的Client ID
-        private const string DeviceCodeUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
-        private const string TokenUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
-
-        public static async Task StartOAuthLogin()
+        private static string[] Scopes => new string[] { "XboxLive.signin", "offline_access", "openid", "profile", "email" };
+        
+        // 获取用户代码
+        public static async ValueTask<RetrieveDeviceCode> RetrieveDeviceCodeInfo(string clientId)
         {
-            var scope = "XboxLive.signin offline_access";
-            var postData = $"client_id={ClientID}&scope={Uri.EscapeDataString(scope)}";
+            if (string.IsNullOrEmpty(clientId))
+                throw new ArgumentNullException(nameof(clientId), "ClientId为空！");
 
-            try
+            string postData = $"client_id={clientId}&scope={string.Join(" ", Scopes)}";
+            string deviceCodeUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
+            string responseJson = await HttpUtil.SendHttpPostRequest(deviceCodeUrl, postData);
+
+            var responseDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseJson);
+            
+            var resultDict = new RetrieveDeviceCode
             {
-                // 发送请求获取device code和user code
-                var response = await HttpUtil.SendHttpPostRequest(DeviceCodeUrl, postData);
-                var json = JObject.Parse(response);
+                UserCode = responseDict["user_code"],
+                DeviceCode = responseDict["device_code"],
+                VerificationUri = responseDict["verification_uri"],
+                Message = responseDict["message"]
+            };
 
-                var userCode = json.Value<string>("user_code");
-                var deviceCode = json.Value<string>("device_code");
-                var verificationUri = json.Value<string>("verification_uri");
-
-                Console.WriteLine($"请访问 {verificationUri} 并输入用户代码: {userCode} 来进行登录。");
-
-                // 等待用户完成登录
-                var token = await WaitForUserToLogin(deviceCode);
-
-                Console.WriteLine("登录成功！");
-                Console.WriteLine($"访问令牌: {token}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("在OAuth登录过程中发生错误:");
-                Console.WriteLine(e.Message);
-            }
+            return resultDict;
         }
 
-        private static async Task<string> WaitForUserToLogin(string deviceCode)
+        public static async ValueTask<Dictionary<string, string>> GetTokenResponse(string clientId, string deviceCode) 
         {
-            var pollingInterval = TimeSpan.FromSeconds(5); // 根据OAuth服务推荐的间隔设置
-            var postData = $"client_id={ClientID}&device_code={deviceCode}&grant_type=http://oauth.net/grant_type/device/1.0";
+            using (HttpClient client = new()) {
+                string tenant = "/consumers";
+                TimeSpan pollingInterval = TimeSpan.FromSeconds(5);
+                DateTimeOffset codeExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15);
 
-            while (true)
-            {
-                // 暂停一段时间后再发送请求，以避免过于频繁的轮询
-                await Task.Delay(pollingInterval);
+                while (DateTimeOffset.UtcNow < codeExpiresOn) {
+                    var content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                        ["grant_type"] = "urn:ietf:params:oauth:grant-type:device_code",
+                        ["device_code"] = deviceCode,
+                        ["client_id"] = clientId,
+                        ["tenant"] = tenant
+                    });
 
-                try
-                {
-                    // 使用用户的device_code来获取access_token
-                    var response = await HttpUtil.SendHttpPostRequest(TokenUrl, postData);
+                    var tokenRes = await client.PostAsync("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", content);
+                    string tokenJson = await tokenRes.Content.ReadAsStringAsync();
 
-                    // 检查是否有错误响应
-                    var json = JObject.Parse(response);
-                    if (json.TryGetValue("error", out JToken errorToken))
+                    if (tokenRes.IsSuccessStatusCode)
                     {
-                        var error = errorToken.ToString();
-                        // 如果错误是“authorization_pending”，则继续轮询
-                        // 如果是其他错误，则抛出异常
-                        if (error != "authorization_pending")
+                        var tokenData = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenJson);
+                        if (tokenData.ContainsKey("access_token"))
                         {
-                            throw new Exception($"OAuth error: {error}");
+                            return new Dictionary<string, string>
+                            {
+                                ["expires_in"] = tokenData["expires_in"],
+                                ["refresh_token"] = tokenData["refresh_token"],
+                                ["access_token"] = tokenData["access_token"]
+                            };
                         }
                     }
-                    else if (json.TryGetValue("access_token", out JToken token))
-                    {
-                        // 如果获取到了access_token，那么登录成功
-                        return token.ToString();
-                    }
+                    // 在此添加错误处理逻辑,我懒得写了
+
+                    await Task.Delay(pollingInterval);
                 }
-                catch (Exception e)
-                {
-                    // 输出异常信息，并且可以选择是否继续尝试
-                    Console.WriteLine("在检查登录状态时发生错误:");
-                    Console.WriteLine(e.Message);
-                    // 可以在这里添加逻辑决定是否要继续轮询或者退出方法
-                }
+                throw new TimeoutException("登录操作已超时");
             }
         }
     }
