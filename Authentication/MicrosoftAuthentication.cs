@@ -31,7 +31,7 @@ namespace StarLight.Core.Authentication
             return resultDict;
         }
 
-        public static async ValueTask<Dictionary<string, string>> GetTokenResponse(string clientId, string deviceCode) 
+        public static async ValueTask<GetTokenResponse> GetTokenResponse(string clientId, string deviceCode) 
         {
             using (HttpClient client = new()) {
                 string tenant = "/consumers";
@@ -54,11 +54,11 @@ namespace StarLight.Core.Authentication
                         var tokenData = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenJson);
                         if (tokenData.ContainsKey("access_token"))
                         {
-                            return new Dictionary<string, string>
+                            return new GetTokenResponse()
                             {
-                                ["expires_in"] = tokenData["expires_in"],
-                                ["refresh_token"] = tokenData["refresh_token"],
-                                ["access_token"] = tokenData["access_token"]
+                                ExpiresIn = int.Parse(tokenData["expires_in"]),
+                                RefreshToken = tokenData["refresh_token"],
+                                AccessToken = tokenData["access_token"]
                             };
                         }
                     }
@@ -69,5 +69,7 @@ namespace StarLight.Core.Authentication
                 throw new TimeoutException("登录操作已超时");
             }
         }
+        
+        
     }
 }
