@@ -34,6 +34,7 @@ namespace StarLight.Core.Authentication
             return resultDict;
         }
 
+        //轮询获取 Token
         public static async ValueTask<GetTokenResponse> GetTokenResponse(RetrieveDeviceCode deviceCodeInfo) 
         {
             Console.WriteLine("开始获取Token");
@@ -52,8 +53,7 @@ namespace StarLight.Core.Authentication
                         ["client_id"] = deviceCodeInfo.ClientId,
                         ["tenant"] = tenant
                     });
-
-                    // 异步获取请求内容的字符串表示
+                    
                     string contentString = await content.ReadAsStringAsync();
                     Console.WriteLine(contentString);
                     
@@ -76,7 +76,6 @@ namespace StarLight.Core.Authentication
                     }
                     else
                     {
-                        // 处理错误响应
                         Console.WriteLine("错误响应: " + tokenJson);
                     }
 
