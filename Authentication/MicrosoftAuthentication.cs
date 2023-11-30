@@ -24,6 +24,7 @@ namespace StarLight.Core.Authentication
             
             var resultDict = new RetrieveDeviceCode
             {
+                ClientId = clientId,
                 UserCode = responseDict["user_code"],
                 DeviceCode = responseDict["device_code"],
                 VerificationUri = responseDict["verification_uri"],
@@ -35,12 +36,16 @@ namespace StarLight.Core.Authentication
 
         public static async ValueTask<GetTokenResponse> GetTokenResponse(RetrieveDeviceCode deviceCodeInfo) 
         {
-            using (HttpClient client = new()) {
+            Console.WriteLine("开始获取Token");
+            Console.WriteLine(deviceCodeInfo.DeviceCode + " 验证 " + deviceCodeInfo.ClientId);
+            using (HttpClient client = new HttpClient()) 
+            {
                 string tenant = "/consumers";
                 TimeSpan pollingInterval = TimeSpan.FromSeconds(5);
                 DateTimeOffset codeExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15);
 
-                while (DateTimeOffset.UtcNow < codeExpiresOn) {
+                while (DateTimeOffset.UtcNow < codeExpiresOn) 
+                {
                     var content = new FormUrlEncodedContent(new Dictionary<string, string> {
                         ["grant_type"] = "urn:ietf:params:oauth:grant-type:device_code",
                         ["device_code"] = deviceCodeInfo.DeviceCode,
@@ -48,6 +53,10 @@ namespace StarLight.Core.Authentication
                         ["tenant"] = tenant
                     });
 
+                    // 异步获取请求内容的字符串表示
+                    string contentString = await content.ReadAsStringAsync();
+                    Console.WriteLine(contentString);
+                    
                     var tokenRes = await client.PostAsync("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", content);
                     string tokenJson = await tokenRes.Content.ReadAsStringAsync();
 
@@ -65,7 +74,11 @@ namespace StarLight.Core.Authentication
                             };
                         }
                     }
-                    // 添加错误处理逻辑,我懒得写了
+                    else
+                    {
+                        // 处理错误响应
+                        Console.WriteLine("错误响应: " + tokenJson);
+                    }
 
                     await Task.Delay(pollingInterval);
                 }
@@ -95,15 +108,26 @@ namespace StarLight.Core.Authentication
 
             string xblLoginContentString = JsonConvert.SerializeObject(xboxLoginContent);
             string xblAuthToken = "null";
+            Console.WriteLine(xblLoginContentString);
+
+            string xboxResponseString = "null";
             
-            var xboxResponseString = await HttpUtil.SendHttpPostRequest(xblLoginContentString,
-                "https://user.auth.xboxlive.com/user/authenticate");
+            try
+            {
+                xboxResponseString = await HttpUtil.SendHttpPostRequest("https://user.auth.xboxlive.com/user/authenticate",
+                    xblLoginContentString,"application/json");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
 
             var xboxResponseData = JsonConvert.DeserializeObject<dynamic>(xboxResponseString);
 
             xblAuthToken = xboxResponseData.Token;
             string userHash = xboxResponseData.DisplayClaims.xui[0].uhs;
-
             
             // 获取XSTS令牌
             action("正在获取XSTS令牌");
@@ -119,48 +143,92 @@ namespace StarLight.Core.Authentication
             };
 
             string xstspostData = JsonConvert.SerializeObject(getXSTSJsonData);
-            string xstsResponse = await HttpUtil.SendHttpPostRequest(xstspostData, "https://xsts.auth.xboxlive.com/xsts/authorize");
+            string xstsResponse = await HttpUtil.SendHttpPostRequest("https://xsts.auth.xboxlive.com/xsts/authorize", 
+                xstspostData,"application/json");
             
             var xstsResponseData = JsonConvert.DeserializeObject<dynamic>(xstsResponse);
             string xstsToken = xstsResponseData.Token;
             string xstsDisplayClaimsuhs = xstsResponseData.DisplayClaims.xui[0].uhs;
-            
+            Console.WriteLine("uhs: " + userHash + "token: " + xstsToken);
             
             // Minecraft 身份验证
             action("正在获取 Minecraft 账户信息");
             string url = "https://api.minecraftservices.com/authentication/login_with_xbox";
-            string accountResponseData = $"XBL3.0 x={xstsDisplayClaimsuhs};{xstsToken}";
-            
-            string accountResponse = await HttpUtil.SendHttpPostRequest(accountResponseData, url);
+            var accountResponseData = new
+            {
+                identityToken = $"XBL3.0 x={userHash};{xstsToken}"
+            };
+            string accountPostData = JsonConvert.SerializeObject(accountResponseData);
+            Console.WriteLine(accountPostData);
+            string accountResponse = await HttpUtil.SendHttpPostRequest(url, accountPostData,"application/json");
             var accountData = JsonConvert.DeserializeObject<dynamic>(accountResponse);
-            string accessToken = accountData.access_Token;
+            Console.WriteLine(accountData);
+            string accessToken = accountData.access_token;
             
             
             // 检查游戏所有权
             action("正在检查游戏所有权");
-            var httpClient = new HttpClient();
+            Console.WriteLine(accessToken);
+            using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var response = await httpClient.GetAsync("https://api.minecraftservices.com/entitlements/mcstore");
-            string responseContent = "null";
+            bool ownTheGame = false;
             
             if (response.IsSuccessStatusCode)
             {
-                responseContent = await response.Content.ReadAsStringAsync();
-            }
-            
-            var gameAccountJsonData = JObject.Parse(responseContent);
+                string responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseContent);
+    
+                var gameAccountJsonData = JObject.Parse(responseContent);
+                
+                if (gameAccountJsonData["items"] != null)
+                {
+                    var itemsArray = gameAccountJsonData["items"] as JArray;
+                    ownTheGame = itemsArray != null && itemsArray.Count > 0;
+                }
 
-            bool ownTheGame = false;
-            
-            var itemsArray = gameAccountJsonData["items"] as JArray;
-            
-            if (itemsArray.Count != null) {
-                ownTheGame = itemsArray.Count > 0 ? true : false;
-            } else {
-                ownTheGame = true;
+                Console.WriteLine(ownTheGame ? "账户拥有Minecraft" : "账户不拥有Minecraft或者是XGP用户");
             }
-            
+            else
+            {
+                Console.WriteLine("请求失败: " + response.StatusCode);
+            }
+
+            if (ownTheGame) {
+                action("开始获取玩家档案");
+                string profileContent = "null";
+                var profileHttpClient = new HttpClient();
+                profileHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                var profileresponse = await httpClient.GetAsync("https://api.minecraftservices.com/minecraft/profile");
+
+                if (profileresponse.IsSuccessStatusCode)
+                {
+                    profileContent = await profileresponse.Content.ReadAsStringAsync();
+                }
+                
+                var jsonObject = JObject.Parse(profileContent);
+                string uuid = jsonObject["id"].ToString();
+                string name = jsonObject["name"].ToString();
+                string skinUrl = jsonObject["skins"][0]["url"].ToString();
+                
+                action("微软登录完成");
+
+                return new MicrosoftAccount {
+                    Uuid = uuid,
+                    Name = name,
+                    ClientToken = Guid.NewGuid().ToString("N"),
+                    AccessToken = xblAuthToken,
+                    RefreshToken = tokenInfo.RefreshToken,
+                    SkinUrl = skinUrl,
+                    DateTime = DateTime.Now
+                };
+            } else {
+                throw new("未购买 Minecraft！");
+            }
+
+            throw new("验证失败！");
         }
     }
 }
