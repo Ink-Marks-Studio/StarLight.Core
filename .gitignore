@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /Demo/Demo.csproj
 /Demo/Program.cs
+/nuget.exe
+/StarLight.Core.nuspec

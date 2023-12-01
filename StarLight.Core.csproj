@@ -1,15 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>StarLight.Core</RootNamespace>
+    <RootNamespace>StarLight_Core</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0-Alpha2</Version>
+    <Title>StarLight.Core</Title>
+    <Authors>Ink Marks Studio</Authors>
+    <Description>StarLight.Core 一个简单,模块化,全能的启动器核心</Description>
+    <Copyright>Copyright © Ink Marks Studio</Copyright>
+    <PackageProjectUrl>https://github.com/Ink-Marks-Studio/StarLight.Core</PackageProjectUrl>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageIcon>logo-256.png</PackageIcon>
+    <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Minecraft</PackageTags>
+    <PackageReleaseNotes>添加到Nuget</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <AssemblyName>StarLight_Core</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logo-256.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="I:\StarrySkyMinecraftLauncher\Assets\logo-256.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <Link>logo-256.png</Link>
+    </None>
   </ItemGroup>
 
 </Project>
