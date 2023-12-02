@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using StarLight_Core.Models;
+using StarLight_Core.Models.Utilities;
 using Microsoft.VisualBasic;
 
 namespace StarLight_Core.Utilities

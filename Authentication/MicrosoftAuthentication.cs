@@ -37,8 +37,6 @@ namespace StarLight_Core.Authentication
         //轮询获取 Token
         public static async ValueTask<GetTokenResponse> GetTokenResponse(RetrieveDeviceCode deviceCodeInfo) 
         {
-            Console.WriteLine("开始获取Token");
-            Console.WriteLine(deviceCodeInfo.DeviceCode + " 验证 " + deviceCodeInfo.ClientId);
             using (HttpClient client = new HttpClient()) 
             {
                 string tenant = "/consumers";
@@ -74,11 +72,7 @@ namespace StarLight_Core.Authentication
                             };
                         }
                     }
-                    else
-                    {
-                        Console.WriteLine("错误响应: " + tokenJson);
-                    }
-
+                    
                     await Task.Delay(pollingInterval);
                 }
                 throw new TimeoutException("登录已超时,请重试");
@@ -107,8 +101,6 @@ namespace StarLight_Core.Authentication
 
             string xblLoginContentString = JsonConvert.SerializeObject(xboxLoginContent);
             string xblAuthToken = "null";
-            Console.WriteLine(xblLoginContentString);
-
             string xboxResponseString = "null";
             
             try
@@ -118,10 +110,8 @@ namespace StarLight_Core.Authentication
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                throw new Exception("获取XBL令牌错误: " + e.Message);
             }
-
 
             var xboxResponseData = JsonConvert.DeserializeObject<dynamic>(xboxResponseString);
 
@@ -148,7 +138,6 @@ namespace StarLight_Core.Authentication
             var xstsResponseData = JsonConvert.DeserializeObject<dynamic>(xstsResponse);
             string xstsToken = xstsResponseData.Token;
             string xstsDisplayClaimsuhs = xstsResponseData.DisplayClaims.xui[0].uhs;
-            Console.WriteLine("uhs: " + userHash + "token: " + xstsToken);
             
             // Minecraft 身份验证
             action("正在获取 Minecraft 账户信息");
@@ -158,16 +147,13 @@ namespace StarLight_Core.Authentication
                 identityToken = $"XBL3.0 x={userHash};{xstsToken}"
             };
             string accountPostData = JsonConvert.SerializeObject(accountResponseData);
-            Console.WriteLine(accountPostData);
             string accountResponse = await HttpUtil.SendHttpPostRequest(url, accountPostData,"application/json");
             var accountData = JsonConvert.DeserializeObject<dynamic>(accountResponse);
-            Console.WriteLine(accountData);
             string accessToken = accountData.access_token;
             
             
             // 检查游戏所有权
             action("正在检查游戏所有权");
-            Console.WriteLine(accessToken);
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
@@ -177,7 +163,6 @@ namespace StarLight_Core.Authentication
             if (response.IsSuccessStatusCode)
             {
                 string responseContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseContent);
     
                 var gameAccountJsonData = JObject.Parse(responseContent);
                 
@@ -186,15 +171,14 @@ namespace StarLight_Core.Authentication
                     var itemsArray = gameAccountJsonData["items"] as JArray;
                     ownTheGame = itemsArray != null && itemsArray.Count > 0;
                 }
-
-                Console.WriteLine(ownTheGame ? "账户拥有Minecraft" : "账户不拥有Minecraft或者是XGP用户");
             }
             else
             {
-                Console.WriteLine("请求失败: " + response.StatusCode);
+                throw new Exception("请求失败: " + response.StatusCode);
             }
 
-            if (ownTheGame) {
+            if (ownTheGame) 
+            {
                 action("开始获取玩家档案");
                 string profileContent = "null";
                 var profileHttpClient = new HttpClient();
@@ -214,7 +198,8 @@ namespace StarLight_Core.Authentication
                 
                 action("微软登录完成");
 
-                return new MicrosoftAccount {
+                return new MicrosoftAccount
+                {
                     Uuid = uuid,
                     Name = name,
                     ClientToken = Guid.NewGuid().ToString("N"),
@@ -223,8 +208,9 @@ namespace StarLight_Core.Authentication
                     SkinUrl = skinUrl,
                     DateTime = DateTime.Now
                 };
-            } else {
-                throw new("未购买 Minecraft！");
+            } else 
+            {
+                throw new("未购买 Minecraft!");
             }
 
             throw new("验证失败！");
