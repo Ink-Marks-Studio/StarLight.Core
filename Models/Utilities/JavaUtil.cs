@@ -1,4 +1,4 @@
-﻿namespace StarLight.Core.Models;
+﻿namespace StarLight_Core.Models;
 
 public class JavaInfo
 {

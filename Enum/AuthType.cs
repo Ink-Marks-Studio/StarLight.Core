@@ -1,4 +1,4 @@
-﻿namespace StarLight.Core.Enum;
+﻿namespace StarLight_Core.Enum;
 
 public enum AuthType
 {

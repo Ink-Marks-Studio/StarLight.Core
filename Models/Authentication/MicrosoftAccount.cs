@@ -1,4 +1,4 @@
-﻿namespace StarLight.Core.Models.Authentication;
+﻿namespace StarLight_Core.Models.Authentication;
 
 public class MicrosoftAccount : BaseAccount
 {

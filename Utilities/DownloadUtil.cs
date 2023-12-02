@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
-namespace StarLight.Core.Utilities 
+namespace StarLight_Core.Utilities 
 {
     public class DownloadUtil 
     {

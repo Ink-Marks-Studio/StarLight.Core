@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StarLight.Core.Utilities;
-using StarLight.Core.Models;
-using StarLight.Core.Enum;
+using StarLight_Core.Utilities;
+using StarLight_Core.Models;
+using StarLight_Core.Enum;
 
-namespace StarLight.Core.Authentication
+namespace StarLight_Core.Authentication
 {
     public class AuthenticationResponse
     {

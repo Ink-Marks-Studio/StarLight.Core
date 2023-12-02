@@ -1,4 +1,4 @@
-﻿namespace StarLight.Core.Launch
+﻿namespace StarLight_Core.Launch
 {
     public static class MinecraftLaunch
     {

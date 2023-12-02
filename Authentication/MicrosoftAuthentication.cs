@@ -1,10 +1,10 @@
 ﻿using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StarLight.Core.Models.Authentication;
-using StarLight.Core.Utilities;
+using StarLight_Core.Models.Authentication;
+using StarLight_Core.Utilities;
 
-namespace StarLight.Core.Authentication
+namespace StarLight_Core.Authentication
 {
     public static class MicrosoftAuthentication
     {

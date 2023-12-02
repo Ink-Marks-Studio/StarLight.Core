@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using StarLight.Core.Enum;
+using StarLight_Core.Enum;
 
-namespace StarLight.Core.Authentication
+namespace StarLight_Core.Authentication
 {
     public static class OfflineAuthentication
     {

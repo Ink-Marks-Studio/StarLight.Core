@@ -1,4 +1,4 @@
-﻿namespace StarLight.Core.Installer
+﻿namespace StarLight_Core.Installer
 {
     public static class MinecraftInstaller
     {

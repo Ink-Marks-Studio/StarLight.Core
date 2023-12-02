@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using StarLight.Core.Models;
+using StarLight_Core.Models;
 using Microsoft.VisualBasic;
 
-namespace StarLight.Core.Utilities
+namespace StarLight_Core.Utilities
 {
     public class JavaUtil
     {
