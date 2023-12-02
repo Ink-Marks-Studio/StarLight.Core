@@ -6,18 +6,18 @@
     <Nullable>enable</Nullable>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0-Alpha2</Version>
+    <Version>1.0.0-Alpha3</Version>
     <Title>StarLight.Core</Title>
     <Authors>Ink Marks Studio</Authors>
     <Description>StarLight.Core 一个简单,模块化,全能的启动器核心</Description>
-    <Copyright>Copyright © Ink Marks Studio</Copyright>
     <PackageProjectUrl>https://github.com/Ink-Marks-Studio/StarLight.Core</PackageProjectUrl>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>logo-256.png</PackageIcon>
     <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Minecraft</PackageTags>
-    <PackageReleaseNotes>添加到Nuget</PackageReleaseNotes>
+    <PackageReleaseNotes>添加Readme</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>StarLight_Core</AssemblyName>
   </PropertyGroup>
@@ -27,9 +27,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="docs\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="logo-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+    <None Update="README.md">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="docs\README.md">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
