@@ -17,7 +17,7 @@
     <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Minecraft</PackageTags>
-    <PackageReleaseNotes>更新Readme</PackageReleaseNotes>
+    <PackageReleaseNotes>更新Readme,更新命名空间，添加游戏版本查找</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>StarLight_Core</AssemblyName>
   </PropertyGroup>

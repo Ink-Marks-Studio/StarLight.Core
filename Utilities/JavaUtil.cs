@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using StarLight_Core.Models.Utilities;
-using Microsoft.VisualBasic;
+using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Utilities
 {
@@ -34,33 +34,41 @@ namespace StarLight_Core.Utilities
             }
         }
 
+        // 判断是否为64位
         private static bool GetIs64Bit(string filePath)
         {
+            const ushort MZSignature = 23117;
+            const ushort PESignature = 17744;
+            const int PEHeaderOffsetPosition = 0x3A;
+            const int MachineTypeOffset = 20;
+            const ushort MachineTypeX64 = 523;
+            const ushort MachineTypeItanium = 267;
+
             try
             {
-                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                using (var binaryReader = new BinaryReader(fileStream))
+                using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                using var binaryReader = new BinaryReader(fileStream);
+                
+                if (binaryReader.ReadUInt16() == MZSignature)
                 {
-                    if (binaryReader.ReadUInt16() != 0x5A4D) // 检查MZ头
-                        return false;
-
-                    fileStream.Seek(0x3C, SeekOrigin.Begin); // PE头偏移量位于0x3C
-                    var peHeaderOffset = binaryReader.ReadUInt32();
-                    fileStream.Seek(peHeaderOffset, SeekOrigin.Begin);
-
-                    if (binaryReader.ReadUInt32() != 0x00004550) // 检查PE头
-                        return false;
-
-                    fileStream.Seek(4, SeekOrigin.Current); // 跳过机器类型之前的4个字节
-
-                    var machineType = binaryReader.ReadUInt16();
-                    return machineType == 0x8664; // 0x8664 表示文件是64位
+                    fileStream.Seek(PEHeaderOffsetPosition, SeekOrigin.Current);
+                    fileStream.Seek(binaryReader.ReadUInt32(), SeekOrigin.Begin);
+                    
+                    if (binaryReader.ReadUInt32() == PESignature)
+                    {
+                        fileStream.Seek(MachineTypeOffset, SeekOrigin.Current);
+                        ushort machineType = binaryReader.ReadUInt16();
+                        
+                        return machineType == MachineTypeX64 || machineType == MachineTypeItanium;
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false; // 如果读取失败，假定为非64位
+                throw new Exception(ex.Message);
             }
+
+            return false;
         }
 
         public static IEnumerable<JavaInfo> GetJavas()
