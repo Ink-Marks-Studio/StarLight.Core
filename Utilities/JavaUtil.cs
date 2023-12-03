@@ -37,29 +37,29 @@ namespace StarLight_Core.Utilities
         // 判断是否为64位
         private static bool GetIs64Bit(string filePath)
         {
-            const ushort MZSignature = 23117;
-            const ushort PESignature = 17744;
-            const int PEHeaderOffsetPosition = 0x3A;
-            const int MachineTypeOffset = 20;
-            const ushort MachineTypeX64 = 523;
-            const ushort MachineTypeItanium = 267;
+            const ushort mzSignature = 23117;
+            const ushort peSignature = 17744;
+            const int peHeaderOffsetPosition = 0x3A;
+            const int machineTypeOffset = 20;
+            const ushort machineTypeX64 = 523;
+            const ushort machineTypeItanium = 267;
 
             try
             {
                 using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
                 using var binaryReader = new BinaryReader(fileStream);
                 
-                if (binaryReader.ReadUInt16() == MZSignature)
+                if (binaryReader.ReadUInt16() == mzSignature)
                 {
-                    fileStream.Seek(PEHeaderOffsetPosition, SeekOrigin.Current);
+                    fileStream.Seek(peHeaderOffsetPosition, SeekOrigin.Current);
                     fileStream.Seek(binaryReader.ReadUInt32(), SeekOrigin.Begin);
                     
-                    if (binaryReader.ReadUInt32() == PESignature)
+                    if (binaryReader.ReadUInt32() == peSignature)
                     {
-                        fileStream.Seek(MachineTypeOffset, SeekOrigin.Current);
+                        fileStream.Seek(machineTypeOffset, SeekOrigin.Current);
                         ushort machineType = binaryReader.ReadUInt16();
                         
-                        return machineType == MachineTypeX64 || machineType == MachineTypeItanium;
+                        return machineType == machineTypeX64 || machineType == machineTypeItanium;
                     }
                 }
             }
