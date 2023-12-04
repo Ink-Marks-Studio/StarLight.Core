@@ -52,9 +52,6 @@ namespace StarLight_Core.Authentication
                         ["tenant"] = tenant
                     });
                     
-                    string contentString = await content.ReadAsStringAsync();
-                    Console.WriteLine(contentString);
-                    
                     var tokenRes = await client.PostAsync("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", content);
                     string tokenJson = await tokenRes.Content.ReadAsStringAsync();
 

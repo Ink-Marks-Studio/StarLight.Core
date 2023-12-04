@@ -8,13 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreVersions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Utilities/JavaVersionJsonEntity.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/JavaUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/JavaInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreVersions.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/JavaUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/JavaUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,6 +79,12 @@
       <workItem from="1701505839339" duration="4263000" />
       <workItem from="1701517031500" duration="2350000" />
       <workItem from="1701569491290" duration="3056000" />
+      <workItem from="1701574214356" duration="919000" />
+      <workItem from="1701599845600" duration="2836000" />
+      <workItem from="1701604669398" duration="2759000" />
+      <workItem from="1701611742166" duration="1787000" />
+      <workItem from="1701614302379" duration="14000" />
+      <workItem from="1701666381706" duration="2199000" />
     </task>
     <servers />
   </component>

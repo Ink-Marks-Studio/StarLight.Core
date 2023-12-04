@@ -5,11 +5,12 @@ namespace StarLight_Core.Utilities
 {
     public class GameCoreUtil
     {
-        public static void GetGameCores(string root = ".minecraft")
+        public static IEnumerable<GameCoreInfo> GetGameCores(string root = ".minecraft")
         {
             string rootPath = root + "\\versions";
-            var versions = Directory.GetDirectories(root);
-
+            var versions = Directory.GetDirectories(rootPath);
+            List<GameCoreInfo> gameCores = new List<GameCoreInfo>();
+            
             foreach (var version in versions)
             {
                 var versionFolder = new DirectoryInfo(version);
@@ -20,12 +21,23 @@ namespace StarLight_Core.Utilities
                     try
                     {
                         var jsonData = File.ReadAllText(versionFile);
-                        var versionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
-
-                        if (versionsJson != null)
+                        var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
+                        GameCoreInfo gameCoreInfo = new GameCoreInfo();
+                        
+                        if (gameCore != null)
                         {
-                            var versionId = versionsJson.Id;
+                            gameCoreInfo = new GameCoreInfo {
+                                Id = gameCore.Id,
+                                Type = gameCore.Type,
+                                JavaVersion = (gameCore.JavaVersion?.MajorVersion).Value,
+                                MainClass = gameCore.MainClass,
+                                InheritsFrom = gameCore.InheritsFrom,
+                                ReleaseTime = gameCore.ReleaseTime,
+                                Time = gameCore.Time,
+                            };
                         }
+                        
+                        gameCores.Add(gameCoreInfo);
                     }
                     catch (JsonException ex)
                     {
@@ -37,6 +49,7 @@ namespace StarLight_Core.Utilities
                     }
                 }
             }
+            return gameCores;
         }
     }
 }
