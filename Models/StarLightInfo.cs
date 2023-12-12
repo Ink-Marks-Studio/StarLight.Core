@@ -2,5 +2,5 @@
 
 public static class StarLightInfo
 {
-    public static string Version { get; set; } = "0.0.1";
+    public static string Version { get; set; } = "1.0.0";
 }

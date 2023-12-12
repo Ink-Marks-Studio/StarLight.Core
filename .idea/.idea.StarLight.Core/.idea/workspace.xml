@@ -8,14 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Utilities/JavaVersionJsonEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreVersions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +83,16 @@
       <workItem from="1701611742166" duration="1787000" />
       <workItem from="1701614302379" duration="14000" />
       <workItem from="1701666381706" duration="2199000" />
+      <workItem from="1702098734650" duration="713000" />
+      <workItem from="1702110158266" duration="2050000" />
+      <workItem from="1702120736090" duration="1514000" />
+      <workItem from="1702126171164" duration="1797000" />
+      <workItem from="1702136709936" duration="65000" />
+      <workItem from="1702137066263" duration="626000" />
+      <workItem from="1702180022721" duration="1437000" />
+      <workItem from="1702389366016" duration="295000" />
+      <workItem from="1702389697440" duration="56000" />
+      <workItem from="1702392057922" duration="306000" />
     </task>
     <servers />
   </component>
