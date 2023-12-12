@@ -8,12 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +88,8 @@
       <workItem from="1702180022721" duration="1437000" />
       <workItem from="1702389366016" duration="295000" />
       <workItem from="1702389697440" duration="56000" />
-      <workItem from="1702392057922" duration="306000" />
+      <workItem from="1702392057922" duration="541000" />
+      <workItem from="1702392953842" duration="827000" />
     </task>
     <servers />
   </component>
