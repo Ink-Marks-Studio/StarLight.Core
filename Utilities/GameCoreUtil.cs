@@ -5,6 +5,8 @@ namespace StarLight_Core.Utilities
 {
     public class GameCoreUtil
     {
+        
+        // 获取游戏核心信息
         public static IEnumerable<GameCoreInfo> GetGameCores(string root = ".minecraft")
         {
             string rootPath = root + "\\versions";
@@ -37,6 +39,7 @@ namespace StarLight_Core.Utilities
                             };
                         }
                         
+                        // 添加到列表
                         gameCores.Add(gameCoreInfo);
                     }
                     catch (JsonException ex)
