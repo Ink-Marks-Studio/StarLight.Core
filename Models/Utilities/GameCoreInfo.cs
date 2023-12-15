@@ -14,5 +14,7 @@ public class GameCoreInfo
     
     public string ReleaseTime { get; set; }
     
+    public bool IsNewVersion { get; set; }
+    
     public string Time { get; set; }
 }

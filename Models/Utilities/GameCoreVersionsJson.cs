@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StarLight_Core.Models.Utilities;
 
@@ -22,9 +23,21 @@ public class GameCoreVersionsJson
     [JsonPropertyName("time")]
     public string Time { get; set; }
     
+    [JsonPropertyName("arguments")]
+    public ArgumentsJson Arguments { get; set; }
+    
     [JsonPropertyName("javaVersion")]
     public JavaVersionJsonEntity JavaVersion { get; set; } = new JavaVersionJsonEntity
     {
         MajorVersion = 8
     };
+}
+
+public class ArgumentsJson
+{
+    [JsonPropertyName("game")]
+    public List<JsonElement> Game { get; set; }
+
+    [JsonPropertyName("jvm")]
+    public List<JsonElement> Jvm { get; set; }
 }

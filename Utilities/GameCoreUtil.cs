@@ -38,13 +38,30 @@ namespace StarLight_Core.Utilities
                                 Time = gameCore.Time,
                             };
                         }
+
+                        // 判断是否为 1.12.2 以上版本 
+                        try
+                        {
+                            if (gameCore.Arguments.Game != null)
+                            {
+                                gameCoreInfo.IsNewVersion = true;
+                            }
+                            else
+                            {
+                                gameCoreInfo.IsNewVersion = false;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            gameCoreInfo.IsNewVersion = false;
+                        }
                         
                         // 添加到列表
                         gameCores.Add(gameCoreInfo);
                     }
                     catch (JsonException ex)
                     {
-                        throw new Exception($"JSON 解析错误: {ex.Message}");
+                        throw new Exception($"版本 JSON 解析错误: {ex.Message}");
                     }
                     catch (Exception ex)
                     {
