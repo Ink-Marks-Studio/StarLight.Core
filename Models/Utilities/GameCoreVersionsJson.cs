@@ -26,6 +26,9 @@ public class GameCoreVersionsJson
     [JsonPropertyName("arguments")]
     public ArgumentsJson Arguments { get; set; }
     
+    [JsonPropertyName("minecraftArguments")]
+    public ArgumentsJson MinecraftArguments { get; set; }
+    
     [JsonPropertyName("javaVersion")]
     public JavaVersionJsonEntity JavaVersion { get; set; } = new JavaVersionJsonEntity
     {
