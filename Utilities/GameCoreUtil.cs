@@ -9,7 +9,17 @@ namespace StarLight_Core.Utilities
         // 获取游戏核心信息
         public static IEnumerable<GameCoreInfo> GetGameCores(string root = ".minecraft")
         {
-            string rootPath = root + "\\versions";
+            string rootPath = "null";
+            
+            if (FileUtil.IsAbsolutePath(root))
+            {
+                rootPath = root + "\\versions";
+            }
+            else
+            {
+                rootPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\versions";
+            }
+            
             var versions = Directory.GetDirectories(rootPath);
             List<GameCoreInfo> gameCores = new List<GameCoreInfo>();
             
@@ -29,6 +39,7 @@ namespace StarLight_Core.Utilities
                         if (gameCore != null)
                         {
                             gameCoreInfo = new GameCoreInfo {
+                                
                                 Id = gameCore.Id,
                                 Type = gameCore.Type,
                                 JavaVersion = (gameCore.JavaVersion?.MajorVersion).Value,
@@ -36,6 +47,7 @@ namespace StarLight_Core.Utilities
                                 InheritsFrom = gameCore.InheritsFrom,
                                 ReleaseTime = gameCore.ReleaseTime,
                                 Time = gameCore.Time,
+                                root = rootPath + "\\" + gameCore.Id
                             };
                         }
 
@@ -75,7 +87,17 @@ namespace StarLight_Core.Utilities
         // 获取指定版本的游戏核心信息
         public static GameCoreInfo GetGameCore(string versionId, string root = ".minecraft")
         {
-            string rootPath = root + "\\versions";
+            string rootPath = "null";
+            
+            if (FileUtil.IsAbsolutePath(root))
+            {
+                rootPath = root + "\\versions";
+            }
+            else
+            {
+                rootPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\versions";
+            }
+            
             var versions = Directory.GetDirectories(rootPath);
 
             foreach (var version in versions)
@@ -101,7 +123,8 @@ namespace StarLight_Core.Utilities
                                 InheritsFrom = gameCore.InheritsFrom,
                                 ReleaseTime = gameCore.ReleaseTime,
                                 Time = gameCore.Time,
-                                IsNewVersion = gameCore.Arguments?.Game != null // 简化判断逻辑
+                                IsNewVersion = gameCore.Arguments?.Game != null, // 简化判断逻辑
+                                root = rootPath + "\\" + gameCore.Id
                             };
 
                             return gameCoreInfo;

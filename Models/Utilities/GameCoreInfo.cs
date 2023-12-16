@@ -17,6 +17,8 @@ public class GameCoreInfo
     public bool IsNewVersion { get; set; }
     
     public string Time { get; set; }
+    
+    public string root { get; set; }
 
     public string MinecraftArguments { get; set; }
 }
