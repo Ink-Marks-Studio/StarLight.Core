@@ -23,7 +23,7 @@ public class Download
     public Artifact Artifact { get; set; }
 
     [JsonPropertyName("classifiers")] 
-    public Classifiers Classifiers { get; set; }
+    public Dictionary<string, Native> Classifiers { get; set; }
 }
 
 public class Native
@@ -39,27 +39,6 @@ public class Native
 
     [JsonPropertyName("url")]
     public string Url { get; set; }
-}
-
-public class Classifiers
-{
-    [JsonPropertyName("natives-linux")]
-    public Native NativesLinux { get; set; } = new Native
-    {
-        Path = null
-    };
-    
-    [JsonPropertyName("natives-macos")]
-    public Native NativesMacos { get; set; } = new Native
-    {
-        Path = null
-    };
-    
-    [JsonPropertyName("natives-windows")]
-    public Native NativesWindows { get; set; } = new Native
-    {
-        Path = null
-    };
 }
 
 public class Artifact

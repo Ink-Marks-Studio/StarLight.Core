@@ -31,19 +31,13 @@ public class ArgumentsBuildUtil
             
             foreach (var lib in fromArgsLibraries.Libraries)
             {
-                if (lib.Downloads.Classifiers.NativesWindows.Path == null ||
-                    lib.Downloads.Classifiers.NativesLinux.Path == null ||
-                    lib.Downloads.Classifiers.NativesMacos.Path == null)
+                if (lib.Downloads.Classifiers != null && lib.Downloads.Classifiers.Count > 0)
                 {
                     var path = BuildUrlFromName(lib.Name, librariesPath);
                     if (!path.Contains("ca"))
                     {
                         cps.Add(path);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Classifiers");
                 }
             }
             
@@ -64,20 +58,13 @@ public class ArgumentsBuildUtil
 
             foreach (var lib in argsLibraries.Libraries)
             {
-                if (lib.Downloads.Classifiers.NativesWindows.Path == null ||
-                    lib.Downloads.Classifiers.NativesLinux.Path == null ||
-                    lib.Downloads.Classifiers.NativesMacos.Path == null)
+                if (lib.Downloads.Classifiers != null && lib.Downloads.Classifiers.Count > 0)
                 {
-                    Console.WriteLine(lib.Downloads.Classifiers);
                     var path = BuildUrlFromName(lib.Name, librariesPath);
                     if (!path.Contains("ca"))
                     {
                         cps.Add(path);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Classifiers");
                 }
             }
 
