@@ -10,6 +10,7 @@
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/Utilities/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/ArgsBuildLibraryJson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,6 +102,10 @@
       <workItem from="1702638399766" duration="2851000" />
       <workItem from="1702653012577" duration="1050000" />
       <workItem from="1702710951905" duration="9728000" />
+      <workItem from="1702730005544" duration="260000" />
+      <workItem from="1702734935847" duration="2169000" />
+      <workItem from="1702737385547" duration="142000" />
+      <workItem from="1702740245958" duration="1422000" />
     </task>
     <servers />
   </component>

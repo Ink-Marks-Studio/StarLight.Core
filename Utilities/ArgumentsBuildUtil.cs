@@ -5,24 +5,56 @@ namespace StarLight_Core.Utilities;
 
 public class ArgumentsBuildUtil
 {
+    // 构建 Libraries 参数
     public static string BuildLibrariesArgs(string versionId, string root)
     {
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(versionId, root);
         string versionPath = coreInfo.root + "\\" + versionId + ".json";
-        Console.WriteLine(versionPath);
         string librariesPath = "null";
+        string InheritFromPath = "null";
         if (FileUtil.IsAbsolutePath(root))
         {
             librariesPath = root + "\\libraries";
+            InheritFromPath = root + "\\versions\\" + coreInfo.InheritsFrom + "\\" + coreInfo.InheritsFrom + ".json";
         }
         else
         {
             librariesPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\libraries";
+            InheritFromPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\versions\\" + coreInfo.InheritsFrom + "\\" + coreInfo.InheritsFrom + ".json";
         }
         
-        if (coreInfo.InheritsFrom != null!)
+        if (coreInfo.InheritsFrom != null)
         {
+            var fromJsonData = File.ReadAllText(InheritFromPath);
+            var fromArgsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(fromJsonData);
+            var cps = new List<string>();
             
+            foreach (var lib in fromArgsLibraries.Libraries)
+            {
+                if (lib.Downloads.Classifiers.NativesWindows.Path == null ||
+                    lib.Downloads.Classifiers.NativesLinux.Path == null ||
+                    lib.Downloads.Classifiers.NativesMacos.Path == null)
+                {
+                    var path = BuildUrlFromName(lib.Name, librariesPath);
+                    if (!path.Contains("ca"))
+                    {
+                        cps.Add(path);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Classifiers");
+                }
+            }
+            
+            var jsonData = File.ReadAllText(versionPath);
+            var argsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(jsonData);
+            foreach (var lib in fromArgsLibraries.Libraries)
+            {
+                var path = BuildUrlFromName(lib.Name, librariesPath);
+                cps.Add(path);
+            }
+            return string.Join(";", cps);
         }
         else
         {
@@ -32,13 +64,20 @@ public class ArgumentsBuildUtil
 
             foreach (var lib in argsLibraries.Libraries)
             {
-                if (lib.Downloads.Classifiers?.Count == 0 || lib.Downloads.Classifiers == null)
+                if (lib.Downloads.Classifiers.NativesWindows.Path == null ||
+                    lib.Downloads.Classifiers.NativesLinux.Path == null ||
+                    lib.Downloads.Classifiers.NativesMacos.Path == null)
                 {
+                    Console.WriteLine(lib.Downloads.Classifiers);
                     var path = BuildUrlFromName(lib.Name, librariesPath);
                     if (!path.Contains("ca"))
                     {
                         cps.Add(path);
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Classifiers");
                 }
             }
 
