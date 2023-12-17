@@ -7,28 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-dotnet6:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: 安装 .NET 6.0 环境
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '6.0.x'
-    - name: 还原依赖库
-      run: dotnet restore
-    - name: 构建
-      run: dotnet build --no-restore -c Release
-    - name: 测试
-      run: dotnet test --no-build -c Release
-    - name: 构建 NuGet 包
-      run: dotnet pack --no-build -c Release -o nupkg
-    - name: 推送至 Github Nuget
-      run: dotnet nuget push "nupkg/*.nupkg" --source "github"
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-dotnet7:
+  build:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
@@ -38,10 +17,6 @@ jobs:
         dotnet-version: '7.0.x'
     - name: 还原依赖库
       run: dotnet restore
-    - name: 构建
-      run: dotnet build --no-restore -c Release
-    - name: 测试
-      run: dotnet test --no-build -c Release
     - name: 构建 NuGet 包
       run: dotnet pack --no-build -c Release -o nupkg
     - name: 推送至 Github Nuget
