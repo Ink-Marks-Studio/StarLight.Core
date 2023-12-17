@@ -19,9 +19,12 @@ jobs:
       run: dotnet restore
     - name: 构建
       run: dotnet build --no-restore -c Release
+    - name: 测试
+      run: dotnet test --no-build -c Release
     - name: 构建 NuGet 包
       run: dotnet pack --no-build -c Release -o nupkg
     - name: 推送至 Github Nuget
-      run: dotnet nuget push "nupkg/*.nupkg" --source "github"
+      run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
