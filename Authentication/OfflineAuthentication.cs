@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using StarLight_Core.Enum;
+using StarLight_Core.Models.Authentication;
 
 namespace StarLight_Core.Authentication
 {
@@ -9,7 +10,7 @@ namespace StarLight_Core.Authentication
         public static string ClientToken { get; set; }
         public static string Name { get; set; }
         public static string Uuid { get; set; }
-        public static async Task<Dictionary<string, string>> Authenticate(string username,string uuid = default)
+        public static BaseAccount Authenticate(string username,string uuid = default)
         {
             AccessToken = Guid.NewGuid().ToString("N");
             ClientToken = Guid.NewGuid().ToString("N");
@@ -26,13 +27,13 @@ namespace StarLight_Core.Authentication
                 Uuid = Guid.NewGuid().ToString();
             }
             
-            Dictionary<string, string> result = new Dictionary<string, string>
+            BaseAccount result = new BaseAccount
             {
-                { "AuthType", AuthType.Offline.ToString() },
-                { "accessToken", AccessToken },
-                { "clientToken", ClientToken },
-                { "id", Uuid },
-                { "name", username }
+                Type = AuthType.Offline.ToString(),
+                Name = Name,
+                Uuid = Uuid,
+                AccessToken = AccessToken,
+                ClientToken = ClientToken,
             };
 
             return result;

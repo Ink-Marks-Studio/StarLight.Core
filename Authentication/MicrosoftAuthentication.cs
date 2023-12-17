@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StarLight_Core.Enum;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Utilities;
 
@@ -197,6 +198,7 @@ namespace StarLight_Core.Authentication
 
                 return new MicrosoftAccount
                 {
+                    Type = AuthType.Microsoft.ToString(),
                     Uuid = uuid,
                     Name = name,
                     ClientToken = Guid.NewGuid().ToString("N"),

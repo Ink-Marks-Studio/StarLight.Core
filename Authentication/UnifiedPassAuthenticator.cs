@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using StarLight_Core.Utilities;
 using StarLight_Core.Models;
 using StarLight_Core.Enum;
+using StarLight_Core.Models.Authentication;
 
 namespace StarLight_Core.Authentication
 {
@@ -25,14 +26,14 @@ namespace StarLight_Core.Authentication
     public class User
     {
         public string Id { get; set; }
-        // 根据需要添加其他属性
     }
 
 
+    // 统一通行证验证类
     public static class UnifiedPassAuthenticator
     {
         private static readonly string baseUrl = "https://auth.mc-user.com:233/";
-        public static async Task<Dictionary<string, string>> Authenticate(string username, string password, string serverId)
+        public static async Task<UnifiedPassAccount> Authenticate(string username, string password, string serverId)
         {
             Uri authenticateUri = new Uri(new Uri(baseUrl), serverId +"/authserver/authenticate");
 
@@ -62,13 +63,13 @@ namespace StarLight_Core.Authentication
             var authResponse = JsonConvert.DeserializeObject<AuthenticationResponse>(response);
 
             // 创建字典对象并返回
-            Dictionary<string, string> result = new Dictionary<string, string>
+            UnifiedPassAccount result = new UnifiedPassAccount
             {
-                { "AuthType", AuthType.UnifiedPass.ToString() },
-                { "accessToken", authResponse.AccessToken },
-                { "clientToken", authResponse.ClientToken },
-                { "id", authResponse.SelectedProfile?.Id },
-                { "name", authResponse.SelectedProfile?.Name }
+                Type = AuthType.UnifiedPass.ToString(),
+                Name = authResponse.SelectedProfile?.Name,
+                Uuid = authResponse.SelectedProfile?.Id,
+                AccessToken = authResponse.AccessToken,
+                ClientToken = authResponse.ClientToken,
             };
 
             return result;
