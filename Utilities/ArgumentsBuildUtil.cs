@@ -5,7 +5,7 @@ namespace StarLight_Core.Utilities;
 
 public class ArgumentsBuildUtil
 {
-    // 构建 Libraries 参数
+    
     public static string BuildLibrariesArgs(string versionId, string root)
     {
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(versionId, root);
@@ -31,7 +31,7 @@ public class ArgumentsBuildUtil
             
             foreach (var lib in fromArgsLibraries.Libraries)
             {
-                if (lib.Downloads.Classifiers != null && lib.Downloads.Classifiers.Count > 0)
+                if (lib.Downloads.Classifiers == null || lib.Downloads.Classifiers.Count == 0)
                 {
                     var path = BuildUrlFromName(lib.Name, librariesPath);
                     if (!path.Contains("ca"))
@@ -43,7 +43,7 @@ public class ArgumentsBuildUtil
             
             var jsonData = File.ReadAllText(versionPath);
             var argsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(jsonData);
-            foreach (var lib in fromArgsLibraries.Libraries)
+            foreach (var lib in argsLibraries.Libraries)
             {
                 var path = BuildUrlFromName(lib.Name, librariesPath);
                 cps.Add(path);
@@ -58,7 +58,7 @@ public class ArgumentsBuildUtil
 
             foreach (var lib in argsLibraries.Libraries)
             {
-                if (lib.Downloads.Classifiers != null && lib.Downloads.Classifiers.Count > 0)
+                if (lib.Downloads.Classifiers == null || lib.Downloads.Classifiers.Count == 0)
                 {
                     var path = BuildUrlFromName(lib.Name, librariesPath);
                     if (!path.Contains("ca"))
@@ -82,4 +82,5 @@ public class ArgumentsBuildUtil
         
         return $"{root}\\{parts[0].Replace('.', '\\')}\\{parts[1]}\\{parts[2]}\\{parts[1]}-{parts[2]}.jar";
     }
+    
 }
