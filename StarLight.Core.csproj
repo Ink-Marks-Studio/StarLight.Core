@@ -33,10 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
     <None Update="README.md">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
@@ -46,11 +42,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="I:\StarrySkyMinecraftLauncher\Assets\logo-256.png">
+    <None Include="Assets\logo-256.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
       <Link>logo-256.png</Link>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
 
 </Project>
