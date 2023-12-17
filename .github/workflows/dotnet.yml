@@ -1,4 +1,4 @@
-name: .NET Core
+name: 自动构建并提交到 Github Nuget
 
 on:
   push:
@@ -17,24 +17,24 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup .NET
+    - name: 安装 .NET 环境
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
 
-    - name: Restore dependencies
+    - name: 还原依赖库
       run: dotnet restore
 
-    - name: Build
+    - name: 构建
       run: dotnet build --no-restore -c Release
 
-    - name: Test
+    - name: 测试
       run: dotnet test --no-build -c Release
 
-    - name: Pack
+    - name: 构建 nupak 包
       run: dotnet pack --no-build -c Release -o nupkg
 
-    - name: Publish NuGet
+    - name: 推送至 Github Nuget
       run: dotnet nuget push "nupkg/*.nupkg" --source "github"
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
