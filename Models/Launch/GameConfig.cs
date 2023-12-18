@@ -9,11 +9,24 @@ public class GameWindowConfig
     public bool IsFullScreen { get; set; } = false;
 }
 
+public class GameCoreConfig
+{
+    public string Ip { get; set; }
+    
+    public string Port { get; set; }
+    
+    public string GameArguments { get; set; }
+}
+
 public class JavaConfig
 {
     public string JavaPath { get; set; }
+
+    public int MaxMemory { get; set; } = 2048;
+
+    public int MinMemory { get; set; } = 256;
     
-    public int MaxMemory { get; set; }
+    public string AdvancedArguments { get; set; }
     
-    public int MinMemory { get; set; }
+    public string GCArguments { get; set; }
 }
