@@ -15,7 +15,7 @@ public class GameCoreConfig
     
     public string Port { get; set; }
     
-    public string GameArguments { get; set; }
+    public IEnumerable<string> GameArguments { get; set; }
 }
 
 public class JavaConfig
@@ -26,7 +26,7 @@ public class JavaConfig
 
     public int MinMemory { get; set; } = 256;
     
-    public string AdvancedArguments { get; set; }
+    public IEnumerable<string> AdvancedArguments { get; set; }
     
-    public string GCArguments { get; set; }
+    public IEnumerable<string> GCArguments { get; set; }
 }
