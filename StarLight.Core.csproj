@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1-Alpha1</Version>
+    <Version>1.0.1-Alpha2</Version>
     <Title>StarLight.Core</Title>
     <Authors>Ink Marks Studio</Authors>
     <Description>StarLight.Core 一个简单,模块化,全能的启动器核心</Description>
@@ -17,11 +17,11 @@
     <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Minecraft</PackageTags>
-    <PackageReleaseNotes>更新游戏版本查找，添加文件小工具集</PackageReleaseNotes>
+    <PackageReleaseNotes>无</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>StarLight_Core</AssemblyName>
-    <AssemblyVersion>1.0.1.1</AssemblyVersion>
-    <FileVersion>1.0.1.1</FileVersion>
+    <AssemblyVersion>1.0.1.2</AssemblyVersion>
+    <FileVersion>1.0.1.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
