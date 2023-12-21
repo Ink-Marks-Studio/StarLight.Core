@@ -1,9 +1,13 @@
-﻿using StarLight_Core.Models.Launch;
+﻿using StarLight_Core.Enum;
+using StarLight_Core.Models.Authentication;
+using StarLight_Core.Models.Launch;
 
 namespace StarLight_Core.Launch
 {
     public class MinecraftLaunch
     {
+        public BaseAccount BaseAccount { get; set; }
+        
         public GameWindowConfig GameWindowConfig { get; set; }
         
         public GameCoreConfig GameCoreConfig { get; set; }
@@ -30,11 +34,17 @@ namespace StarLight_Core.Launch
             "-MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump"
         };
         
-        public MinecraftLaunch(GameWindowConfig gameWindowConfig, GameCoreConfig gameCoreConfig, JavaConfig javaConfig)
+        public MinecraftLaunch(GameWindowConfig gameWindowConfig, GameCoreConfig gameCoreConfig, JavaConfig javaConfig, BaseAccount baseAccount)
         {
             GameWindowConfig = gameWindowConfig;
             GameCoreConfig = gameCoreConfig;
             JavaConfig = javaConfig;
+            BaseAccount = baseAccount;
+        }
+
+        public async Task LaunchAsync()
+        {
+
         }
     }
 }

@@ -1,4 +1,11 @@
+using StarLight_Core.Models.Authentication;
+
 namespace StarLight_Core.Models.Launch;
+
+public class Account
+{
+    public BaseAccount BaseAccount { get; set; }
+}
 
 public class GameWindowConfig
 {

@@ -70,6 +70,7 @@ namespace StarLight_Core.Authentication
                 Uuid = authResponse.SelectedProfile?.Id,
                 AccessToken = authResponse.AccessToken,
                 ClientToken = authResponse.ClientToken,
+                ServerId = serverId
             };
 
             return result;
