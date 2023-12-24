@@ -32,8 +32,8 @@ namespace StarLight_Core.Authentication
     // 统一通行证验证类
     public static class UnifiedPassAuthenticator
     {
-        private static readonly string baseUrl = "https://auth.mc-user.com:233/";
-        public static async Task<UnifiedPassAccount> Authenticate(string username, string password, string serverId)
+        private const string UnifiedPassBaseUrl = "https://auth.mc-user.com:233/";
+        public static async Task<UnifiedPassAccount> Authenticate(string username, string password, string serverId, string baseUrl = UnifiedPassBaseUrl)
         {
             Uri authenticateUri = new Uri(new Uri(baseUrl), serverId +"/authserver/authenticate");
 
@@ -77,7 +77,7 @@ namespace StarLight_Core.Authentication
         }
         
         // 获取玩家皮肤信息。
-        private static async Task<Dictionary<string, string>> RetrieveSkinInfo(string baseUrl, string profileId)
+        public static async Task<Dictionary<string, string>> RetrieveSkinInfo(string baseUrl, string profileId)
         {
             Uri skinQueryUri = new Uri(new Uri(baseUrl), $"sessionserver/session/minecraft/profile/{profileId}");
 

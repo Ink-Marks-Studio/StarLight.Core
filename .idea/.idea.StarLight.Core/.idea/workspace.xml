@@ -7,9 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-    </list>
+    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,6 +116,7 @@
       <workItem from="1703085300070" duration="30000" />
       <workItem from="1703170075162" duration="478000" />
       <workItem from="1703170589066" duration="23000" />
+      <workItem from="1703243597381" duration="9000" />
     </task>
     <servers />
   </component>
