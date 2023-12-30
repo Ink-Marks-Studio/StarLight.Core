@@ -11,10 +11,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
-    - name: 安装 .NET 7.0 环境
+    - name: 安装 .NET 8.0 环境
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
     - name: 还原依赖库
       run: dotnet restore
     - name: 构建
