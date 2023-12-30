@@ -198,7 +198,6 @@ namespace StarLight_Core.Authentication
 
                 return new MicrosoftAccount
                 {
-                    Type = AuthType.Microsoft.ToString(),
                     Uuid = uuid,
                     Name = name,
                     ClientToken = Guid.NewGuid().ToString("N"),

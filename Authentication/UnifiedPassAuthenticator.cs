@@ -65,7 +65,6 @@ namespace StarLight_Core.Authentication
             // 创建字典对象并返回
             UnifiedPassAccount result = new UnifiedPassAccount
             {
-                Type = AuthType.UnifiedPass.ToString(),
                 Name = authResponse.SelectedProfile?.Name,
                 Uuid = authResponse.SelectedProfile?.Id,
                 AccessToken = authResponse.AccessToken,

@@ -8,9 +8,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Authentication/YggdrasilAccount.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/OffineAccount.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/YggdrasilResponse.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Authentication/BaseAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/BaseAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Authentication/MicrosoftAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/MicrosoftAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Authentication/UnifiedPassAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/UnifiedPassAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Authentication/YggdrasilAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/YggdrasilAccount.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/HttpUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/HttpUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +57,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "preferences.toDoOptions",
     "vue.rearranger.settings.migration": "true",
     "发布到 IIS.StarLight.Core: FolderProfile.executor": "Run"
   },
@@ -124,7 +134,8 @@
       <workItem from="1703243597381" duration="9000" />
       <workItem from="1703408349688" duration="1711000" />
       <workItem from="1703414110552" duration="1398000" />
-      <workItem from="1703913234791" duration="329000" />
+      <workItem from="1703913234791" duration="1403000" />
+      <workItem from="1703925751852" duration="4053000" />
     </task>
     <servers />
   </component>

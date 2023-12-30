@@ -27,9 +27,8 @@ namespace StarLight_Core.Authentication
                 Uuid = Guid.NewGuid().ToString();
             }
             
-            BaseAccount result = new BaseAccount
+            OfflineAccount result = new OfflineAccount()
             {
-                Type = AuthType.Offline.ToString(),
                 Name = Name,
                 Uuid = Uuid,
                 AccessToken = AccessToken,

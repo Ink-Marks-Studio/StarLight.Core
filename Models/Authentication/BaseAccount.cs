@@ -1,9 +1,9 @@
-﻿namespace StarLight_Core.Models.Authentication;
+﻿using StarLight_Core.Enum;
+
+namespace StarLight_Core.Models.Authentication;
 
 public class BaseAccount
 {
-    public string Type { get; set; }
-    
     public string Name { get; set; }
     
     public string Uuid { get; set; }
@@ -12,11 +12,5 @@ public class BaseAccount
     
     public string ClientToken { get; set;}
     
-    public enum AccountType
-    {
-        Offline,
-        Microsoft,
-        UnifiedPass,
-        Yggdrasil
-    }
+    public virtual AuthType Type { get; set;}
 }

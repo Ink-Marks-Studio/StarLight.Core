@@ -1,7 +1,11 @@
-﻿namespace StarLight_Core.Models.Authentication;
+﻿using StarLight_Core.Enum;
+
+namespace StarLight_Core.Models.Authentication;
 
 public class MicrosoftAccount : BaseAccount
 {
+    public override AuthType Type => AuthType.Microsoft;
+
     // 刷新令牌
     public string RefreshToken { get; set; }
     
