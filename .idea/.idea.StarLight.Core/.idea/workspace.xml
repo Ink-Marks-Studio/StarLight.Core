@@ -8,19 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Authentication/OffineAccount.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Authentication/YggdrasilResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/MinecraftAccountData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/MinecraftProfile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/XboxResponse.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/BaseAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/BaseAccount.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/MicrosoftAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/MicrosoftAccount.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/UnifiedPassAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/UnifiedPassAccount.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/YggdrasilAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/YggdrasilAccount.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Authentication/RetrieveDeviceCode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/RetrieveDeviceCode.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/HttpUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/HttpUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,29 +41,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.toDoOptions",
-    "vue.rearranger.settings.migration": "true",
-    "发布到 IIS.StarLight.Core: FolderProfile.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.toDoOptions&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;发布到 IIS.StarLight.Core: FolderProfile.executor&quot;: &quot;Run&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\25404\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\25404\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\25404\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\25404\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\25404\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\25404\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="StarLight.Core: FolderProfile" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish publish_profile="FolderProfile.pubxml" pubxml_path="$PROJECT_DIR$/Properties/PublishProfiles/FolderProfile.pubxml" uuid_high="3566934773274922682" uuid_low="-8798903248815400877" />
@@ -136,6 +131,10 @@
       <workItem from="1703414110552" duration="1398000" />
       <workItem from="1703913234791" duration="1403000" />
       <workItem from="1703925751852" duration="4053000" />
+      <workItem from="1703989625976" duration="117000" />
+      <workItem from="1703997436165" duration="2377000" />
+      <workItem from="1704013302499" duration="3514000" />
+      <workItem from="1704023023131" duration="31000" />
     </task>
     <servers />
   </component>

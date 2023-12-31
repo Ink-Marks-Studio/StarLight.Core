@@ -1,19 +1,22 @@
-﻿namespace StarLight_Core.Models.Authentication;
+﻿using System.Text.Json.Serialization;
 
-public class RetrieveDeviceCode
+namespace StarLight_Core.Models.Authentication
 {
-    // 访问令牌
-    public string DeviceCode { get; set; }
-    
-    // 验证代码
-    public string UserCode { get; set; }
-        
-    // 客户端Id
-    public string ClientId { get; set; }
-    
-    // 验证地址
-    public string VerificationUri { get; set; }
-    
-    // 基本描述
-    public string Message { get; set; }
+    public class RetrieveDeviceCode
+    {
+        [JsonPropertyName("device_code")]
+        public string DeviceCode { get; set; }
+
+        [JsonPropertyName("user_code")]
+        public string UserCode { get; set; }
+
+        [JsonPropertyName("client_id")]
+        public string ClientId { get; set; }
+
+        [JsonPropertyName("verification_uri")]
+        public string VerificationUri { get; set; }
+
+        [JsonPropertyName("message")]
+        public string Message { get; set; }
+    }
 }
