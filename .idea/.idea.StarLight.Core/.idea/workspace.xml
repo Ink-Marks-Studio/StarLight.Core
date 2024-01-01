@@ -8,14 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Authentication/MinecraftAccountData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Authentication/MinecraftProfile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Authentication/XboxResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/UnifiedPassProfileResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/UnifiedPassResponse.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/RetrieveDeviceCode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/RetrieveDeviceCode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,6 +134,9 @@
       <workItem from="1703997436165" duration="2377000" />
       <workItem from="1704013302499" duration="3514000" />
       <workItem from="1704023023131" duration="31000" />
+      <workItem from="1704023438534" duration="433000" />
+      <workItem from="1704036480261" duration="58000" />
+      <workItem from="1704074041498" duration="2486000" />
     </task>
     <servers />
   </component>

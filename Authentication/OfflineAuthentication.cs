@@ -4,26 +4,40 @@ using StarLight_Core.Models.Authentication;
 
 namespace StarLight_Core.Authentication
 {
-    public static class OfflineAuthentication
+    public class OfflineAuthentication
     {
-        public static string AccessToken { get; set; }
-        public static string ClientToken { get; set; }
-        public static string Name { get; set; }
-        public static string Uuid { get; set; }
-        public static BaseAccount Authenticate(string username,string uuid = default)
+        public string AccessToken { get; set; }
+        public string ClientToken { get; set; }
+        public string Name { get; set; }
+        public string Uuid { get; set; }
+        
+        public OfflineAuthentication(string username)
         {
-            AccessToken = Guid.NewGuid().ToString("N");
+            AccessToken = AccessToken = Guid.NewGuid().ToString("N");
             ClientToken = Guid.NewGuid().ToString("N");
             Name = username;
-            
-            if (uuid == default) {
-                Uuid = Guid.NewGuid().ToString();
-            }
-            else if (IsValidUuid(uuid)) {
-                Uuid = uuid;
-            }
-            else
-            {
+            Uuid = Guid.NewGuid().ToString();
+        }
+        
+        public OfflineAuthentication(string username, string uuid)
+        {
+            AccessToken = AccessToken = Guid.NewGuid().ToString("N");
+            ClientToken = Guid.NewGuid().ToString("N");
+            Name = username;
+            Uuid = uuid;
+        }
+        
+        public OfflineAuthentication(string username, string uuid, string accessToken, string clientToken)
+        {
+            AccessToken = accessToken;
+            ClientToken = clientToken;
+            Name = username;
+            Uuid = uuid;
+        }
+        
+        public BaseAccount OfflineAuth()
+        {
+            if (!IsValidUuid(Uuid)) {
                 Uuid = Guid.NewGuid().ToString();
             }
             

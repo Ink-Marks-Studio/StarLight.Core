@@ -1,28 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using StarLight_Core.Enum;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Authentication
 {
-    public static class MicrosoftAuthentication
+    public class MicrosoftAuthentication
     {
         private static string[] Scopes => new string[] { "XboxLive.signin", "offline_access", "openid", "profile", "email" };
 
-        // 获取用户代码
-        public static async ValueTask<RetrieveDeviceCode> RetrieveDeviceCodeInfo(string clientId)
+        public string ClientId { get; set; }
+        
+        public MicrosoftAuthentication(string clientId)
         {
-            if (string.IsNullOrEmpty(clientId))
-                throw new ArgumentNullException(nameof(clientId), "ClientId为空！");
+            ClientId = clientId;
+        }
+        
+        // 获取用户代码
+        public async ValueTask<RetrieveDeviceCode> RetrieveDeviceCodeInfo()
+        {
+            if (string.IsNullOrEmpty(ClientId))
+                throw new ArgumentNullException(nameof(ClientId), "ClientId为空！");
 
-            string postData = $"client_id={clientId}&scope={string.Join(" ", Scopes)}";
+            string postData = $"client_id={ClientId}&scope={string.Join(" ", Scopes)}";
             string deviceCodeUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
             string responseJson = await HttpUtil.SendHttpPostRequest(deviceCodeUrl, postData);
             
@@ -30,7 +30,7 @@ namespace StarLight_Core.Authentication
 
             var resultDict = new RetrieveDeviceCode
             {
-                ClientId = clientId,
+                ClientId = ClientId,
                 UserCode = responseDict.UserCode,
                 DeviceCode = responseDict.DeviceCode,
                 VerificationUri = responseDict.VerificationUri,
@@ -41,7 +41,7 @@ namespace StarLight_Core.Authentication
         }
 
         // 轮询获取 Token
-        public static async ValueTask<GetTokenResponse> GetTokenResponse(RetrieveDeviceCode deviceCodeInfo)
+        public async ValueTask<GetTokenResponse> GetTokenResponse(RetrieveDeviceCode deviceCodeInfo)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -82,7 +82,7 @@ namespace StarLight_Core.Authentication
             }
         }
 
-        public static async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action)
+        public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action)
         {
             action("开始获取Microsoft账号信息");
 

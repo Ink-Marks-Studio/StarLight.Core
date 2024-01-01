@@ -1,6 +1,7 @@
-﻿namespace StarLight_Core.Models;
-
-public static class StarLightInfo
+﻿namespace StarLight_Core.Models
 {
-    public static string Version { get; set; } = "1.0.0";
+    public static class StarLightInfo
+    {
+        public const string Version = "1.2.0";
+    }
 }
