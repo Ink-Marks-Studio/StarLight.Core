@@ -5,22 +5,31 @@ namespace StarLight_Core.Utilities;
 
 public class ArgumentsBuildUtil
 {
+    public string VersionId { get; set; }
     
-    public static string BuildLibrariesArgs(string versionId, string root)
+    public string Root { get; set; }
+    
+    public ArgumentsBuildUtil(string versionId, string root)
     {
-        GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(versionId, root);
-        string versionPath = coreInfo.root + "\\" + versionId + ".json";
+        VersionId = versionId;
+        Root = root;
+    }
+    
+    public string BuildLibrariesArgs()
+    {
+        GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+        string versionPath = coreInfo.root + "\\" + VersionId + ".json";
         string librariesPath = "null";
         string InheritFromPath = "null";
-        if (FileUtil.IsAbsolutePath(root))
+        if (FileUtil.IsAbsolutePath(Root))
         {
-            librariesPath = root + "\\libraries";
-            InheritFromPath = root + "\\versions\\" + coreInfo.InheritsFrom + "\\" + coreInfo.InheritsFrom + ".json";
+            librariesPath = Root + "\\libraries";
+            InheritFromPath = Root + "\\versions\\" + coreInfo.InheritsFrom + "\\" + coreInfo.InheritsFrom + ".json";
         }
         else
         {
-            librariesPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\libraries";
-            InheritFromPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\versions\\" + coreInfo.InheritsFrom + "\\" + coreInfo.InheritsFrom + ".json";
+            librariesPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + Root + "\\libraries";
+            InheritFromPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + Root + "\\versions\\" + coreInfo.InheritsFrom + "\\" + coreInfo.InheritsFrom + ".json";
         }
         
         if (coreInfo.InheritsFrom != null)
@@ -75,12 +84,11 @@ public class ArgumentsBuildUtil
     }
     
     // 构建 Libraries 路径
-    private static string BuildUrlFromName(string name, string root)
+    private string BuildUrlFromName(string name, string root)
     {
         var parts = name.Split(':');
         if (parts.Length != 3) throw new ArgumentException("[SLC]名称格式无效,获取错误");
         
         return $"{root}\\{parts[0].Replace('.', '\\')}\\{parts[1]}\\{parts[2]}\\{parts[1]}-{parts[2]}.jar";
     }
-    
 }
