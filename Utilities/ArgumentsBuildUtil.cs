@@ -1,5 +1,7 @@
 using StarLight_Core.Models.Utilities;
 using System.Text.Json;
+using StarLight_Core.Models.Authentication;
+using StarLight_Core.Models.Launch;
 
 namespace StarLight_Core.Utilities;
 
@@ -9,10 +11,23 @@ public class ArgumentsBuildUtil
     
     public string Root { get; set; }
     
-    public ArgumentsBuildUtil(string versionId, string root)
+    public BaseAccount BaseAccount { get; set; }
+        
+    public GameWindowConfig GameWindowConfig { get; set; }
+        
+    public GameCoreConfig GameCoreConfig { get; set; }
+        
+    public JavaConfig JavaConfig { get; set; }
+
+    
+    public ArgumentsBuildUtil(GameWindowConfig gameWindowConfig, GameCoreConfig gameCoreConfig, JavaConfig javaConfig, BaseAccount baseAccount)
     {
-        VersionId = versionId;
-        Root = root;
+        GameWindowConfig = gameWindowConfig;
+        GameCoreConfig = gameCoreConfig;
+        JavaConfig = javaConfig;
+        BaseAccount = baseAccount;
+        VersionId = gameCoreConfig.Version;
+        Root = gameCoreConfig.Root;
     }
     
     public string BuildLibrariesArgs()

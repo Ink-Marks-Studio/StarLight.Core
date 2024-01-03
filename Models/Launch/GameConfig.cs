@@ -18,6 +18,10 @@ public class GameWindowConfig
 
 public class GameCoreConfig
 {
+    public string Root { get; set; }
+    
+    public string Version { get; set; }
+    
     public string Ip { get; set; }
     
     public string Port { get; set; }
