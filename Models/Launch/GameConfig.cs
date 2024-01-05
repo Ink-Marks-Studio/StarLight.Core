@@ -37,6 +37,10 @@ public class JavaConfig
 
     public int MinMemory { get; set; } = 256;
     
+    public bool DisabledOptimizationAdvancedArgs { get; set; } = false;
+    
+    public bool DisabledOptimizationGcArgs { get; set; } = false;
+    
     public IEnumerable<string> AdvancedArguments { get; set; }
     
     public IEnumerable<string> GCArguments { get; set; }

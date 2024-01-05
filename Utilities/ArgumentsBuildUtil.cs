@@ -31,14 +31,47 @@ public class ArgumentsBuildUtil
         Root = gameCoreConfig.Root;
     }
 
+    // 参数构建器
     public List<string> Build()
     {
         List<string> arguments = new List<string>();
+        
+        arguments.Add(BuildMemoryArgs());
+        
         arguments.Add(BuildLibrariesArgs());
+        
         return arguments;
     }
+
+    // 内存参数
+    private string BuildMemoryArgs()
+    {
+        List<string> args = new List<string>();
+        
+        args.Add("-Xmx" + JavaConfig.MaxMemory + "M");
+        args.Add("-Xmn" + JavaConfig.MinMemory + "M");
+
+        return string.Join(" ",args);
+    }
+
+    private string BuildJvmArgs()
+    {
+        var allArguments = BuildArgsData.DefaultGcArguments.Concat(BuildArgsData.DefaultAdvancedArguments);
+
+        if (!JavaConfig.DisabledOptimizationGcArgs)
+        {
+            allArguments = allArguments.Concat(BuildArgsData.OptimizationGcArguments);
+        }
+        if (!JavaConfig.DisabledOptimizationAdvancedArgs)
+        {
+            allArguments = allArguments.Concat(BuildArgsData.OptimizationAdvancedArguments);
+        }
+        
+        return string.Join(" ", allArguments);
+    }
     
-    public string BuildLibrariesArgs()
+    // 构建 ClassPath 参数
+    private string BuildLibrariesArgs()
     {
         try
         {

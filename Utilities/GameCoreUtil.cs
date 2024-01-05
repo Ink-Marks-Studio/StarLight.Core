@@ -42,7 +42,7 @@ namespace StarLight_Core.Utilities
                                 
                                 Id = gameCore.Id,
                                 Type = gameCore.Type,
-                                JavaVersion = (gameCore.JavaVersion?.MajorVersion).Value,
+                                JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
                                 MainClass = gameCore.MainClass,
                                 InheritsFrom = gameCore.InheritsFrom,
                                 ReleaseTime = gameCore.ReleaseTime,
@@ -50,8 +50,7 @@ namespace StarLight_Core.Utilities
                                 root = rootPath + "\\" + gameCore.Id
                             };
                         }
-
-                        // 判断是否为 1.12.2 以上版本 
+                        
                         try
                         {
                             if (gameCore.Arguments.Game != null)
@@ -68,16 +67,15 @@ namespace StarLight_Core.Utilities
                             gameCoreInfo.IsNewVersion = false;
                         }
                         
-                        // 添加到列表
                         gameCores.Add(gameCoreInfo);
                     }
                     catch (JsonException ex)
                     {
-                        throw new Exception($"版本 JSON 解析错误: {ex.Message}");
+                        throw new Exception($"[SL]版本 JSON 解析错误: {ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"发生错误: {ex.Message}");
+                        throw new Exception($"[SL]发生错误: {ex.Message}");
                     }
                 }
             }
@@ -118,30 +116,47 @@ namespace StarLight_Core.Utilities
                             {
                                 Id = gameCore.Id,
                                 Type = gameCore.Type,
-                                JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0, // 安全地处理可空类型
+                                JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
                                 MainClass = gameCore.MainClass,
                                 InheritsFrom = gameCore.InheritsFrom,
                                 ReleaseTime = gameCore.ReleaseTime,
                                 Time = gameCore.Time,
-                                IsNewVersion = gameCore.Arguments?.Game != null, // 简化判断逻辑
+                                IsNewVersion = gameCore.Arguments?.Game != null,
                                 root = rootPath + "\\" + gameCore.Id
                             };
+                            
+                            try
+                            {
+                                if (gameCore.Arguments.Game != null)
+                                {
+                                    gameCoreInfo.IsNewVersion = true;
+                                }
+                                else
+                                {
+                                    gameCoreInfo.IsNewVersion = false;
+                                    gameCoreInfo.MinecraftArguments = gameCore.MinecraftArguments;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                gameCoreInfo.IsNewVersion = false;
+                            }
 
                             return gameCoreInfo;
                         }
                     }
                     catch (JsonException ex)
                     {
-                        throw new Exception($"版本 JSON 解析错误: {ex.Message}");
+                        throw new Exception($"[SL]版本 JSON 解析错误: {ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"发生错误: {ex.Message}");
+                        throw new Exception($"[SL]发生错误: {ex.Message}");
                     }
                 }
             }
 
-            return null!; // 如果未找到指定版本，则返回 null
+            return null!;
         }
     }
 }
