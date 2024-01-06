@@ -1,4 +1,6 @@
-﻿namespace StarLight_Core.Models.Utilities;
+﻿using StarLight_Core.Utilities;
+
+namespace StarLight_Core.Models.Utilities;
 
 public class GameCoreInfo
 {
@@ -19,6 +21,10 @@ public class GameCoreInfo
     public string Time { get; set; }
     
     public string root { get; set; }
+    
+    public string Assets { get; set; }
+    
+    public ArgumentsJson Arguments { get; set; }
 
     public string MinecraftArguments { get; set; }
 }

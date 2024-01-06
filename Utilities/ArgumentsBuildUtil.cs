@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using StarLight_Core.Models.Utilities;
 using System.Text.Json;
 using StarLight_Core.Models.Authentication;
@@ -19,7 +20,8 @@ public class ArgumentsBuildUtil
     public GameCoreConfig GameCoreConfig { get; set; }
         
     public JavaConfig JavaConfig { get; set; }
-
+    
+    private string userType;
     
     public ArgumentsBuildUtil(GameWindowConfig gameWindowConfig, GameCoreConfig gameCoreConfig, JavaConfig javaConfig, BaseAccount baseAccount)
     {
@@ -29,6 +31,7 @@ public class ArgumentsBuildUtil
         BaseAccount = baseAccount;
         VersionId = gameCoreConfig.Version;
         Root = gameCoreConfig.Root;
+        userType = "msa";
     }
 
     // 参数构建器
@@ -37,7 +40,7 @@ public class ArgumentsBuildUtil
         List<string> arguments = new List<string>();
         
         arguments.Add(BuildMemoryArgs());
-        
+        arguments.Add(BuildJvmArgs());
         arguments.Add(BuildLibrariesArgs());
         
         return arguments;
@@ -54,7 +57,108 @@ public class ArgumentsBuildUtil
         return string.Join(" ",args);
     }
 
+    // Jvm 参数
     private string BuildJvmArgs()
+    {
+        List<string> args = new List<string>();
+        
+        args.Add(BuildGcAndAdvancedArguments());
+        
+        GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+
+        var jvmPlaceholders = new Dictionary<string, string>
+        {
+            { "${natives_directory}", Root + "\\versions\\" + VersionId + "\\natives" },
+            { "${launcher_name}", "StarLight" },
+            { "${launcher_version}", "1" },
+            { "${classpath}", BuildLibrariesArgs() }
+        };
+
+        string jvmArgumentTemplate = "";
+        
+        List<string> jvmArgumentsTemplate = new List<string>
+        {
+            "-Djava.library.path=${natives_directory}",
+            "-Dminecraft.launcher.brand=${launcher_name}",
+            "-Dminecraft.launcher.version=${launcher_version}",
+            "-cp",
+            "${classpath}"
+        };
+        
+        if (coreInfo.IsNewVersion)
+        {
+            jvmArgumentsTemplate.Clear();
+            foreach (var element in coreInfo.Arguments.Jvm)
+            {
+                if (!ElementContainsRules(element))
+                {
+                    jvmArgumentsTemplate.Add(element.ToString());
+                }
+            }
+            
+            jvmArgumentTemplate = string.Join(" ", jvmArgumentsTemplate);
+        }
+        else
+        {
+            jvmArgumentTemplate = string.Join(" ", jvmArgumentsTemplate);
+        }
+        
+        args.Add(ReplacePlaceholders(jvmArgumentTemplate, jvmPlaceholders));
+        
+        return string.Join(" ", args);
+    }
+    
+    // 游戏参数
+    private string BuildGameArgs()
+    {
+        
+        
+        GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+        
+        var gamePlaceholders = new Dictionary<string, string>
+        {
+            { "${auth_player_name}", BaseAccount.Name },
+            { "${version_name}", VersionId },
+            { "${game_directory}", Path.Combine(CurrentExecutingDirectory(Root), "versions", VersionId) },
+            { "${assets_root}", Path.Combine(CurrentExecutingDirectory(Root), "assets") },
+            { "${assets_index_name}", coreInfo.Assets },
+            { "${auth_uuid}", BaseAccount.Uuid },
+            { "${auth_access_token}", BaseAccount.AccessToken },
+            { "${clientid}", "${clientid}" },
+            { "${auth_xuid}", "${auth_xuid}" },
+            { "${user_type}", userType },
+            { "${version_type}", "SL" }
+        };
+        
+        string gameArgumentTemplate = "";
+        
+        List<string> gameArgumentsTemplate = new List<string>();
+        
+        if (coreInfo.IsNewVersion)
+        {
+            foreach (var element in coreInfo.Arguments.Game)
+            {
+                if (!ElementContainsRules(element))
+                {
+                    if (!ElementContainsRules(element))
+                    {
+                        gameArgumentsTemplate.Add(element.ToString());
+                    }
+                }
+            }
+            
+            gameArgumentTemplate = string.Join(" ", gameArgumentsTemplate);
+        }
+        else
+        {
+            gameArgumentTemplate = coreInfo.MinecraftArguments;
+        }
+
+        return ReplacePlaceholders(gameArgumentTemplate, gamePlaceholders);
+    }
+
+    // Gc 与 Advanced 参数
+    private string BuildGcAndAdvancedArguments()
     {
         var allArguments = BuildArgsData.DefaultGcArguments.Concat(BuildArgsData.DefaultAdvancedArguments);
 
@@ -120,6 +224,24 @@ public class ArgumentsBuildUtil
         }
     }
 
+    private static bool ElementContainsRules(JsonElement element)
+    {
+        if (element.ValueKind == JsonValueKind.Object)
+        {
+            return element.TryGetProperty("rules", out _);
+        }
+        return false;
+    }
+    
+    static string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
+    {
+        foreach (var placeholder in placeholders)
+        {
+            template = template.Replace(placeholder.Key, placeholder.Value);
+        }
+
+        return template;
+    }
     
     private string BuildFromName(string name, string root)
     {
@@ -127,5 +249,12 @@ public class ArgumentsBuildUtil
         if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
 
         return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}.jar");
+    }
+
+    private string CurrentExecutingDirectory(string path)
+    {
+        return FileUtil.IsAbsolutePath(Root) ? 
+            Path.Combine(Root) : 
+            Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
     }
 }

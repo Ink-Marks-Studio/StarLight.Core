@@ -25,8 +25,8 @@ namespace StarLight_Core.Launch
 
         public async Task LaunchAsync()
         {
-            var Arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
-            Console.WriteLine(string.Join(" ", Arguments));
+            var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
+            Console.WriteLine(string.Join(" ", arguments));
         }
     }
 }

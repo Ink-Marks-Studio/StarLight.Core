@@ -27,6 +27,9 @@ public class GameCoreVersionsJson
     [JsonPropertyName("minecraftArguments")]
     public string MinecraftArguments { get; set; }
     
+    [JsonPropertyName("assets")]
+    public string Assets { get; set; }
+    
     [JsonPropertyName("arguments")]
     public ArgumentsJson Arguments { get; set; }
     

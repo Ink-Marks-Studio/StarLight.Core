@@ -122,14 +122,29 @@ namespace StarLight_Core.Utilities
                                 ReleaseTime = gameCore.ReleaseTime,
                                 Time = gameCore.Time,
                                 IsNewVersion = gameCore.Arguments?.Game != null,
-                                root = rootPath + "\\" + gameCore.Id
+                                root = rootPath + "\\" + gameCore.Id,
+                                Assets = gameCore.Assets
                             };
+
+                            try
+                            {
+                                if (gameCoreInfo.InheritsFrom != null)
+                                {
+                                    gameCoreInfo.Assets = GetGameCore(gameCoreInfo.InheritsFrom, root).Assets;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                //
+                            }
+
                             
                             try
                             {
                                 if (gameCore.Arguments.Game != null)
                                 {
                                     gameCoreInfo.IsNewVersion = true;
+                                    gameCoreInfo.Arguments = gameCore.Arguments;
                                 }
                                 else
                                 {
