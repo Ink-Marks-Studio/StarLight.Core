@@ -31,7 +31,7 @@ public class ArgumentsBuildUtil
         BaseAccount = baseAccount;
         VersionId = gameCoreConfig.Version;
         Root = gameCoreConfig.Root;
-        userType = "msa";
+        userType = "mojang";
     }
 
     // 参数构建器
@@ -41,7 +41,8 @@ public class ArgumentsBuildUtil
         
         arguments.Add(BuildMemoryArgs());
         arguments.Add(BuildJvmArgs());
-        arguments.Add(BuildLibrariesArgs());
+        arguments.Add(BuildGameArgs());
+        arguments.Add(BuildWindowArgs());
         
         return arguments;
     }
@@ -60,6 +61,8 @@ public class ArgumentsBuildUtil
     // Jvm 参数
     private string BuildJvmArgs()
     {
+        ProcessAccount();
+        
         List<string> args = new List<string>();
         
         args.Add(BuildGcAndAdvancedArguments());
@@ -111,8 +114,6 @@ public class ArgumentsBuildUtil
     // 游戏参数
     private string BuildGameArgs()
     {
-        
-        
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
         
         var gamePlaceholders = new Dictionary<string, string>
@@ -133,6 +134,8 @@ public class ArgumentsBuildUtil
         string gameArgumentTemplate = "";
         
         List<string> gameArgumentsTemplate = new List<string>();
+        
+        gameArgumentsTemplate.Add(coreInfo.MainClass);
         
         if (coreInfo.IsNewVersion)
         {
@@ -197,6 +200,8 @@ public class ArgumentsBuildUtil
             }
 
             cps.AddRange(ProcessLibraryPath(versionPath, librariesPath));
+            
+            cps.Add(Path.Combine(coreInfo.root, $"{VersionId}.jar"));
 
             return string.Join(";", cps);
         }
@@ -206,6 +211,21 @@ public class ArgumentsBuildUtil
         }
     }
 
+    // 窗口参数
+    private string BuildWindowArgs()
+    {
+        List<string> args = new List<string>();
+        
+        args.Add("--width " + GameWindowConfig.Width);
+        args.Add("--height " + GameWindowConfig.Height);
+        if (GameWindowConfig.IsFullScreen)
+        {
+            args.Add("--fullscreen");
+        }
+
+        return string.Join(" ", args);
+    }
+    
     private IEnumerable<string> ProcessLibraryPath(string filePath, string librariesPath)
     {
         var jsonData = File.ReadAllText(filePath);
@@ -251,10 +271,24 @@ public class ArgumentsBuildUtil
         return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}.jar");
     }
 
+    // 完整路径
     private string CurrentExecutingDirectory(string path)
     {
         return FileUtil.IsAbsolutePath(Root) ? 
             Path.Combine(Root) : 
             Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
+    }
+    
+    // 判断账户
+    public void ProcessAccount()
+    {
+        if (BaseAccount is MicrosoftAccount)
+        {
+            userType = "msa";
+        }
+        else
+        {
+            userType = "mojang";
+        }
     }
 }

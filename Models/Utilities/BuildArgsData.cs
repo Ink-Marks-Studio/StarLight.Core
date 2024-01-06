@@ -13,7 +13,7 @@ public class BuildArgsData
         "-Dfml.ignoreInvalidMinecraftCertificates=true",
         "-Dfml.ignorePatchDiscrepancies=true",
         "-Dlog4j2.formatMsgNoLookups=true",
-        "-MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump"
+        "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump"
     };
     
     public static readonly IEnumerable<string> OptimizationGcArguments = new string[] { 

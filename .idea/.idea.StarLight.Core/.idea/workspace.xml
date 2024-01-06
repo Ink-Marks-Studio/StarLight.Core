@@ -9,12 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/BuildArgsData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/BuildArgsData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,6 +147,9 @@
       <workItem from="1704514629161" duration="2406000" />
       <workItem from="1704530414998" duration="1483000" />
       <workItem from="1704531992733" duration="10699000" />
+      <workItem from="1704552156524" duration="2487000" />
+      <workItem from="1704555048648" duration="662000" />
+      <workItem from="1704555730453" duration="31000" />
     </task>
     <servers />
   </component>
