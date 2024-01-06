@@ -1,6 +1,18 @@
 using StarLight_Core.Models.Authentication;
 
-namespace StarLight_Core.Models.Launch;
+namespace StarLight_Core.Models.Launch
+{
+    public class LaunchConfig
+    {
+        public Account Account { get; set; }
+
+        public GameWindowConfig GameWindowConfig { get; set; }
+
+        public GameCoreConfig GameCoreConfig { get; set; }
+
+        public JavaConfig JavaConfig { get; set; }
+    }
+}
 
 public class Account
 {

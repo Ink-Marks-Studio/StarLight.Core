@@ -8,13 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Utilities/ArgumentsJson.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Launch/GameConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/GameConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/BuildArgsData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/BuildArgsData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,6 +139,8 @@
       <workItem from="1704429852461" duration="2205000" />
       <workItem from="1704454883465" duration="6439000" />
       <workItem from="1704466732133" duration="1519000" />
+      <workItem from="1704468300705" duration="76000" />
+      <workItem from="1704514629161" duration="2406000" />
     </task>
     <servers />
   </component>

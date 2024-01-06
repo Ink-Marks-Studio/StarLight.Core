@@ -1,6 +1,7 @@
 ﻿using StarLight_Core.Enum;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Models.Launch;
+using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Launch
 {
@@ -14,17 +15,18 @@ namespace StarLight_Core.Launch
         
         public JavaConfig JavaConfig { get; set; }
         
-        public MinecraftLaunch(GameWindowConfig gameWindowConfig, GameCoreConfig gameCoreConfig, JavaConfig javaConfig, BaseAccount baseAccount)
+        public MinecraftLaunch(LaunchConfig launchConfig)
         {
-            GameWindowConfig = gameWindowConfig;
-            GameCoreConfig = gameCoreConfig;
-            JavaConfig = javaConfig;
-            BaseAccount = baseAccount;
+            GameWindowConfig = launchConfig.GameWindowConfig;
+            GameCoreConfig = launchConfig.GameCoreConfig;
+            JavaConfig = launchConfig.JavaConfig;
+            BaseAccount = launchConfig.Account.BaseAccount;
         }
 
         public async Task LaunchAsync()
         {
-            
+            var Arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
+            Console.WriteLine(string.Join(" ", Arguments));
         }
     }
 }
