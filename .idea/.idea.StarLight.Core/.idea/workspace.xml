@@ -8,17 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Authentication/Account.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Launch/GameCoreConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Launch/GameWindowConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Launch/JavaConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Utilities/SystemUtil.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Launch/GameConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/GameConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreVersionsJson.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/SystemUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/SystemUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,6 +156,7 @@
       <workItem from="1704596002753" duration="791000" />
       <workItem from="1704597285665" duration="4955000" />
       <workItem from="1704606106244" duration="727000" />
+      <workItem from="1704620945752" duration="5558000" />
     </task>
     <servers />
   </component>

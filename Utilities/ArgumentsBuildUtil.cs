@@ -52,8 +52,8 @@ public class ArgumentsBuildUtil
     {
         List<string> args = new List<string>();
         
-        args.Add("-Xmx" + JavaConfig.MaxMemory + "M");
         args.Add("-Xmn" + JavaConfig.MinMemory + "M");
+        args.Add("-Xmx" + JavaConfig.MaxMemory + "M");
 
         return string.Join(" ",args);
     }
@@ -66,8 +66,17 @@ public class ArgumentsBuildUtil
         List<string> args = new List<string>();
         
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+
+        if (coreInfo.IsNewVersion)
+        {
+            args.Add("-Dminecraft.client.jar=" + Path.Combine(coreInfo.root, $"{VersionId}.jar"));
+        }
         
-        args.Add("-Dminecraft.client.jar=" + Path.Combine(coreInfo.root, $"{VersionId}.jar"));
+        if (SystemUtil.IsOperatingSystemGreaterThanWin10())
+        {
+            args.Add(BuildSystemArgs());
+        }
+        
         args.Add(BuildGcAndAdvancedArguments());
 
         var jvmPlaceholders = new Dictionary<string, string>
@@ -112,11 +121,18 @@ public class ArgumentsBuildUtil
         return string.Join(" ", args);
     }
     
+    private string BuildClientJarArgs()
+    {
+        GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+        
+        return "-Dminecraft.client.jar=" + Path.Combine(coreInfo.root, $"{VersionId}.jar");
+    }
+    
     // 系统参数
     private string BuildSystemArgs()
     {
         List<string> args = new List<string>();
-
+        
         if (SystemUtil.IsOperatingSystemGreaterThanWin10())
         {
             args.Add("-Dos.name=\"Windows 10\"");
@@ -170,7 +186,6 @@ public class ArgumentsBuildUtil
         else
         {
             gameArgumentTemplate = coreInfo.MinecraftArguments;
-            Console.WriteLine("args: " + coreInfo.MinecraftArguments + coreInfo.IsNewVersion);
         }
 
         return ReplacePlaceholders(gameArgumentTemplate, gamePlaceholders);

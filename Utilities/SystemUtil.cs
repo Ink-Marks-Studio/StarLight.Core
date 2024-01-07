@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace StarLight_Core.Utilities
 {
@@ -6,20 +6,15 @@ namespace StarLight_Core.Utilities
     {
         public static bool IsOperatingSystemGreaterThanWin10()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            const string subkey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
+            using (var key = Registry.LocalMachine.OpenSubKey(subkey))
             {
-                var osDescription = RuntimeInformation.OSDescription;
-                if (osDescription.Contains("Windows"))
+                if (key != null)
                 {
-                    var versionString = osDescription.Split(" ")[1];
-                    var versionParts = versionString.Split('.');
-
-                    if (versionParts.Length >= 2)
+                    object currentValue = key.GetValue("CurrentMajorVersionNumber");
+                    if (currentValue is int majorVersion)
                     {
-                        if (int.TryParse(versionParts[0], out int majorVersion) && int.TryParse(versionParts[1], out int minorVersion))
-                        {
-                            return majorVersion > 10 || (majorVersion == 10 && minorVersion > 0);
-                        }
+                        return majorVersion >= 10;
                     }
                 }
             }

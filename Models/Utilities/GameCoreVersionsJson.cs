@@ -33,6 +33,8 @@ public class GameCoreVersionsJson
     [JsonPropertyName("arguments")]
     public ArgumentsJson Arguments { get; set; }
     
+    [JsonPropertyName("clientVersion")]
+    public string ClientVersion { get; set; }
     
     [JsonPropertyName("javaVersion")]
     public JavaVersionJsonEntity JavaVersion { get; set; } = new JavaVersionJsonEntity

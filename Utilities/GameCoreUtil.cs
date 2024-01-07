@@ -47,8 +47,18 @@ namespace StarLight_Core.Utilities
                                 InheritsFrom = gameCore.InheritsFrom,
                                 ReleaseTime = gameCore.ReleaseTime,
                                 Time = gameCore.Time,
-                                root = rootPath + "\\" + gameCore.Id
+                                root = rootPath + "\\" + gameCore.Id,
+                                Version = gameCore.ClientVersion
                             };
+                        }
+
+                        if (gameCoreInfo.InheritsFrom != null)
+                        {
+                            gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
+                        }
+                        else if (gameCoreInfo.Version != null)
+                        {
+                            gameCoreInfo.Version = gameCoreInfo.Id;
                         }
                         
                         try
@@ -123,7 +133,9 @@ namespace StarLight_Core.Utilities
                                 Time = gameCore.Time,
                                 IsNewVersion = gameCore.Arguments?.Game != null,
                                 root = rootPath + "\\" + gameCore.Id,
-                                Assets = gameCore.Assets
+                                Assets = gameCore.Assets,
+                                MinecraftArguments = gameCore.MinecraftArguments,
+                                Version = gameCore.ClientVersion
                             };
 
                             try
@@ -138,6 +150,14 @@ namespace StarLight_Core.Utilities
                                 //
                             }
 
+                            if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
+                            {
+                                gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
+                            }
+                            else if (gameCoreInfo.Version == null)
+                            {
+                                gameCoreInfo.Version = gameCoreInfo.Id;
+                            }
                             
                             try
                             {

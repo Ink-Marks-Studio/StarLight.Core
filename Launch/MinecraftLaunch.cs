@@ -32,8 +32,7 @@ namespace StarLight_Core.Launch
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                throw new Exception("启动失败,未知原因: " + e);
             }
         }
     }

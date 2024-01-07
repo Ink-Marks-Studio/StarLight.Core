@@ -5,6 +5,8 @@ namespace StarLight_Core.Models.Utilities;
 public class GameCoreInfo
 {
     public string Id { get; set; }
+    
+    public string Version { get; set; }
 
     public string Type { get; set; }
 
