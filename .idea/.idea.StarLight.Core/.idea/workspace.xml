@@ -8,10 +8,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/Account.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Launch/GameCoreConfig.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Launch/GameWindowConfig.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Launch/JavaConfig.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utilities/SystemUtil.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/BuildArgsData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/BuildArgsData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Launch/GameConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/GameConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +29,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2160bc4926aa466e9df96858144245fca24b18/b1/a273394c/Path.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6c701f5335f14d16ac1bbcc781f8c1d3a24ea0/70/d10ef363/String.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -150,6 +156,10 @@
       <workItem from="1704552156524" duration="2487000" />
       <workItem from="1704555048648" duration="662000" />
       <workItem from="1704555730453" duration="31000" />
+      <workItem from="1704592472963" duration="1939000" />
+      <workItem from="1704596002753" duration="791000" />
+      <workItem from="1704597285665" duration="4955000" />
+      <workItem from="1704606106244" duration="727000" />
     </task>
     <servers />
   </component>

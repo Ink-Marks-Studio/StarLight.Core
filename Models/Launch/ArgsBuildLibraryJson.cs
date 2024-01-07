@@ -15,6 +15,24 @@ public class Library
     
     [JsonPropertyName("downloads")]
     public Download Downloads { get; set; }
+    
+    [JsonPropertyName("rules")]
+    public Rule[] Rule { get; set; }
+}
+
+public class Rule
+{
+    [JsonPropertyName("action")]
+    public string Action { get; set; }
+    
+    [JsonPropertyName("os")]
+    public Os Os { get; set; }
+}
+
+public class Os
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 }
 
 public class Download

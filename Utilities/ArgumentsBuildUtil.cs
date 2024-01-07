@@ -31,7 +31,7 @@ public class ArgumentsBuildUtil
         BaseAccount = baseAccount;
         VersionId = gameCoreConfig.Version;
         Root = gameCoreConfig.Root;
-        userType = "mojang";
+        userType = "Mojang";
     }
 
     // 参数构建器
@@ -65,9 +65,10 @@ public class ArgumentsBuildUtil
         
         List<string> args = new List<string>();
         
-        args.Add(BuildGcAndAdvancedArguments());
-        
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+        
+        args.Add("-Dminecraft.client.jar=" + Path.Combine(coreInfo.root, $"{VersionId}.jar"));
+        args.Add(BuildGcAndAdvancedArguments());
 
         var jvmPlaceholders = new Dictionary<string, string>
         {
@@ -111,6 +112,20 @@ public class ArgumentsBuildUtil
         return string.Join(" ", args);
     }
     
+    // 系统参数
+    private string BuildSystemArgs()
+    {
+        List<string> args = new List<string>();
+
+        if (SystemUtil.IsOperatingSystemGreaterThanWin10())
+        {
+            args.Add("-Dos.name=\"Windows 10\"");
+            args.Add("-Dos.version=10.0");
+        }
+
+        return string.Join(" ", args);
+    }
+    
     // 游戏参数
     private string BuildGameArgs()
     {
@@ -123,12 +138,12 @@ public class ArgumentsBuildUtil
             { "${game_directory}", Path.Combine(CurrentExecutingDirectory(Root), "versions", VersionId) },
             { "${assets_root}", Path.Combine(CurrentExecutingDirectory(Root), "assets") },
             { "${assets_index_name}", coreInfo.Assets },
-            { "${auth_uuid}", BaseAccount.Uuid },
+            { "${auth_uuid}", BaseAccount.Uuid.Replace("-","") },
             { "${auth_access_token}", BaseAccount.AccessToken },
             { "${clientid}", "${clientid}" },
             { "${auth_xuid}", "${auth_xuid}" },
             { "${user_type}", userType },
-            { "${version_type}", "SL" }
+            { "${version_type}", "\"StarLight\"" }
         };
         
         string gameArgumentTemplate = "";
@@ -155,6 +170,7 @@ public class ArgumentsBuildUtil
         else
         {
             gameArgumentTemplate = coreInfo.MinecraftArguments;
+            Console.WriteLine("args: " + coreInfo.MinecraftArguments + coreInfo.IsNewVersion);
         }
 
         return ReplacePlaceholders(gameArgumentTemplate, gamePlaceholders);
@@ -235,13 +251,42 @@ public class ArgumentsBuildUtil
         {
             if (lib.Downloads.Classifiers == null || lib.Downloads.Classifiers.Count == 0)
             {
-                var path = BuildFromName(lib.Name, librariesPath);
-                if (!path.Contains("ca"))
+                if (ShouldIncludeLibrary(lib.Rule))
                 {
-                    yield return path;
+                    var path = BuildFromName(lib.Name, librariesPath);
+                    if (!path.Contains("ca"))
+                    {
+                        yield return path;
+                    }
                 }
             }
         }
+    }
+
+    private bool ShouldIncludeLibrary(Rule[] rules)
+    {
+        if (rules == null || rules.Length == 0)
+        {
+            return true;
+        }
+
+        bool isAllow = false;
+        bool isDisallowForOsX = false;
+
+        foreach (var rule in rules)
+        {
+            if (rule.Action == "allow" && (rule.Os == null || rule.Os.Name.ToLower() != "osx"))
+            {
+                isAllow = true;
+            }
+            else if (rule.Action == "disallow" && rule.Os != null && rule.Os.Name.ToLower() == "osx")
+            {
+                isDisallowForOsX = true;
+            }
+        }
+
+        // 如果存在 disallow 规则针对 osx，其他情况是 allow，则需要添加
+        return isDisallowForOsX || isAllow;
     }
 
     private static bool ElementContainsRules(JsonElement element)
@@ -288,7 +333,7 @@ public class ArgumentsBuildUtil
         }
         else
         {
-            userType = "mojang";
+            userType = "Mojang";
         }
     }
 }
