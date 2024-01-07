@@ -1,4 +1,5 @@
-﻿using StarLight_Core.Enum;
+﻿using System.Diagnostics;
+using StarLight_Core.Enum;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Models.Launch;
 using StarLight_Core.Utilities;
@@ -23,12 +24,63 @@ namespace StarLight_Core.Launch
             BaseAccount = launchConfig.Account.BaseAccount;
         }
 
-        public async Task LaunchAsync()
+        public async Task<ProcessInfo> LaunchAsync(Action<ProgressReport> onProgressChanged, Action<ProcessInfo> onProcessExited)
         {
+            var stopwatch = new Stopwatch();
+            var processInfo = new ProcessInfo();
+            var progressReport = new ProgressReport();
+
+            var tcs = new TaskCompletionSource<ProcessInfo>();
+            
             try
             {
+                progressReport.Description = "构建启动参数...";
+                progressReport.Percentage = 10;
+                onProgressChanged?.Invoke(progressReport);
+                
                 var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
-                Console.WriteLine(string.Join(" ", arguments));
+                
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = JavaConfig.JavaPath,
+                        Arguments = string.Join(' '.ToString(), arguments),
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        WorkingDirectory = GameCoreConfig.Root
+                    },
+                    EnableRaisingEvents = true
+                };
+                
+                stopwatch.Start();
+                process.Start();
+                string processName = process.ProcessName;
+                int pid = process.Id;
+
+                progressReport.Description = "进程启动...";
+                progressReport.Percentage = 100;
+                onProgressChanged?.Invoke(progressReport);
+
+                // 异步等待进程退出
+                await Task.Run(() =>
+                {
+                    process.WaitForExit();
+                    stopwatch.Stop();
+                });
+                
+                processInfo = new ProcessInfo
+                {
+                    Name = processName,
+                    Pid = pid,
+                    RunTime = stopwatch.Elapsed,
+                    ExitCode = process.ExitCode
+                };
+                
+                onProcessExited?.Invoke(processInfo);
+
+                return processInfo;
             }
             catch (Exception e)
             {
