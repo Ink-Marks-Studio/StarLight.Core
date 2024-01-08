@@ -180,15 +180,13 @@ public class ArgumentsBuildUtil
                     }
                 }
             }
-            
-            gameArgumentTemplate = string.Join(" ", gameArgumentsTemplate);
         }
         else
         {
-            gameArgumentTemplate = coreInfo.MinecraftArguments;
+            gameArgumentsTemplate.Add(coreInfo.MinecraftArguments);
         }
-
-        return ReplacePlaceholders(gameArgumentTemplate, gamePlaceholders);
+        
+        return ReplacePlaceholders(string.Join(" ", gameArgumentsTemplate), gamePlaceholders);
     }
 
     // Gc 与 Advanced 参数
@@ -231,8 +229,15 @@ public class ArgumentsBuildUtil
             }
 
             cps.AddRange(ProcessLibraryPath(versionPath, librariesPath));
-            
-            cps.Add(Path.Combine(coreInfo.root, $"{VersionId}.jar"));
+
+            if (coreInfo.InheritsFrom != null && coreInfo.InheritsFrom != "null")
+            {
+                cps.Add(Path.Combine(Root, "versions", coreInfo.InheritsFrom, $"{coreInfo.InheritsFrom}.jar"));
+            }
+            else
+            {
+                cps.Add(Path.Combine(coreInfo.root, $"{VersionId}.jar"));
+            }
 
             return string.Join(";", cps);
         }
@@ -269,10 +274,7 @@ public class ArgumentsBuildUtil
                 if (ShouldIncludeLibrary(lib.Rule))
                 {
                     var path = BuildFromName(lib.Name, librariesPath);
-                    if (!path.Contains("ca"))
-                    {
-                        yield return path;
-                    }
+                    yield return path;
                 }
             }
         }

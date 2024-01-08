@@ -2,6 +2,8 @@
 {
     public static class StarLightInfo
     {
-        public const string Version = "1.3.0";
+        public const string Version = "1.3.1";
+
+        public const string Type = "Preview";
     }
 }

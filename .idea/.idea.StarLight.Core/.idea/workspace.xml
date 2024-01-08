@@ -8,12 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Launch/ProcessInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Launch/ProgressReport.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,6 +158,10 @@
       <workItem from="1704635870195" duration="18000" />
       <workItem from="1704638658918" duration="2671000" />
       <workItem from="1704641649306" duration="72000" />
+      <workItem from="1704719228143" duration="1340000" />
+      <workItem from="1704724451539" duration="301000" />
+      <workItem from="1704724931854" duration="2102000" />
+      <workItem from="1704727073152" duration="92000" />
     </task>
     <servers />
   </component>

@@ -39,6 +39,8 @@ namespace StarLight_Core.Launch
                 onProgressChanged?.Invoke(progressReport);
                 
                 var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
+
+                Console.WriteLine(string.Join(' '.ToString(), arguments));
                 
                 var process = new Process
                 {
