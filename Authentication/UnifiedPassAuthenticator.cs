@@ -47,7 +47,6 @@ namespace StarLight_Core.Authentication
             try
             {
                 response = await HttpUtil.SendHttpPostRequest(authenticateUri.ToString(), jsonData,"application/json");
-                Console.WriteLine(response);
             }
             catch (Exception ex)
             {
