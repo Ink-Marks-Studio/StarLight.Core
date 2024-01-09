@@ -14,41 +14,29 @@ namespace StarLight_Core.Utilities
         public event Action<int> ProgressChanged;
         public event Action<double> SpeedChanged;
         
-        // 地址  
-        private string url;
-
-        // 目标位置  
-        private string destination;
-
-        // 并行下载线程数  
-        private int threadCount;
-
-        // 总数据量  
-        private long totalSize;
-
-        // 数据量  
-        private long totalDownloaded;
-
-        // 下载速度  
-        private double speed;
+        private string url; // 地址
+          
+        private string destination; // 目标位置
+          
+        private int threadCount; // 并行下载线程数
+          
+        private long totalSize; // 总数据量
+          
+        private long totalDownloaded; // 数据量
+          
+        private double speed; // 下载速度
         
         public DownloadUtil(string url, string destination, int threadCount)
         {
-            // 地址  
-            this.url = url;
-
-            // 目标位置  
-            this.destination = destination;
-
-            // 并行下载线程数  
-            this.threadCount = threadCount;
+            this.url = url; // 地址 
+            this.destination = destination; // 目标位置
+            this.threadCount = threadCount; // 并行下载线程数  
         }
 
         public void StartDownload()
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-
-            // 设置请求的HTTP方法为HEAD，即只获取请求头而不获取具体内容  
+            
             request.Method = "HEAD";
             
             using (HttpWebResponse resp = (HttpWebResponse)request.GetResponse())
@@ -57,7 +45,6 @@ namespace StarLight_Core.Utilities
             }
             
             long partSize = totalSize / threadCount;
-            
             long leftOver = totalSize % threadCount;
             
             for (int i = 0; i < threadCount; i++)
@@ -112,10 +99,10 @@ namespace StarLight_Core.Utilities
                 catch (IOException ex)
                 {
                     retryCount++;
-                    Thread.Sleep(2000);
+                    Thread.Sleep(3000);
                     if (retryCount >= maxRetries)
                     {
-                        throw;
+                        throw; // 如果重试次数超过最大重试次数,抛出异常
                     }
                 }
             }
