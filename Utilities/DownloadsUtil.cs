@@ -1,15 +1,9 @@
-﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Timers;
-using Timer = System.Timers.Timer;
 
 namespace StarLight_Core.Utilities 
 {
-    public class DownloadUtil 
+    public class DownloadsUtil 
     {
         public event Action<int> ProgressChanged;
         public event Action<double> SpeedChanged;
@@ -26,7 +20,7 @@ namespace StarLight_Core.Utilities
           
         private double speed; // 下载速度
         
-        public DownloadUtil(string url, string destination, int threadCount)
+        public DownloadsUtil(string url, string destination, int threadCount)
         {
             this.url = url; // 地址 
             this.destination = destination; // 目标位置
@@ -51,10 +45,8 @@ namespace StarLight_Core.Utilities
             {
                 long from = i * partSize;
                 long to = (i < threadCount - 1) ? from + partSize - 1 : from + partSize + leftOver - 1;
-
-                // 创建一个新的线程来执行下载任务，传入需要下载的数据范围的起始位置和结束位置，以及线程的标识符  
+                
                 Thread thread = new Thread(() => DownloadPart(from, to, i));
-                // 启动线程执行下载任务  
                 thread.Start();
             }
         }
@@ -94,7 +86,7 @@ namespace StarLight_Core.Utilities
                         }
                     }
 
-                    break; // 成功下载后退出循环
+                    break;
                 }
                 catch (IOException ex)
                 {
@@ -102,12 +94,11 @@ namespace StarLight_Core.Utilities
                     Thread.Sleep(3000);
                     if (retryCount >= maxRetries)
                     {
-                        throw; // 如果重试次数超过最大重试次数,抛出异常
+                        throw;
                     }
                 }
             }
-
-            // 下载完成时的最终更新
+            
             UpdateProgress(new Stopwatch(), ref totalRead, true);
         }
 
@@ -120,7 +111,7 @@ namespace StarLight_Core.Utilities
                 ProgressChanged?.Invoke((int)((totalDownloaded * 100) / totalSize));
                 stopwatch.Restart();
 
-                totalRead = 0; // 重置 totalRead 为下一次测量准备
+                totalRead = 0;
             }
             else if (forceUpdate)
             {
