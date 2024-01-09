@@ -78,7 +78,7 @@ public class ArgumentsBuildUtil
         }
         
         args.Add(BuildGcAndAdvancedArguments());
-
+        
         var jvmPlaceholders = new Dictionary<string, string>
         {
             { "${natives_directory}", Root + "\\versions\\" + VersionId + "\\natives" },
@@ -86,6 +86,7 @@ public class ArgumentsBuildUtil
             { "${launcher_version}", "1" },
             { "${classpath}", BuildLibrariesArgs() }
         };
+        
 
         string jvmArgumentTemplate = "";
         
@@ -243,7 +244,7 @@ public class ArgumentsBuildUtil
         }
         catch (Exception ex)
         {
-            throw new Exception($"[SL]构建Library参数错误: + {ex.Message}");
+            throw new Exception($"[SL]构建Library参数错误: + {ex}");
         }
     }
 
@@ -269,6 +270,11 @@ public class ArgumentsBuildUtil
 
         foreach (var lib in argsLibraries.Libraries)
         {
+            if (lib == null || lib.Downloads == null)
+            {
+                continue;
+            }
+            
             if (lib.Downloads.Classifiers == null || lib.Downloads.Classifiers.Count == 0)
             {
                 if (ShouldIncludeLibrary(lib.Rule))
@@ -278,6 +284,7 @@ public class ArgumentsBuildUtil
                 }
             }
         }
+
     }
 
     private bool ShouldIncludeLibrary(Rule[] rules)
