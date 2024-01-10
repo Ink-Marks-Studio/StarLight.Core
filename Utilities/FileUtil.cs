@@ -22,4 +22,14 @@ public class FileUtil
         string executablePath = Assembly.GetExecutingAssembly().Location;
         return Path.GetDirectoryName(executablePath);
     }
+    
+    // 检测是否为文件夹
+    public static bool IsDirectory(string path, bool isCreate = false) 
+    {
+        if (isCreate) {
+            Directory.CreateDirectory(path);
+        }
+
+        return Directory.Exists(path);
+    }
 }

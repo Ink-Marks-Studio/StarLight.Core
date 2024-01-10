@@ -6,13 +6,20 @@ namespace StarLight_Core.Utilities
 {
     public class JavaUtil
     {
+        // 获取 Java 信息
         public static JavaInfo GetJavaInfo(string javaPath)
         {
             try
             {
-                var javaExePath = Path.Combine(javaPath, "java.exe");
-                var javawExePath = Path.Combine(javaPath, "javaw.exe");
-
+                string javaExePath = javaPath;
+                string javawExePath = javaPath;
+                
+                if (FileUtil.IsDirectory(javaPath))
+                {
+                    javaExePath = Path.Combine(javaPath, "javaw.exe");
+                    javawExePath = Path.Combine(javaPath, "javaw.exe");
+                }
+                
                 var javaFileInfo = File.Exists(javaExePath) ? new FileInfo(javaExePath) : new FileInfo(javawExePath);
 
                 if (!javaFileInfo.Exists) return null;

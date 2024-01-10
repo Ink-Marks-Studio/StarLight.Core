@@ -81,10 +81,13 @@ public class ArgumentsBuildUtil
         
         var jvmPlaceholders = new Dictionary<string, string>
         {
-            { "${natives_directory}", Root + "\\versions\\" + VersionId + "\\natives" },
+            { "${natives_directory}", Path.Combine(Root, "versions", VersionId, "natives") },
             { "${launcher_name}", "StarLight" },
             { "${launcher_version}", "1" },
-            { "${classpath}", BuildLibrariesArgs() }
+            { "${classpath}", BuildLibrariesArgs() },
+            { "${version_name}", coreInfo.Id},
+            { "${library_directory}", Path.Combine(Root, "libraries") },
+            { "${classpath_separator}", ";" }
         };
         
 

@@ -30,11 +30,36 @@ namespace StarLight_Core.Launch
             var stopwatch = new Stopwatch();
             var process = new Process();
             var progressReport = new ProgressReport();
+
+            progressReport.Description = "检查启动参数";
+            progressReport.Percentage = 10;
+            onProgressChanged?.Invoke(progressReport);
+            
+            if (GameCoreConfig == null)
+            {
+                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("未配置游戏核心信息"));
+            }
+            if (JavaConfig == null)
+            {
+                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("未配置Java"));   
+            }
+            if (BaseAccount == null)
+            {
+                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("未配置账户信息"));
+            }
+            if (GameCoreUtil.GetGameCore(GameCoreConfig.Version, GameCoreConfig.Root) == null)
+            {
+                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("游戏核心不存在或游戏核心已损坏"));
+            }
+            if (JavaUtil.GetJavaInfo(JavaConfig.JavaPath) == null)
+            {
+                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("Java 不存在或 Java 已损坏"));
+            }
             
             try
             {
-                progressReport.Description = "构建启动参数...";
-                progressReport.Percentage = 10;
+                progressReport.Description = "构建启动参数";
+                progressReport.Percentage = 20;
                 onProgressChanged?.Invoke(progressReport);
                 var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
                 

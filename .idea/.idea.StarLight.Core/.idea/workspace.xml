@@ -8,14 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Enum/LaunchStatus.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Launch/LaunchResponse.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLaunch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Launch/ProcessInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/ProcessInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/FileUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FileUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/JavaUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/JavaUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,6 +172,12 @@
       <workItem from="1704797366815" duration="467000" />
       <workItem from="1704806787757" duration="4321000" />
       <workItem from="1704814621945" duration="50000" />
+      <workItem from="1704862885287" duration="177000" />
+      <workItem from="1704863073153" duration="3658000" />
+      <workItem from="1704883805880" duration="747000" />
+      <workItem from="1704896511932" duration="476000" />
+      <workItem from="1704899773171" duration="1439000" />
+      <workItem from="1704901893922" duration="18000" />
     </task>
     <servers />
   </component>
