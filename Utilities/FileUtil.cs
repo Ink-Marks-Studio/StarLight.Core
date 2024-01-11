@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace StarLight_Core.Utilities;
 
@@ -31,5 +32,28 @@ public class FileUtil
         }
 
         return Directory.Exists(path);
+    }
+    
+    // 修改语言
+    public static void ModifyLangValue(string filePath)
+    {
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                string content = File.ReadAllText(filePath);
+                string updatedContent = Regex.Replace(content, @"lang:\w+", "lang:zh_cn");
+
+                File.WriteAllText(filePath, updatedContent);
+            }
+            else
+            {
+                File.WriteAllText(filePath, "lang:zh_cn");
+            }
+        }
+        catch (Exception x)
+        {
+            throw new("修改设置异常: " + x);
+        }
     }
 }
