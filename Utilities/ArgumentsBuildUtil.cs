@@ -22,6 +22,8 @@ public class ArgumentsBuildUtil
     public JavaConfig JavaConfig { get; set; }
     
     private string userType;
+
+    private string jarPath;
     
     public ArgumentsBuildUtil(GameWindowConfig gameWindowConfig, GameCoreConfig gameCoreConfig, JavaConfig javaConfig, BaseAccount baseAccount)
     {
@@ -32,6 +34,7 @@ public class ArgumentsBuildUtil
         VersionId = gameCoreConfig.Version;
         Root = gameCoreConfig.Root;
         userType = "Mojang";
+        jarPath = GetVersionJarPath();
     }
 
     // 参数构建器
@@ -69,7 +72,7 @@ public class ArgumentsBuildUtil
 
         if (coreInfo.IsNewVersion)
         {
-            args.Add("-Dminecraft.client.jar=" + Path.Combine(coreInfo.root, $"{VersionId}.jar"));
+            args.Add(BuildClientJarArgs());
         }
         
         if (SystemUtil.IsOperatingSystemGreaterThanWin10())
@@ -125,12 +128,7 @@ public class ArgumentsBuildUtil
         return string.Join(" ", args);
     }
     
-    private string BuildClientJarArgs()
-    {
-        GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
-        
-        return "-Dminecraft.client.jar=" + Path.Combine(coreInfo.root, $"{VersionId}.jar");
-    }
+    private string BuildClientJarArgs() => "-Dminecraft.client.jar=" + jarPath;
     
     // 系统参数
     private string BuildSystemArgs()
@@ -316,7 +314,7 @@ public class ArgumentsBuildUtil
         return isDisallowForOsX || isAllow;
     }
 
-    private static bool ElementContainsRules(JsonElement element)
+    private bool ElementContainsRules(JsonElement element)
     {
         if (element.ValueKind == JsonValueKind.Object)
         {
@@ -325,7 +323,7 @@ public class ArgumentsBuildUtil
         return false;
     }
     
-    static string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
+    private string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
     {
         foreach (var placeholder in placeholders)
         {
@@ -352,7 +350,7 @@ public class ArgumentsBuildUtil
     }
     
     // 判断账户
-    public void ProcessAccount()
+    private void ProcessAccount()
     {
         if (BaseAccount is MicrosoftAccount)
         {
@@ -362,5 +360,15 @@ public class ArgumentsBuildUtil
         {
             userType = "Mojang";
         }
+    }
+    
+    // 获取版本 Jar 实际路径
+    private string GetVersionJarPath()
+    {
+        GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+        string versionPath = FileUtil.IsAbsolutePath(Root) ? 
+            Path.Combine(Root, "versions") : 
+            Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root, "versions");
+        return Path.Combine(versionPath, coreInfo.Version, $"{coreInfo.Version}.jar");
     }
 }

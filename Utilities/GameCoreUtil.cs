@@ -51,12 +51,12 @@ namespace StarLight_Core.Utilities
                                 Version = gameCore.ClientVersion
                             };
                         }
-
-                        if (gameCoreInfo.InheritsFrom != null)
+                        
+                        if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
                         {
                             gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
                         }
-                        else if (gameCoreInfo.Version != null)
+                        else if (gameCoreInfo.Version == null)
                         {
                             gameCoreInfo.Version = gameCoreInfo.Id;
                         }

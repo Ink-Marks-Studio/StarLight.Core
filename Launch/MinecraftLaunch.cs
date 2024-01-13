@@ -58,6 +58,11 @@ namespace StarLight_Core.Launch
             
             try
             {
+                string optionsFilePath = FileUtil.IsAbsolutePath(GameCoreConfig.Root) ? 
+                    Path.Combine(GameCoreConfig.Root, "options.txt") : 
+                    Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Root, "options.txt");
+                FileUtil.ModifyLangValue(optionsFilePath);
+                
                 progressReport.Description = "构建启动参数";
                 progressReport.Percentage = 20;
                 onProgressChanged?.Invoke(progressReport);
@@ -80,7 +85,7 @@ namespace StarLight_Core.Launch
                 stopwatch.Start();
 
                 progressReport.Description = "进程启动中...";
-                progressReport.Percentage = 99;
+                progressReport.Percentage = 90;
                 onProgressChanged?.Invoke(progressReport);
 
                 return new LaunchResponse(LaunchStatus.Success, stopwatch, process, new Exception());
