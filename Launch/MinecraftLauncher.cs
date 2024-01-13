@@ -7,7 +7,7 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Launch
 {
-    public class MinecraftLaunch
+    public class MinecraftLauncher
     {
         public BaseAccount BaseAccount { get; set; }
         
@@ -17,7 +17,7 @@ namespace StarLight_Core.Launch
         
         public JavaConfig JavaConfig { get; set; }
         
-        public MinecraftLaunch(LaunchConfig launchConfig)
+        public MinecraftLauncher(LaunchConfig launchConfig)
         {
             GameWindowConfig = launchConfig.GameWindowConfig;
             GameCoreConfig = launchConfig.GameCoreConfig;
