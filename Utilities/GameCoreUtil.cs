@@ -19,6 +19,8 @@ namespace StarLight_Core.Utilities
             {
                 rootPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\versions";
             }
+
+            FileUtil.IsDirectory(rootPath, true);
             
             var versions = Directory.GetDirectories(rootPath);
             List<GameCoreInfo> gameCores = new List<GameCoreInfo>();
