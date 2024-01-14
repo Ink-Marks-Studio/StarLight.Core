@@ -5,8 +5,6 @@ namespace StarLight_Core.Models.Launch
         public string Name { get; set; }
         
         public int Pid { get; set; }
-        
-        public string Title { get; set; }
     }
 
 }

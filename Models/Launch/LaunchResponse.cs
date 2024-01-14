@@ -25,11 +25,10 @@ namespace StarLight_Core.Models.Launch
             if (LaunchStatus == LaunchStatus.Success)
             {
                 process.Start();
-                ProcessInfo = new ProcessInfo()
+                ProcessInfo = new ProcessInfo
                 {
                     Name = Process.ProcessName,
-                    Pid = Process.Id,
-                    Title = Process.MainWindowTitle
+                    Pid = Process.Id
                 };
             }
         }
