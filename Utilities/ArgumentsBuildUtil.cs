@@ -87,14 +87,18 @@ public class ArgumentsBuildUtil
         
         args.Add(BuildGcAndAdvancedArguments());
         
+        string rootPath = FileUtil.IsAbsolutePath(Root) ? 
+            Path.Combine(Root) : 
+            Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
+        
         var jvmPlaceholders = new Dictionary<string, string>
         {
-            { "${natives_directory}", Path.Combine(Root, "versions", VersionId, "natives") },
+            { "${natives_directory}", Path.Combine(rootPath, "versions", VersionId, "natives") },
             { "${launcher_name}", "StarLight" },
             { "${launcher_version}", "1" },
             { "${classpath}", BuildLibrariesArgs() },
             { "${version_name}", coreInfo.Id},
-            { "${library_directory}", Path.Combine(Root, "libraries") },
+            { "${library_directory}", Path.Combine(rootPath, "libraries") },
             { "${classpath_separator}", ";" }
         };
         

@@ -74,7 +74,7 @@ namespace StarLight_Core.Launch
                 FileUtil.ModifyLangValue(optionsFilePath);
                 
                 progressReport.Description = "构建启动参数";
-                progressReport.Percentage = 20;
+                progressReport.Percentage = 50;
                 onProgressChanged?.Invoke(progressReport);
                 var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
                 
@@ -83,7 +83,7 @@ namespace StarLight_Core.Launch
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = JavaConfig.JavaPath,
-                        Arguments = string.Join(' '.ToString(), arguments),
+                        Arguments = string.Join(" ", arguments),
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
