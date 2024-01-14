@@ -17,7 +17,7 @@ namespace StarLight_Core.Utilities
             }
             else
             {
-                rootPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\versions";
+                rootPath = FileUtil.GetCurrentExecutingDirectory() + root + "\\versions";
             }
 
             FileUtil.IsDirectory(rootPath, true);
@@ -105,7 +105,7 @@ namespace StarLight_Core.Utilities
             }
             else
             {
-                rootPath = FileUtil.GetCurrentExecutingDirectory() + "\\" + root + "\\versions";
+                rootPath = FileUtil.GetCurrentExecutingDirectory() + root + "\\versions";
             }
             
             var versions = Directory.GetDirectories(rootPath);

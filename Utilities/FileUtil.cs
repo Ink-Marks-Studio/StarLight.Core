@@ -20,8 +20,7 @@ public class FileUtil
     // 获取当前运行路径
     public static string GetCurrentExecutingDirectory()
     {
-        string executablePath = Assembly.GetCallingAssembly().Location;
-        return Path.GetDirectoryName(executablePath);
+        return AppDomain.CurrentDomain.BaseDirectory;
     }
     
     // 检测是否为文件夹
