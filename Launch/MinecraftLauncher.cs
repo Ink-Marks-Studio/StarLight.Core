@@ -58,9 +58,19 @@ namespace StarLight_Core.Launch
             
             try
             {
-                string optionsFilePath = FileUtil.IsAbsolutePath(GameCoreConfig.Root) ? 
-                    Path.Combine(GameCoreConfig.Root, "options.txt") : 
-                    Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Root, "options.txt");
+                string optionsFilePath;
+                if (GameCoreConfig.IsVersionIsolation)
+                {
+                    optionsFilePath = FileUtil.IsAbsolutePath(GameCoreConfig.Root) ? 
+                        Path.Combine(GameCoreConfig.Root, "versions", GameCoreConfig.Version, "options.txt") : 
+                        Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Root, "versions", GameCoreConfig.Version, "options.txt");
+                }
+                else
+                {
+                    optionsFilePath = FileUtil.IsAbsolutePath(GameCoreConfig.Root) ? 
+                        Path.Combine(GameCoreConfig.Root, "options.txt") : 
+                        Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Root, "options.txt");
+                }
                 FileUtil.ModifyLangValue(optionsFilePath);
                 
                 progressReport.Description = "构建启动参数";

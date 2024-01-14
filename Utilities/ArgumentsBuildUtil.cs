@@ -70,6 +70,11 @@ public class ArgumentsBuildUtil
         
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
 
+        if (BaseAccount is UnifiedPassAccount)
+        {
+            args.Add("-javaagent:\"" + GameCoreConfig.Nide8authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+        }
+
         if (coreInfo.IsNewVersion)
         {
             args.Add(BuildClientJarArgs());
@@ -116,6 +121,13 @@ public class ArgumentsBuildUtil
                 }
             }
             
+            List<string> updatedJvmArguments = new List<string>();
+            foreach (var argument in jvmArgumentsTemplate)
+            {
+                updatedJvmArguments.Add(argument.Replace(" ", ""));
+            }
+            
+            jvmArgumentsTemplate = updatedJvmArguments;
             jvmArgumentTemplate = string.Join(" ", jvmArgumentsTemplate);
         }
         else
@@ -153,7 +165,6 @@ public class ArgumentsBuildUtil
         {
             { "${auth_player_name}", BaseAccount.Name },
             { "${version_name}", VersionId },
-            { "${game_directory}", Path.Combine(CurrentExecutingDirectory(Root), "versions", VersionId) },
             { "${assets_root}", Path.Combine(CurrentExecutingDirectory(Root), "assets") },
             { "${assets_index_name}", coreInfo.Assets },
             { "${auth_uuid}", BaseAccount.Uuid.Replace("-","") },
@@ -163,6 +174,12 @@ public class ArgumentsBuildUtil
             { "${user_type}", userType },
             { "${version_type}", "\"StarLight\"" }
         };
+
+        string gameDirectory = GameCoreConfig.IsVersionIsolation ?
+            Path.Combine(CurrentExecutingDirectory(Root), "versions", VersionId) :
+            Path.Combine(CurrentExecutingDirectory(Root));
+
+        gamePlaceholders.Add("${game_directory}", gameDirectory);
         
         string gameArgumentTemplate = "";
         
@@ -273,6 +290,8 @@ public class ArgumentsBuildUtil
         {
             if (lib == null || lib.Downloads == null)
             {
+                var path = BuildFromName(lib.Name, librariesPath);
+                yield return path;
                 continue;
             }
             

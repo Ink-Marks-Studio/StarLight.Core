@@ -35,14 +35,14 @@ namespace StarLight_Core.Authentication
             var requestData = new
             {
                 agent = new { name = "StarLight.Core", version = StarLightInfo.Version },
-                Username,
-                Password,
+                username = Username,
+                password = Password,
                 clientToken = null as string,
                 requestUser = true
-            };
+            };  
 
             string jsonData = JsonSerializer.Serialize(requestData);
-
+            
             string response;
             try
             {
