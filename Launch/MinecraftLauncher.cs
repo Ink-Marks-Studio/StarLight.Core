@@ -32,7 +32,7 @@ namespace StarLight_Core.Launch
             var progressReport = new ProgressReport();
 
             progressReport.Description = "检查启动参数";
-            progressReport.Percentage = 10;
+            progressReport.Percentage = 20;
             onProgressChanged?.Invoke(progressReport);
             
             if (GameCoreConfig == null)
