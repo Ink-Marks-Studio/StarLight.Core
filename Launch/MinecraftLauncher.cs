@@ -98,7 +98,7 @@ namespace StarLight_Core.Launch
                 progressReport.Percentage = 90;
                 onProgressChanged?.Invoke(progressReport);
 
-                return new LaunchResponse(LaunchStatus.Success, stopwatch, process, new Exception());
+                return new LaunchResponse(LaunchStatus.Success, stopwatch, process, arguments, new Exception());
             }
             catch (Exception e)
             {

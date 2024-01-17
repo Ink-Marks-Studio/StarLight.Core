@@ -15,11 +15,14 @@ namespace StarLight_Core.Models.Launch
         
         public ProcessInfo ProcessInfo { get; set; }
         
-        public LaunchResponse(LaunchStatus launchStatus, Stopwatch stopwatch, Process process, Exception exception)
+        public List<string> Args { get; set; }
+        
+        public LaunchResponse(LaunchStatus launchStatus, Stopwatch stopwatch, Process process, List<string> args, Exception exception)
         {
             LaunchStatus = launchStatus;
             RunTime = stopwatch;
             Process = process;
+            Args = args;
             Exception = exception;
 
             if (LaunchStatus == LaunchStatus.Success)
@@ -33,6 +36,14 @@ namespace StarLight_Core.Models.Launch
                     Pid = Process.Id
                 };
             }
+        }
+        
+        public LaunchResponse(LaunchStatus launchStatus, Stopwatch stopwatch, Process process, Exception exception)
+        {
+            LaunchStatus = launchStatus;
+            RunTime = stopwatch;
+            Process = process;
+            Exception = exception;
         }
     }
 }
