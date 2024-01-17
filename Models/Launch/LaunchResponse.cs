@@ -25,6 +25,8 @@ namespace StarLight_Core.Models.Launch
             if (LaunchStatus == LaunchStatus.Success)
             {
                 process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
                 ProcessInfo = new ProcessInfo
                 {
                     Name = Process.ProcessName,
