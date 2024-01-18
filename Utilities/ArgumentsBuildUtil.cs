@@ -90,10 +90,21 @@ public class ArgumentsBuildUtil
         string rootPath = FileUtil.IsAbsolutePath(Root) ? 
             Path.Combine(Root) : 
             Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
+        string nativesPath = Path.Combine(rootPath, "versions", VersionId, "natives");
+        
+        if (!Directory.Exists(nativesPath))
+        {
+            string[] nativesDirectories = Directory.GetDirectories(coreInfo.root, "*natives*", SearchOption.AllDirectories);
+            
+            if (nativesDirectories.Length > 0)
+            {
+                nativesPath = nativesDirectories[0];
+            }
+        }
         
         var jvmPlaceholders = new Dictionary<string, string>
         {
-            { "${natives_directory}", Path.Combine(rootPath, "versions", VersionId, "natives") },
+            { "${natives_directory}", nativesPath },
             { "${launcher_name}", "StarLight" },
             { "${launcher_version}", "1" },
             { "${classpath}", BuildLibrariesArgs() },
@@ -308,7 +319,6 @@ public class ArgumentsBuildUtil
                 }
             }
         }
-
     }
 
     private bool ShouldIncludeLibrary(Rule[] rules)
@@ -332,8 +342,7 @@ public class ArgumentsBuildUtil
                 isDisallowForOsX = true;
             }
         }
-
-        // 如果存在 disallow 规则针对 osx，其他情况是 allow，则需要添加
+        
         return isDisallowForOsX || isAllow;
     }
 
@@ -362,6 +371,14 @@ public class ArgumentsBuildUtil
         if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
 
         return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}.jar");
+    }
+    
+    public static string BuildNativesName(string name, string root)
+    {
+        var parts = name.Split(':');
+        if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
+
+        return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}-natives-windows.jar");
     }
 
     // 完整路径

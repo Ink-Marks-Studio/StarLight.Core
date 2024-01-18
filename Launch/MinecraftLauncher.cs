@@ -58,6 +58,11 @@ namespace StarLight_Core.Launch
             
             try
             {
+                progressReport.Description = "解压游戏资源";
+                progressReport.Percentage = 50;
+                onProgressChanged?.Invoke(progressReport);
+                await FileUtil.DecompressionNatives(GameCoreConfig);
+                
                 string optionsFilePath;
                 if (GameCoreConfig.IsVersionIsolation)
                 {
@@ -74,7 +79,7 @@ namespace StarLight_Core.Launch
                 FileUtil.ModifyLangValue(optionsFilePath);
                 
                 progressReport.Description = "构建启动参数";
-                progressReport.Percentage = 50;
+                progressReport.Percentage = 70;
                 onProgressChanged?.Invoke(progressReport);
                 var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
                 

@@ -11,6 +11,8 @@ namespace StarLight_Core.Utilities
         {
             string rootPath = "null";
             
+            FileUtil.IsDirectory(root, true);
+            
             if (FileUtil.IsAbsolutePath(root))
             {
                 rootPath = root + "\\versions";
@@ -98,6 +100,8 @@ namespace StarLight_Core.Utilities
         public static GameCoreInfo GetGameCore(string versionId, string root = ".minecraft")
         {
             string rootPath = "null";
+
+            FileUtil.IsDirectory(root, true);
             
             if (FileUtil.IsAbsolutePath(root))
             {

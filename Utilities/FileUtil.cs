@@ -1,5 +1,8 @@
 using System.Reflection;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using StarLight_Core.Models.Launch;
+using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities;
 
@@ -54,5 +57,78 @@ public class FileUtil
         {
             throw new("修改设置异常: " + x);
         }
+    }
+    
+    // 解压 Natives
+    public static async Task DecompressionNatives(GameCoreConfig coreConfig)
+    {
+        try
+        {
+            string versionPath = Path.Join(coreConfig.Root, "versions", coreConfig.Version,
+                $"{coreConfig.Version}-natives");
+            
+            IsDirectory(versionPath, true);
+            
+            GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(coreConfig.Version, coreConfig.Root);
+            string versionJsonPath = Path.Combine(coreInfo.root, $"{coreConfig.Version}.json");
+            string librariesPath = FileUtil.IsAbsolutePath(coreConfig.Root) ? 
+                Path.Combine(coreConfig.Root, "libraries") : 
+                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), coreConfig.Root, "libraries");
+
+            var natives = ProcessNativesPath(versionJsonPath, librariesPath);
+            
+            
+            foreach (var nativePath in natives)
+            {
+                await ZipUtil.ExtractNativesFilesAsync(nativePath, versionPath);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"[SL]处理 Natives 文件错误: + {ex.Message}");
+        }
+    }
+    
+    private static IEnumerable<string> ProcessNativesPath(string filePath, string librariesPath)
+    {
+        var jsonData = File.ReadAllText(filePath);
+        var argsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(jsonData);
+
+        foreach (var lib in argsLibraries.Libraries)
+        {
+            if (lib.Downloads.Classifiers != null)
+            {
+                if (ShouldIncludeLibrary(lib.Rule))
+                {
+                    var path = ArgumentsBuildUtil.BuildNativesName(lib.Name, librariesPath);
+                    yield return path;
+                }
+            }
+        }
+    }
+    
+    private static bool ShouldIncludeLibrary(Rule[] rules)
+    {
+        if (rules == null || rules.Length == 0)
+        {
+            return true;
+        }
+
+        bool isAllow = false;
+        bool isDisallowForOsX = false;
+
+        foreach (var rule in rules)
+        {
+            if (rule.Action == "allow" && (rule.Os == null || rule.Os.Name.ToLower() != "osx"))
+            {
+                isAllow = true;
+            }
+            else if (rule.Action == "disallow" && rule.Os != null && rule.Os.Name.ToLower() == "osx")
+            {
+                isDisallowForOsX = true;
+            }
+        }
+        
+        return isDisallowForOsX || isAllow;
     }
 }
