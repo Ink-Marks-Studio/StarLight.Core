@@ -85,7 +85,7 @@ public class FileUtil
         }
         catch (Exception ex)
         {
-            throw new Exception($"[SL]处理 Natives 文件错误: + {ex.Message}");
+            throw new Exception($"[SL]处理 Natives 文件错误: + {ex}");
         }
     }
     
@@ -96,12 +96,15 @@ public class FileUtil
 
         foreach (var lib in argsLibraries.Libraries)
         {
-            if (lib.Downloads.Classifiers != null)
+            if (lib.Downloads != null)
             {
-                if (ShouldIncludeLibrary(lib.Rule))
+                if (lib.Downloads.Classifiers != null)
                 {
-                    var path = ArgumentsBuildUtil.BuildNativesName(lib.Name, librariesPath);
-                    yield return path;
+                    if (ShouldIncludeLibrary(lib.Rule))
+                    {
+                        var path = ArgumentsBuildUtil.BuildNativesName(lib.Name, librariesPath);
+                        yield return path;
+                    }
                 }
             }
         }
