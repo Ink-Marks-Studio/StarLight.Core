@@ -11,7 +11,7 @@
     <Authors>Ink Marks Studio</Authors>
     <Description>StarLight.Core 一个简单,模块化,全能的启动器核心</Description>
     <PackageProjectUrl>https://github.com/Ink-Marks-Studio/StarLight.Core</PackageProjectUrl>
-    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>logo-256.png</PackageIcon>
     <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>

@@ -8,12 +8,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Installer/GameCoreDownloadInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/GameCoreJsonEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/LatestInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/VersionInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -207,6 +201,7 @@
       <workItem from="1706796169421" duration="652000" />
       <workItem from="1706797061944" duration="538000" />
       <workItem from="1706800828724" duration="1130000" />
+      <workItem from="1706802362352" duration="213000" />
     </task>
     <servers />
   </component>
