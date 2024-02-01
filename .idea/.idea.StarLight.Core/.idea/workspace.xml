@@ -8,9 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Installer/GameCoreDownloadInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Installer/GameCoreJsonEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Installer/LatestInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Installer/VersionInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/FileUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FileUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,6 +202,11 @@
       <workItem from="1705575361687" duration="565000" />
       <workItem from="1705582250562" duration="580000" />
       <workItem from="1705583086697" duration="998000" />
+      <workItem from="1706591206967" duration="1321000" />
+      <workItem from="1706713352771" duration="539000" />
+      <workItem from="1706796169421" duration="652000" />
+      <workItem from="1706797061944" duration="538000" />
+      <workItem from="1706800828724" duration="1130000" />
     </task>
     <servers />
   </component>
