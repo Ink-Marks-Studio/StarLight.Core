@@ -11,4 +11,6 @@ public class GameCoreDownloadInfo
     public string Time { get; set; }
     
     public string ReleaseTime { get; set; }
+    
+    public string Sha1 { get; set; }
 }

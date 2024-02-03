@@ -18,4 +18,7 @@ public class VersionInfo
     
     [JsonPropertyName("releaseTime")]
     public string ReleaseTime { get; set; }
+    
+    [JsonPropertyName("sha1")]
+    public string Sha1 { get; set; }
 }
