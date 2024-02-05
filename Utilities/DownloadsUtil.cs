@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 
@@ -5,120 +6,64 @@ namespace StarLight_Core.Utilities
 {
     public class DownloadsUtil 
     {
-        public event Action<int> ProgressChanged;
-        public event Action<double> SpeedChanged;
-        
-        private string url; // 地址
-          
-        private string destination; // 目标位置
-          
-        private int threadCount; // 并行下载线程数
-          
-        private long totalSize; // 总数据量
-          
-        private long totalDownloaded; // 数据量
-          
-        private double speed; // 下载速度
-        
-        public DownloadsUtil(string url, string destination, int threadCount)
+        private HttpClient httpClient = new HttpClient();
+        private long totalBytesReceived = 0;
+        private long totalExpectedBytes = 0;
+
+        public DownloadsUtil()
         {
-            this.url = url; // 地址 
-            this.destination = destination; // 目标位置
-            this.threadCount = threadCount; // 并行下载线程数  
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
         }
 
-        public void StartDownload()
+        public async Task DownloadFilesAsync(IEnumerable<string> urls, string outputFolder, Action<double, double> progressChanged)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            
-            request.Method = "HEAD";
-            
-            using (HttpWebResponse resp = (HttpWebResponse)request.GetResponse())
+            var sw = Stopwatch.StartNew();
+            var downloadTasks = urls.Select(url => DownloadFileAsync(url, outputFolder)).ToList();
+
+            // Start a timer to periodically report progress
+            using var timer = new Timer(_ =>
             {
-                totalSize = resp.ContentLength;
-            }
-            
-            long partSize = totalSize / threadCount;
-            long leftOver = totalSize % threadCount;
-            
-            for (int i = 0; i < threadCount; i++)
-            {
-                long from = i * partSize;
-                long to = (i < threadCount - 1) ? from + partSize - 1 : from + partSize + leftOver - 1;
-                
-                Thread thread = new Thread(() => DownloadPart(from, to, i));
-                thread.Start();
-            }
+                var progress = totalExpectedBytes > 0 ? (double)totalBytesReceived / totalExpectedBytes * 100 : 0;
+                var speed = totalBytesReceived / sw.Elapsed.TotalSeconds;
+                progressChanged(progress, speed);
+            }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
+
+            var tasksWithExpectedBytes = await Task.WhenAll(downloadTasks);
+            totalExpectedBytes = tasksWithExpectedBytes.Sum(task => task.ExpectedBytes);
+
+            timer.Change(Timeout.Infinite, Timeout.Infinite); // Stop the timer
+            sw.Stop();
+
+            // Final progress update
+            var finalProgress = totalExpectedBytes > 0 ? 100.0 : 0; // Assuming all downloads are complete
+            var finalSpeed = totalBytesReceived / sw.Elapsed.TotalSeconds;
+            progressChanged(finalProgress, finalSpeed);
         }
-        
-        // 下载部分
-        private void DownloadPart(long from, long to, int partIndex)
+
+        private async Task<(long ExpectedBytes, long DownloadedBytes)> DownloadFileAsync(string url, string outputFolder)
         {
-            int retryCount = 0;
-            int maxRetries = 3;
-            long totalRead = 0; // 追踪当前线程读取的总字节数
+            var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
 
-            while (retryCount < maxRetries)
+            var totalBytes = response.Content.Headers.ContentLength ?? 0;
+            var fileName = Path.GetFileName(new Uri(url).AbsolutePath);
+            var outputPath = Path.Combine(outputFolder, fileName);
+            var bytesReceived = 0L;
+
+            using (var stream = await response.Content.ReadAsStreamAsync())
+            using (var fileStream = new FileStream(outputPath, FileMode.Create))
             {
-                try
+                var buffer = new byte[8192];
+                var bytesRead = 0;
+                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.AddRange(from, to);
-
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                    using (Stream responseStream = response.GetResponseStream())
-                    using (FileStream fileStream = new FileStream(destination, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-                    {
-                        fileStream.Position = from;
-
-                        byte[] buffer = new byte[4096];
-                        int bytesRead;
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
-
-                        while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            fileStream.Write(buffer, 0, bytesRead);
-                            totalRead += bytesRead;
-                            Interlocked.Add(ref totalDownloaded, bytesRead);
-
-                            UpdateProgress(stopwatch, ref totalRead);
-                        }
-                    }
-
-                    break;
-                }
-                catch (IOException ex)
-                {
-                    retryCount++;
-                    Thread.Sleep(3000);
-                    if (retryCount >= maxRetries)
-                    {
-                        throw;
-                    }
+                    await fileStream.WriteAsync(buffer, 0, bytesRead);
+                    Interlocked.Add(ref totalBytesReceived, bytesRead);
+                    bytesReceived += bytesRead;
                 }
             }
-            
-            UpdateProgress(new Stopwatch(), ref totalRead, true);
-        }
 
-        private void UpdateProgress(Stopwatch stopwatch, ref long totalRead, bool forceUpdate = false)
-        {
-            if (stopwatch.ElapsedMilliseconds > 0)
-            {
-                double speed = totalRead / (stopwatch.ElapsedMilliseconds / 1000.0);
-                SpeedChanged?.Invoke(speed);
-                ProgressChanged?.Invoke((int)((totalDownloaded * 100) / totalSize));
-                stopwatch.Restart();
-
-                totalRead = 0;
-            }
-            else if (forceUpdate)
-            {
-                // 如果是强制更新但计时器时间为零，可以考虑跳过速度更新或设置默认值
-                SpeedChanged?.Invoke(0); 
-                ProgressChanged?.Invoke((int)((totalDownloaded * 100) / totalSize));
-            }
+            return (totalBytes, bytesReceived);
         }
     }
 }
