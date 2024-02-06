@@ -72,7 +72,10 @@ public class ArgumentsBuildUtil
 
         if (BaseAccount is UnifiedPassAccount)
         {
-            args.Add("-javaagent:\"" + GameCoreConfig.Nide8authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+            string authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath) ? 
+                Path.Combine(GameCoreConfig.Nide8authPath) : 
+                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
+            args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
         }
 
         if (coreInfo.IsNewVersion)

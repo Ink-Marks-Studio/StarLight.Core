@@ -31,7 +31,7 @@ namespace StarLight_Core.Launch
             var process = new Process();
             var progressReport = new ProgressReport();
 
-            progressReport.Description = "检查启动参数";
+            progressReport.Description = "检查启动配置";
             progressReport.Percentage = 20;
             onProgressChanged?.Invoke(progressReport);
             
