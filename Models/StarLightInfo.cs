@@ -4,7 +4,7 @@
     {
         public const string Version = "1.3.2";
 
-        // Debug or Release
-        public const string Type = "Debug";
+        // Debug / Release
+        public const string Type = "Release";
     }
 }
