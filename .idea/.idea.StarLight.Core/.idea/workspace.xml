@@ -8,8 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Enum/InstallStatus.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Installer/InstallInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utilities/HashUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/DownloadItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/DownloadItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/HttpUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/HttpUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/InstallUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/InstallUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,9 +27,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/3c2471ca0fbf40eab2d9f06aaf3af6fe1b200/eb/12932269/0200004Bpdb6Low.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/3c2471ca0fbf40eab2d9f06aaf3af6fe1b200/f1/7ce16d4e/02000049pdb8High.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/3c2471ca0fbf40eab2d9f06aaf3af6fe1b200/f1/7ce16d4e/02000049pdb8Low.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6c701f5335f14d16ac1bbcc781f8c1d3a24ea0/70/d10ef363/String.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/StarLight.Core/StarLight.Core/Utilities/DownloadUtil.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/StarLight.Core/StarLight.Core/Utilities/DownloadUtil.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -220,6 +228,10 @@
       <workItem from="1707227915818" duration="2975000" />
       <workItem from="1707231415208" duration="11000" />
       <workItem from="1707235238368" duration="116000" />
+      <workItem from="1707278730877" duration="2167000" />
+      <workItem from="1707296469583" duration="9288000" />
+      <workItem from="1707314128576" duration="2642000" />
+      <workItem from="1707320063984" duration="939000" />
     </task>
     <servers />
   </component>

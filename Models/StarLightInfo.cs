@@ -2,9 +2,9 @@
 {
     public static class StarLightInfo
     {
-        public const string Version = "1.3.2";
+        public const string Version = "1.3.3";
 
-        // Debug / Release
-        public const string Type = "Release";
+        // Preview / Release
+        public const string Type = "Preview";
     }
 }

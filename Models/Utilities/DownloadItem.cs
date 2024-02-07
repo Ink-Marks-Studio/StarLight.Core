@@ -1,16 +1,18 @@
 namespace StarLight_Core.Models.Utilities
 {
-    public class DownloadItem
+    namespace StarLight_Core.Models.Utilities
     {
-        public string Url { get; set; }
-        
-        public string SaveAsName { get; set; }
-
-        public DownloadItem(string url, string saveAsName = null)
+        public class DownloadItem
         {
-            Url = url;
-            SaveAsName = saveAsName;
+            public string Url { get; set; }
+        
+            public string OutputPath { get; set; }
+
+            public DownloadItem(string url, string outputPath = null)
+            {
+                Url = url;
+                OutputPath = outputPath;
+            }
         }
     }
-
 }

@@ -72,7 +72,7 @@ namespace StarLight_Core.Utilities
         }
 
         // GET 请求(带请求头)
-        public static async Task<string> SendHttpGetRequestWithHeaders(string url, Dictionary<string, string> customHeaders = null)
+        public static async Task<string> SendHttpGetRequestWithHeaders(string url, Dictionary<string, string>? customHeaders = null)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -112,7 +112,7 @@ namespace StarLight_Core.Utilities
         }
 
         // POST 请求(带请求头)
-        public static async Task<string> SendHttpPostRequestWithHeaders(string url, string postData, string contentType = "application/x-www-form-urlencoded", Dictionary<string, string> customHeaders = null)
+        public static async Task<string> SendHttpPostRequestWithHeaders(string url, string postData, string contentType = "application/x-www-form-urlencoded", Dictionary<string, string>? customHeaders = null)
         {
             if (string.IsNullOrEmpty(url))
             {

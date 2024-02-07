@@ -8,7 +8,7 @@ namespace StarLight_Core.Utilities
         // 获取指定版本
         public static async Task<GameCoreDownloadInfo> GetGameCoreAsync(string id)
         {
-            var gameCoresInfo = await GetGameCoresAsync().ConfigureAwait(false);
+            var gameCoresInfo = await GetGameCoresAsync();
             var gameCoreInfo = gameCoresInfo.FirstOrDefault(x => x.Id == id);
             
             if (gameCoreInfo == null)
@@ -24,7 +24,7 @@ namespace StarLight_Core.Utilities
         {
             try
             {
-                var json = await HttpUtil.GetJsonAsync("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json").ConfigureAwait(false);
+                var json = await HttpUtil.GetJsonAsync("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
                 if (string.IsNullOrWhiteSpace(json))
                 {
                     throw new InvalidOperationException("[SL]版本列表为空");
@@ -65,7 +65,7 @@ namespace StarLight_Core.Utilities
         {
             try
             {
-                var json = await HttpUtil.GetJsonAsync("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json").ConfigureAwait(false);
+                var json = await HttpUtil.GetJsonAsync("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
                 if (string.IsNullOrWhiteSpace(json))
                 {
                     throw new InvalidOperationException("[SL]版本列表为空");
