@@ -4,13 +4,12 @@ namespace StarLight_Core.Models.Utilities
     {
         public string Url { get; set; }
         
-        public string SaveAsName { get; set; }
+        public string? SaveAsPath { get; set; }
 
-        public DownloadItem(string url, string saveAsName = null)
+        public DownloadItem(string url, string? saveAsPath = null)
         {
             Url = url;
-            SaveAsName = saveAsName;
+            SaveAsPath = saveAsPath;
         }
     }
-
 }

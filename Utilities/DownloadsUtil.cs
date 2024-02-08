@@ -1,6 +1,11 @@
-using System.Collections.Concurrent;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities 
@@ -9,7 +14,6 @@ namespace StarLight_Core.Utilities
     {
         private readonly HttpClient _httpClient = new HttpClient();
         private long _totalBytesReceived = 0;
-        private long _totalExpectedBytes = 0;
         private int _totalFiles = 0;
         private int _downloadedFiles = 0;
         
@@ -19,16 +23,27 @@ namespace StarLight_Core.Utilities
         }
 
         // 下载多个文件
-        public async Task DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string outputFolder, Action<double>? progressChanged = null, Action<int, int>? onDownloadCompleted = null)
+        public async Task DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
         {
             var sw = Stopwatch.StartNew();
-            
+
             List<DownloadItem> downloadItemList = downloadItems.ToList();
             _totalFiles = downloadItemList.Count;
             
-            onDownloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
+            if (outputFolder == null)
+            {
+                foreach (var item in downloadItemList)
+                {
+                    if (item.SaveAsPath == null)
+                    {
+                        throw new Exception("[SL]未设置保存路径");
+                    }
+                }
+            }
             
-            var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsName, onDownloadCompleted)).ToList();
+            downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
+            
+            var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsPath, downloadCompleted, downloadFailed)).ToList();
             
             using var timer = new Timer(_ =>
             {
@@ -37,7 +52,7 @@ namespace StarLight_Core.Utilities
             }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
 
             var tasksWithExpectedBytes = await Task.WhenAll(downloadTasks);
-            _totalExpectedBytes = tasksWithExpectedBytes.Sum(task => task.ExpectedBytes);
+            var totalExpectedBytes = tasksWithExpectedBytes.Sum(task => task.ExpectedBytes);
 
             timer.Change(Timeout.Infinite, Timeout.Infinite);
             sw.Stop();
@@ -47,7 +62,7 @@ namespace StarLight_Core.Utilities
         }
 
         // 下载单个文件
-        private async Task<(long ExpectedBytes, long DownloadedBytes)> DownloadFileAsync(string url, string outputFolder, string saveAsName, Action<int, int>? onDownloadCompleted)
+        private async Task<(long ExpectedBytes, long DownloadedBytes)> DownloadFileAsync(string url, string? outputFolder, string? saveAsPath, Action<int, int>? downloadCompleted, Action<string>? downloadFailed)
         {
             const int maxRetryAttempts = 3;
             int retryCount = 0;
@@ -60,13 +75,12 @@ namespace StarLight_Core.Utilities
                     response.EnsureSuccessStatusCode();
 
                     var totalBytes = response.Content.Headers.ContentLength ?? 0;
+
+                    var fileName = Path.GetFileName(new Uri(url).AbsolutePath); // 获取文件名
+                    var folderPath = string.IsNullOrEmpty(saveAsPath) ? outputFolder : Path.GetDirectoryName(saveAsPath); // 获取文件夹路径
+                    var outputPath = Path.Combine(folderPath, fileName); // 组合文件夹路径和文件名
                     
-                    var fileName = Path.GetFileName(new Uri(url).AbsolutePath); //名称
-                    if (string.IsNullOrEmpty(saveAsName))
-                    {
-                        saveAsName = Path.GetFileName(new Uri(url).AbsolutePath);
-                    }
-                    var outputPath = Path.Combine(outputFolder, fileName); // 路径
+                    FileUtil.IsDirectory(folderPath, true);
                     
                     var bytesReceived = 0L;
 
@@ -85,19 +99,19 @@ namespace StarLight_Core.Utilities
 
                     // 下载完成
                     _downloadedFiles++;
-                    onDownloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
+                    downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
+                    downloadFailed?.Invoke(outputPath);
 
                     return (totalBytes, bytesReceived);
                 }
                 catch (HttpRequestException e) when (retryCount < maxRetryAttempts)
                 {
                     retryCount++;
-                    // Console.WriteLine($"下载失败，正在重试...（{retryCount}/{maxRetryAttempts}）");
                     await Task.Delay(TimeSpan.FromSeconds(3));
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"下载失败，无法重试。错误：{ex.Message}");
+                    throw new Exception($"[SL]下载失败，无法重试。错误：{ex.Message}");
                 }
             }
         }
