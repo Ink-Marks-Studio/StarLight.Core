@@ -2,7 +2,6 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using StarLight_Core.Models.Utilities;
-using StarLight_Core.Models.Utilities.StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities 
 {
@@ -23,14 +22,14 @@ namespace StarLight_Core.Utilities
         public async Task DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string outputFolder, Action<double>? progressChanged = null, Action<int, int>? onDownloadCompleted = null)
         {
             var sw = Stopwatch.StartNew();
-    
+            
             List<DownloadItem> downloadItemList = downloadItems.ToList();
             _totalFiles = downloadItemList.Count;
-    
+            
             onDownloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
-    
-            var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.OutputPath, onDownloadCompleted)).ToList();
-    
+            
+            var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsName, onDownloadCompleted)).ToList();
+            
             using var timer = new Timer(_ =>
             {
                 var speed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
@@ -42,13 +41,13 @@ namespace StarLight_Core.Utilities
 
             timer.Change(Timeout.Infinite, Timeout.Infinite);
             sw.Stop();
-    
+            
             var finalSpeed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
             progressChanged?.Invoke(finalSpeed);
         }
 
         // 下载单个文件
-        private async Task<(long ExpectedBytes, long DownloadedBytes)> DownloadFileAsync(string url, string outputFolder, string outputPath, Action<int, int>? onDownloadCompleted)
+        private async Task<(long ExpectedBytes, long DownloadedBytes)> DownloadFileAsync(string url, string outputFolder, string saveAsName, Action<int, int>? onDownloadCompleted)
         {
             const int maxRetryAttempts = 3;
             int retryCount = 0;
@@ -61,14 +60,18 @@ namespace StarLight_Core.Utilities
                     response.EnsureSuccessStatusCode();
 
                     var totalBytes = response.Content.Headers.ContentLength ?? 0;
-            
-                    var fileName = Path.GetFileName(new Uri(url).AbsolutePath);
-                    var fullPath = string.IsNullOrEmpty(outputPath) ? Path.Combine(outputFolder, fileName) : outputPath;
-            
+                    
+                    var fileName = Path.GetFileName(new Uri(url).AbsolutePath); //名称
+                    if (string.IsNullOrEmpty(saveAsName))
+                    {
+                        saveAsName = Path.GetFileName(new Uri(url).AbsolutePath);
+                    }
+                    var outputPath = Path.Combine(outputFolder, fileName); // 路径
+                    
                     var bytesReceived = 0L;
 
                     using (var stream = await response.Content.ReadAsStreamAsync())
-                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                    using (var fileStream = new FileStream(outputPath, FileMode.Create))
                     {
                         var buffer = new byte[8192];
                         var bytesRead = 0;
