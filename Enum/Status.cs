@@ -1,6 +1,6 @@
 namespace StarLight_Core.Enum;
 
-public enum InstallStatus
+public enum Status
 {
     Succeeded,
     Failed,

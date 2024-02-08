@@ -37,23 +37,23 @@ namespace StarLight_Core.Launch
             
             if (GameCoreConfig == null)
             {
-                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("未配置游戏核心信息"));
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置游戏核心信息"));
             }
             if (JavaConfig == null)
             {
-                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("未配置Java"));   
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置Java"));   
             }
             if (BaseAccount == null)
             {
-                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("未配置账户信息"));
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置账户信息"));
             }
             if (GameCoreUtil.GetGameCore(GameCoreConfig.Version, GameCoreConfig.Root) == null)
             {
-                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("游戏核心不存在或游戏核心已损坏"));
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("游戏核心不存在或游戏核心已损坏"));
             }
             if (JavaUtil.GetJavaInfo(JavaConfig.JavaPath) == null)
             {
-                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, new Exception("Java 不存在或 Java 已损坏"));
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("Java 不存在或 Java 已损坏"));
             }
             
             try
@@ -103,11 +103,11 @@ namespace StarLight_Core.Launch
                 progressReport.Percentage = 90;
                 onProgressChanged?.Invoke(progressReport);
 
-                return new LaunchResponse(LaunchStatus.Success, stopwatch, process, arguments, new Exception());
+                return new LaunchResponse(Status.Succeeded, stopwatch, process, arguments, new Exception());
             }
             catch (Exception e)
             {
-                return new LaunchResponse(LaunchStatus.Failed, stopwatch, process, e);
+                return new LaunchResponse(Status.Failed, stopwatch, process, e);
             }
         }
     }

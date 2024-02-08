@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using StarLight_Core.Enum;
 using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities 
@@ -23,42 +24,51 @@ namespace StarLight_Core.Utilities
         }
 
         // 下载多个文件
-        public async Task DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
+        public async Task<DownloadStatus> DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
         {
-            var sw = Stopwatch.StartNew();
-
-            List<DownloadItem> downloadItemList = downloadItems.ToList();
-            _totalFiles = downloadItemList.Count;
-            
-            if (outputFolder == null)
+            try
             {
-                foreach (var item in downloadItemList)
+                var sw = Stopwatch.StartNew();
+
+                List<DownloadItem> downloadItemList = downloadItems.ToList();
+                _totalFiles = downloadItemList.Count;
+            
+                if (outputFolder == null)
                 {
-                    if (item.SaveAsPath == null)
+                    foreach (var item in downloadItemList)
                     {
-                        throw new Exception("[SL]未设置保存路径");
+                        if (item.SaveAsPath == null)
+                        {
+                            throw new Exception("[SL]未设置保存路径");
+                        }
                     }
                 }
+            
+                downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
+            
+                var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsPath, downloadCompleted, downloadFailed)).ToList();
+            
+                using var timer = new Timer(_ =>
+                {
+                    var speed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
+                    progressChanged?.Invoke(speed);
+                }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
+
+                var tasksWithExpectedBytes = await Task.WhenAll(downloadTasks);
+                var totalExpectedBytes = tasksWithExpectedBytes.Sum(task => task.ExpectedBytes);
+
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+                sw.Stop();
+            
+                var finalSpeed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
+                progressChanged?.Invoke(finalSpeed);
+                
+                return new DownloadStatus(Status.Succeeded);
             }
-            
-            downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
-            
-            var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsPath, downloadCompleted, downloadFailed)).ToList();
-            
-            using var timer = new Timer(_ =>
+            catch (Exception e)
             {
-                var speed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
-                progressChanged?.Invoke(speed);
-            }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
-
-            var tasksWithExpectedBytes = await Task.WhenAll(downloadTasks);
-            var totalExpectedBytes = tasksWithExpectedBytes.Sum(task => task.ExpectedBytes);
-
-            timer.Change(Timeout.Infinite, Timeout.Infinite);
-            sw.Stop();
-            
-            var finalSpeed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
-            progressChanged?.Invoke(finalSpeed);
+                return new DownloadStatus(Status.Failed, e);
+            }
         }
 
         // 下载单个文件
@@ -111,7 +121,7 @@ namespace StarLight_Core.Utilities
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"[SL]下载失败，无法重试。错误：{ex.Message}");
+                    throw new Exception($"[SL]下载失败，无法重试：{ex.Message}");
                 }
             }
         }

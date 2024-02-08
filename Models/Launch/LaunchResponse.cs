@@ -5,7 +5,7 @@ namespace StarLight_Core.Models.Launch
 {
     public class LaunchResponse
     {
-        public LaunchStatus LaunchStatus { get; set; }
+        public Status Status { get; set; }
         
         public Stopwatch RunTime { get; set; }
         
@@ -17,15 +17,15 @@ namespace StarLight_Core.Models.Launch
         
         public List<string> Args { get; set; }
         
-        public LaunchResponse(LaunchStatus launchStatus, Stopwatch stopwatch, Process process, List<string> args, Exception exception)
+        public LaunchResponse(Status Status, Stopwatch stopwatch, Process process, List<string> args, Exception exception)
         {
-            LaunchStatus = launchStatus;
+            Status = Status;
             RunTime = stopwatch;
             Process = process;
             Args = args;
             Exception = exception;
 
-            if (LaunchStatus == LaunchStatus.Success)
+            if (Status == Status.Succeeded)
             {
                 process.Start();
                 process.BeginOutputReadLine();
@@ -38,9 +38,9 @@ namespace StarLight_Core.Models.Launch
             }
         }
         
-        public LaunchResponse(LaunchStatus launchStatus, Stopwatch stopwatch, Process process, Exception exception)
+        public LaunchResponse(Status Status, Stopwatch stopwatch, Process process, Exception exception)
         {
-            LaunchStatus = launchStatus;
+            Status = Status;
             RunTime = stopwatch;
             Process = process;
             Exception = exception;
