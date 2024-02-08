@@ -23,6 +23,21 @@ namespace StarLight_Core.Utilities
             _httpClient.Timeout = TimeSpan.FromMinutes(10);
         }
 
+        // 下载文件
+        public async Task<DownloadStatus> DownloadAsync(DownloadItem downloadItem, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
+        {
+            try
+            {
+                var downloadItems = new List<DownloadItem> { downloadItem };
+                var result = await DownloadFilesAsync(downloadItems, outputFolder, progressChanged, downloadCompleted, downloadFailed);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return new DownloadStatus(Status.Failed, e);
+            }
+        }
+
         // 下载多个文件
         public async Task<DownloadStatus> DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
         {
@@ -87,10 +102,9 @@ namespace StarLight_Core.Utilities
                     var totalBytes = response.Content.Headers.ContentLength ?? 0;
 
                     var fileName = Path.GetFileName(new Uri(url).AbsolutePath); // 获取文件名
-                    var folderPath = string.IsNullOrEmpty(saveAsPath) ? outputFolder : Path.GetDirectoryName(saveAsPath); // 获取文件夹路径
-                    var outputPath = Path.Combine(folderPath, fileName); // 组合文件夹路径和文件名
-                    
-                    FileUtil.IsDirectory(folderPath, true);
+                    var outputPath = string.IsNullOrEmpty(saveAsPath) ? Path.Combine(outputFolder, fileName) : saveAsPath;
+
+                    FileUtil.IsDirectory(Path.GetDirectoryName(outputPath), true);
                     
                     var bytesReceived = 0L;
 
@@ -124,6 +138,11 @@ namespace StarLight_Core.Utilities
                     throw new Exception($"[SL]下载失败，无法重试：{ex.Message}");
                 }
             }
+        }
+        
+        public void Dispose()
+        {
+            _httpClient.Dispose();
         }
     }
 }

@@ -26,14 +26,22 @@ public class FileUtil
         return AppDomain.CurrentDomain.BaseDirectory;
     }
     
-    // 检测是否为文件夹
-    public static bool IsDirectory(string path, bool isCreate = false) 
+    public static bool IsFile(string filePath)
     {
-        if (isCreate) {
+        return File.Exists(filePath);
+    }
+    
+    // 检测是否为文件夹
+    public static bool IsDirectory(string path, bool isCreate = false)
+    {
+        bool isDir = Directory.Exists(path);
+        
+        if (isCreate) 
+        {
             Directory.CreateDirectory(path);
         }
 
-        return Directory.Exists(path);
+        return isDir;
     }
     
     // 修改语言

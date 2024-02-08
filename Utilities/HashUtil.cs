@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -38,7 +40,7 @@ namespace StarLight_Core.Utilities
         
         public static string CalculateFileHash(string filePath, HashAlgorithm algorithm)
         {
-            using (var stream = File.OpenRead(filePath))
+            using (FileStream stream = File.OpenRead(filePath))
             {
                 byte[] hashBytes = algorithm.ComputeHash(stream);
                 return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
