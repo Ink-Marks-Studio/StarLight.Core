@@ -67,6 +67,24 @@ public class FileUtil
         }
     }
     
+    // 重命名文件
+    public static void RenameFile(string oldFileName, string newFileName)
+    {
+        if (File.Exists(oldFileName))
+        {
+            File.Move(oldFileName, newFileName);
+        }
+    }
+    
+    // 重命名文件夹
+    public static void RenameDirectory(string oldDirectoryName, string newDirectoryName)
+    {
+        if (Directory.Exists(oldDirectoryName))
+        {
+            Directory.Move(oldDirectoryName, newDirectoryName);
+        }
+    }
+    
     // 解压 Natives
     public static async Task DecompressionNatives(GameCoreConfig coreConfig)
     {

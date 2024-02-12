@@ -46,9 +46,6 @@ namespace StarLight_Core.Installer
                 GamePath = FileUtil.IsAbsolutePath(Root)
                     ? Path.Combine(Root)
                     : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
-
-                string varPath = Path.Combine(GamePath, "versions", gameCoreName);
-                string jsonPath = Path.Combine(varPath, gameCoreName + ".json");
             }
             catch (OperationCanceledException)
             {
@@ -61,18 +58,13 @@ namespace StarLight_Core.Installer
                 return;
             }
 
+            string varPath = Path.Combine(GamePath, "versions", gameCoreName);
+            string jsonPath = Path.Combine(varPath, gameCoreName + ".json");
+            
             try
             {
-                if (gameCoreName == null)
-                {
-                    gameCoreName = GameId;
-                }
-
                 OnProgressChanged?.Invoke("下载版本索引文件", 10);
                 var versionsJson = await InstallUtil.GetGameCoreAsync(GameId);
-
-                string varPath = Path.Combine(GamePath, "versions", gameCoreName);
-                string jsonPath = Path.Combine(varPath, gameCoreName + ".json");
 
                 if (!FileUtil.IsDirectory(varPath, true) || !FileUtil.IsFile(jsonPath))
                 {
@@ -132,6 +124,9 @@ namespace StarLight_Core.Installer
                 }
                 
                 OnProgressChanged?.Invoke("下载游戏核心", 20);
+                
+                                
+                GameCoreVersionsJson gameCoreVersionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
             }
             catch (OperationCanceledException)
             {
