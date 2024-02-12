@@ -24,7 +24,7 @@ namespace StarLight_Core.Utilities
         {
             try
             {
-                var json = await HttpUtil.GetJsonAsync("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
+                var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.VersionManifest);
                 if (string.IsNullOrWhiteSpace(json))
                 {
                     throw new InvalidOperationException("[SL]版本列表为空");
@@ -65,7 +65,7 @@ namespace StarLight_Core.Utilities
         {
             try
             {
-                var json = await HttpUtil.GetJsonAsync("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
+                var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.VersionManifest);
                 if (string.IsNullOrWhiteSpace(json))
                 {
                     throw new InvalidOperationException("[SL]版本列表为空");

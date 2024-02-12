@@ -1,6 +1,8 @@
 ﻿using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
+using System.Text.Json;
 using StarLight_Core.Enum;
+using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
 using StarLight_Core.Utilities;
 
@@ -56,6 +58,7 @@ namespace StarLight_Core.Installer
             catch (Exception e)
             {
                 OnProgressChanged?.Invoke("初始化游戏安装错误: " + e.Message, 0);
+                return;
             }
 
             try
@@ -71,30 +74,74 @@ namespace StarLight_Core.Installer
                 string varPath = Path.Combine(GamePath, "versions", gameCoreName);
                 string jsonPath = Path.Combine(varPath, gameCoreName + ".json");
 
-                if (!FileUtil.IsDirectory(varPath, true) || !FileUtil.IsFile(jsonPath) || !HashUtil.VerifyFileHash(jsonPath, versionsJson.Sha1, SHA1.Create()))
+                if (!FileUtil.IsDirectory(varPath, true) || !FileUtil.IsFile(jsonPath))
                 {
-                    var downloadsUtil = new DownloadsUtil();
-                    Action<double> progressChanged = speed => { OnSpeedChanged?.Invoke(speed / 1024); };
-
-                    var downloadJson = await downloadsUtil.DownloadAsync(new DownloadItem(versionsJson.Url, jsonPath), null, progressChanged);
+                    string gameCoreJson;
                     
-                    if (downloadJson.Status == Status.Failed || !HashUtil.VerifyFileHash(jsonPath, versionsJson.Sha1, SHA1.Create()))
+                    if (DownloadAPIs.Current == DownloadAPIs.Mojang)
                     {
-                        OnProgressChanged?.Invoke("下载游戏核心失败: " + downloadJson.Exception, 10);
+                         gameCoreJson = await HttpUtil.GetJsonAsync(versionsJson.Url);
+                    }
+                    else
+                    {
+                        gameCoreJson = await HttpUtil.GetJsonAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
+                    }
+                    
+                    await File.WriteAllTextAsync(jsonPath, gameCoreJson, cancellationToken);
+                    
+                    if (!HashUtil.VerifySha1(gameCoreJson, versionsJson.Sha1))   
+                    {
+                        OnProgressChanged?.Invoke("下载版本索引文件失败", 10);
                         return;
                     }
+                    
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var gameCoreData = JsonSerializer.Deserialize<Dictionary<string, object>>(gameCoreJson, options);
+                    
+                    if (gameCoreData != null && gameCoreData.ContainsKey("id"))
+                    {
+                        gameCoreData["id"] = gameCoreName;
+                    }
+                    
+                    string modifiedJson = JsonSerializer.Serialize(gameCoreData, options);
+                    
+                    await File.WriteAllTextAsync(jsonPath, modifiedJson, cancellationToken);
                 }
+                else
+                {
+                    OnProgressChanged?.Invoke($"版本已存在", 10);
+                    return;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                OnProgressChanged?.Invoke("已取消安装", 0);
+                return;
+            }
+            catch (Exception e)
+            {
+                OnProgressChanged?.Invoke($"下载版本索引文件失败: {e}", 10);
+                return;
+            }
 
-                cancellationToken.ThrowIfCancellationRequested();
+            try
+            {
+                if (cancellationToken != default)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+                
                 OnProgressChanged?.Invoke("下载游戏核心", 20);
             }
             catch (OperationCanceledException)
             {
                 OnProgressChanged?.Invoke("已取消安装", 0);
+                return;
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke($"安装过程中发生错误: {e}", 10);
+                OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 20);
+                return;
             }
 
             try
@@ -115,7 +162,6 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 20);
             }
-
         }
     }
 }
