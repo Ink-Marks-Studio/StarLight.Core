@@ -96,7 +96,6 @@ namespace StarLight_Core.Installer
                     }
                     
                     string modifiedJson = JsonSerializer.Serialize(gameCoreData, options);
-                    
                     await File.WriteAllTextAsync(jsonPath, modifiedJson, cancellationToken);
                 }
                 else
@@ -124,9 +123,32 @@ namespace StarLight_Core.Installer
                 }
                 
                 OnProgressChanged?.Invoke("下载游戏核心", 20);
-                
                                 
                 GameCoreVersionsJson gameCoreVersionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
+                string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
+                string jarFilePath = Path.Combine(varPath, gameCoreName + ".jar");
+                if (DownloadAPIs.Current != DownloadAPIs.Mojang)
+                {
+                    jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
+                }
+
+                Console.WriteLine(jarDownloadPath);
+                
+                var jarDownloader = new DownloadsUtil();
+                
+                Action<double> progressChanged = (double speed) =>
+                {
+                    OnSpeedChanged?.Invoke(speed / 1024);
+                };
+                var jarDownloadstatus =
+                    await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
+                        progressChanged);
+                
+                if (jarDownloadstatus.Status != Status.Succeeded)
+                {
+                    OnProgressChanged?.Invoke("下载游戏核心文件失败", 20);
+                    return;
+                }
             }
             catch (OperationCanceledException)
             {

@@ -24,12 +24,12 @@ namespace StarLight_Core.Utilities
         }
 
         // 下载文件
-        public async Task<DownloadStatus> DownloadAsync(DownloadItem downloadItem, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
+        public async Task<DownloadStatus> DownloadAsync(DownloadItem downloadItem, string? outputFolder = null, Action<double>? speedChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
         {
             try
             {
                 var downloadItems = new List<DownloadItem> { downloadItem };
-                var result = await DownloadFilesAsync(downloadItems, outputFolder, progressChanged, downloadCompleted, downloadFailed);
+                var result = await DownloadFilesAsync(downloadItems, outputFolder, speedChanged, downloadCompleted, downloadFailed);
                 return result;
             }
             catch (Exception e)
