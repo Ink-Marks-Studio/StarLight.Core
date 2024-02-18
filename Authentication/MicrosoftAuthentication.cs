@@ -119,7 +119,7 @@ namespace StarLight_Core.Authentication
             var xboxResponseData = JsonSerializer.Deserialize<XboxResponse>(xboxResponseString);
             xblAuthToken = xboxResponseData.AuthToken;
             string userHash = xboxResponseData.DisplayClaims.Xui[0].UserHash;
-
+    
             // 获取XSTS令牌
             action("正在获取XSTS令牌");
             var getXSTSJsonData = new

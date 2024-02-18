@@ -117,12 +117,12 @@ namespace StarLight_Core.Installer
 
             try
             {
+                OnProgressChanged?.Invoke("下载游戏核心", 20);
+                
                 if (cancellationToken != default)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                 }
-                
-                OnProgressChanged?.Invoke("下载游戏核心", 20);
                                 
                 GameCoreVersionsJson gameCoreVersionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
                 string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
@@ -146,7 +146,7 @@ namespace StarLight_Core.Installer
                 
                 if (jarDownloadstatus.Status != Status.Succeeded)
                 {
-                    OnProgressChanged?.Invoke("下载游戏核心文件失败", 20);
+                    OnProgressChanged?.Invoke("下载游戏核心失败", 20);
                     return;
                 }
             }
@@ -157,18 +157,20 @@ namespace StarLight_Core.Installer
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 20);
+                OnProgressChanged?.Invoke("下载游戏核心错误: " + e.Message, 20);
                 return;
             }
 
             try
             {
+                OnProgressChanged?.Invoke("下载游戏核心文件", 20);
+                
                 if (cancellationToken != default)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+                    
+                    var versionEntity = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
                 }
-                
-                OnProgressChanged?.Invoke("下载游戏核心", 20);
             }
             catch (OperationCanceledException)
             {
