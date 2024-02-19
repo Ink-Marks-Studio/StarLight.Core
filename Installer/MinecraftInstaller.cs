@@ -169,7 +169,11 @@ namespace StarLight_Core.Installer
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     
-                    var versionEntity = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
+                    var versionEntity = JsonSerializer.Deserialize<GameDownloadJsonEntity>(File.ReadAllText(jsonPath));
+                    foreach (var versionDownload in versionEntity.Libraries)
+                    {
+                        
+                    }
                 }
             }
             catch (OperationCanceledException)

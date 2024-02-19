@@ -8,8 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -240,6 +240,9 @@
       <workItem from="1708185287365" duration="17000" />
       <workItem from="1708260886797" duration="1395000" />
       <workItem from="1708265766527" duration="904000" />
+      <workItem from="1708315471037" duration="13000" />
+      <workItem from="1708335216929" duration="600000" />
+      <workItem from="1708345558062" duration="512000" />
     </task>
     <servers />
   </component>
