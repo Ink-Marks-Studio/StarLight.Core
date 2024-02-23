@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Threading.Channels;
 using StarLight_Core.Enum;
 using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
@@ -123,7 +124,7 @@ namespace StarLight_Core.Installer
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                 }
-                                
+                
                 GameCoreVersionsJson gameCoreVersionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
                 string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
                 string jarFilePath = Path.Combine(varPath, gameCoreName + ".jar");
@@ -131,8 +132,6 @@ namespace StarLight_Core.Installer
                 {
                     jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
                 }
-
-                Console.WriteLine(jarDownloadPath);
                 
                 var jarDownloader = new DownloadsUtil();
                 
@@ -164,15 +163,19 @@ namespace StarLight_Core.Installer
             try
             {
                 OnProgressChanged?.Invoke("下载游戏核心文件", 20);
-                
                 if (cancellationToken != default)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    
-                    var versionEntity = JsonSerializer.Deserialize<GameDownloadJsonEntity>(File.ReadAllText(jsonPath));
-                    foreach (var versionDownload in versionEntity.Libraries)
+                }
+                
+                string jsonContent = File.ReadAllText(jsonPath);
+                var versionEntity = JsonSerializer.Deserialize<GameDownloadJsonEntity>(jsonContent);
+                foreach (var versionDownload in versionEntity.Libraries)
+                {
+                    if (versionDownload == null || versionDownload.Downloads == null)
                     {
-                        
+                        var path = BuildFromName(versionDownload.Name, DownloadAPIs.Current.Root);
+                        Console.WriteLine(path);
                     }
                 }
             }
@@ -185,6 +188,14 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 20);
             }
+        }
+        
+        private string BuildFromName(string name, string root)
+        {
+            var parts = name.Split(':');
+            if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
+
+            return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}.jar");
         }
     }
 }
