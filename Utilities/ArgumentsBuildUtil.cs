@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using StarLight_Core.Models.Utilities;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Models.Launch;
 
@@ -368,20 +369,37 @@ public class ArgumentsBuildUtil
         return template;
     }
     
-    private string BuildFromName(string name, string root)
+    private string BuildFromName(string qualifiedName, string basePath)
     {
-        var parts = name.Split(':');
-        if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
-
-        return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}.jar");
+        // 使用正则提取
+        var match = Regex.Match(qualifiedName, @"^(\w+)\.(\w+):(\w+)$");
+        if (!match.Success)
+        {
+            throw new ArgumentException("[SL]名称格式无效");
+        }
+        
+        string namespacePart = match.Groups[1].Value;
+        string className = match.Groups[2].Value;
+        string version = match.Groups[3].Value;
+        
+        string directoryPath = namespacePart.Replace('.', '\\');
+        return Path.Combine(basePath, directoryPath, className, version, $"{className}-{version}.jar");
     }
     
-    public static string BuildNativesName(string name, string root)
+    public static string BuildNativesName(string qualifiedName, string basePath)
     {
-        var parts = name.Split(':');
-        if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
-
-        return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}-natives-windows.jar");
+        var match = Regex.Match(qualifiedName, @"^(\w+)\.(\w+):(\w+)$");
+        if (!match.Success)
+        {
+            throw new ArgumentException("[SL]名称格式无效");
+        }
+        
+        string namespacePart = match.Groups[1].Value;
+        string className = match.Groups[2].Value;
+        string version = match.Groups[3].Value;
+        
+        string directoryPath = namespacePart.Replace('.', Path.DirectorySeparatorChar);
+        return Path.Combine(basePath, directoryPath, className, version, $"{className}-{version}-natives-windows.jar");
     }
 
     // 完整路径
