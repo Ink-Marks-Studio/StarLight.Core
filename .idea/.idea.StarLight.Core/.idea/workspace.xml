@@ -8,9 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Enum/DownloadSource.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +33,9 @@
     <setting file="file://$PROJECT_DIR$/Installer/MinecraftInstaller.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/GameCoreDownloadInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Models/Installer/MinecraftInstallerModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Utilities/DownloadsUtil.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -250,6 +254,9 @@
       <workItem from="1708335216929" duration="600000" />
       <workItem from="1708345558062" duration="512000" />
       <workItem from="1708699614460" duration="1544000" />
+      <workItem from="1708779533999" duration="2101000" />
+      <workItem from="1708826529346" duration="11413000" />
+      <workItem from="1708859255579" duration="5390000" />
     </task>
     <servers />
   </component>

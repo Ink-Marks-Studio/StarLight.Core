@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Intrinsics.Arm;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Channels;
@@ -29,7 +30,7 @@ namespace StarLight_Core.Installer
             OnSpeedChanged = onSpeedChanged;
         }
 
-        public async Task InstallAsync(string? gameCoreName = null, CancellationToken cancellationToken = default)
+        public async Task InstallAsync(string? gameCoreName = null, bool mandatory = false, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -101,8 +102,52 @@ namespace StarLight_Core.Installer
                 }
                 else
                 {
-                    OnProgressChanged?.Invoke($"版本已存在", 10);
-                    return;
+                    if (mandatory)
+                    {
+                        try
+                        {
+                            File.Delete(jsonPath);
+                            string gameCoreJson;
+                    
+                            if (DownloadAPIs.Current == DownloadAPIs.Mojang)
+                            {
+                                gameCoreJson = await HttpUtil.GetJsonAsync(versionsJson.Url);
+                            }
+                            else
+                            {
+                                gameCoreJson = await HttpUtil.GetJsonAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
+                            }
+                    
+                            await File.WriteAllTextAsync(jsonPath, gameCoreJson, cancellationToken);
+                    
+                            if (!HashUtil.VerifySha1(gameCoreJson, versionsJson.Sha1))   
+                            {
+                                OnProgressChanged?.Invoke("下载版本索引文件失败", 10);
+                                return;
+                            }
+                    
+                            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                            var gameCoreData = JsonSerializer.Deserialize<Dictionary<string, object>>(gameCoreJson, options);
+                    
+                            if (gameCoreData != null && gameCoreData.ContainsKey("id"))
+                            {
+                                gameCoreData["id"] = gameCoreName;
+                            }
+                    
+                            string modifiedJson = JsonSerializer.Serialize(gameCoreData, options);
+                            await File.WriteAllTextAsync(jsonPath, modifiedJson, cancellationToken);
+                        }
+                        catch (IOException e)
+                        {
+                            OnProgressChanged?.Invoke("无法删除文件: " + e.Message, 10);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        OnProgressChanged?.Invoke($"版本已存在", 10);
+                        return;
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -126,27 +171,57 @@ namespace StarLight_Core.Installer
                 }
                 
                 GameCoreVersionsJson gameCoreVersionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
-                string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
+                string coreJarSha1 = gameCoreVersionsJson.Downloads.Client.Sha1;
                 string jarFilePath = Path.Combine(varPath, gameCoreName + ".jar");
-                if (DownloadAPIs.Current != DownloadAPIs.Mojang)
+                if (!FileUtil.IsFile(jarFilePath))
                 {
-                    jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
+                    string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
+
+                    if (DownloadAPIs.Current != DownloadAPIs.Mojang)
+                    {
+                        jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
+                    }
+                
+                    var jarDownloader = new DownloadsUtil();
+                
+                    Action<double> progressChanged = (double speed) =>
+                    {
+                        OnSpeedChanged?.Invoke(speed / 1024);
+                    };
+                    var jarDownloadstatus =
+                        await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
+                            progressChanged);
+                
+                    if (jarDownloadstatus.Status != Status.Succeeded)
+                    {
+                        OnProgressChanged?.Invoke("下载游戏核心失败", 20);
+                        return;
+                    }
                 }
-                
-                var jarDownloader = new DownloadsUtil();
-                
-                Action<double> progressChanged = (double speed) =>
+                else if (!HashUtil.VerifyFileHash(jarFilePath, coreJarSha1, SHA1.Create()))
                 {
-                    OnSpeedChanged?.Invoke(speed / 1024);
-                };
-                var jarDownloadstatus =
-                    await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
-                        progressChanged);
+                    string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
+
+                    if (DownloadAPIs.Current != DownloadAPIs.Mojang)
+                    {
+                        jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
+                    }
                 
-                if (jarDownloadstatus.Status != Status.Succeeded)
-                {
-                    OnProgressChanged?.Invoke("下载游戏核心失败", 20);
-                    return;
+                    var jarDownloader = new DownloadsUtil();
+                
+                    Action<double> progressChanged = (double speed) =>
+                    {
+                        OnSpeedChanged?.Invoke(speed / 1024);
+                    };
+                    var jarDownloadstatus =
+                        await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
+                            progressChanged);
+                
+                    if (jarDownloadstatus.Status != Status.Succeeded)
+                    {
+                        OnProgressChanged?.Invoke("下载游戏核心失败", 20);
+                        return;
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -170,14 +245,40 @@ namespace StarLight_Core.Installer
                 
                 string jsonContent = File.ReadAllText(jsonPath);
                 var versionEntity = JsonSerializer.Deserialize<GameDownloadJsonEntity>(jsonContent);
+
+                var librariesDownloader = new DownloadsUtil();
+                var downloadList = new List<DownloadItem>();
+                int i = 0;
                 foreach (var versionDownload in versionEntity.Libraries)
                 {
-                    if (versionDownload == null || versionDownload.Downloads == null)
+                    if (versionDownload?.Downloads != null)
                     {
-                        var path = BuildFromName(versionDownload.Name, DownloadAPIs.Current.Root);
-                        Console.WriteLine(path);
+                        i++;
+                        Console.WriteLine(i);
+                        var basePath = MinecraftInstallerModel.BuildFromName(versionDownload.Name, Path.DirectorySeparatorChar.ToString());
+                        var jarFilePath = Path.Combine(GamePath, "libraries") + basePath;
+                        var jarDownloadPath = DownloadAPIs.Current.Maven + basePath.Replace("\\", "/");
+
+                        downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
                     }
                 }
+                
+                Action<double> progressChanged = (double speed) =>
+                {
+                    OnSpeedChanged?.Invoke(speed / 1024);
+                };
+                
+                Action<int, int> downloadCompleted = (int downloaded, int total) =>
+                {
+                    //OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 20);
+                };
+                
+                Action<string> downloadFailed = (string path) =>
+                {
+                    //OnProgressChanged?.Invoke($"下载游戏核心文件: {path}", 20);
+                };
+                
+                var jarDownloadstatus = await librariesDownloader.DownloadFilesAsync(downloadList, null, progressChanged, downloadCompleted, downloadFailed);
             }
             catch (OperationCanceledException)
             {
@@ -188,14 +289,6 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 20);
             }
-        }
-        
-        private string BuildFromName(string name, string root)
-        {
-            var parts = name.Split(':');
-            if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
-
-            return Path.Combine(root, parts[0].Replace('.', '\\'), parts[1], parts[2], $"{parts[1]}-{parts[2]}.jar");
         }
     }
 }
