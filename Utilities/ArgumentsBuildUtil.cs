@@ -2,7 +2,6 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using StarLight_Core.Models.Utilities;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Models.Launch;
 
@@ -369,37 +368,34 @@ public class ArgumentsBuildUtil
         return template;
     }
     
-    private string BuildFromName(string qualifiedName, string basePath)
+    private string BuildFromName(string name, string root)
     {
-        // 使用正则提取
-        var match = Regex.Match(qualifiedName, @"^(\w+)\.(\w+):(\w+)$");
-        if (!match.Success)
+        var parts = name.Split(':');
+        if (parts.Length != 3)
         {
-            throw new ArgumentException("[SL]名称格式无效");
+            throw new ArgumentException("[SL]名称格式无效,获取错误");
         }
         
-        string namespacePart = match.Groups[1].Value;
-        string className = match.Groups[2].Value;
-        string version = match.Groups[3].Value;
+        string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
+        string artifactId = parts[1];
+        string version = parts[2];
         
-        string directoryPath = namespacePart.Replace('.', '\\');
-        return Path.Combine(basePath, directoryPath, className, version, $"{className}-{version}.jar");
+        return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}.jar");
     }
     
-    public static string BuildNativesName(string qualifiedName, string basePath)
+    public static string BuildNativesName(string name, string root)
     {
-        var match = Regex.Match(qualifiedName, @"^(\w+)\.(\w+):(\w+)$");
-        if (!match.Success)
+        var parts = name.Split(':');
+        if (parts.Length != 3)
         {
-            throw new ArgumentException("[SL]名称格式无效");
+            throw new ArgumentException("[SL]名称格式无效,获取错误");
         }
+
+        string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
+        string artifactId = parts[1];
+        string version = parts[2];
         
-        string namespacePart = match.Groups[1].Value;
-        string className = match.Groups[2].Value;
-        string version = match.Groups[3].Value;
-        
-        string directoryPath = namespacePart.Replace('.', Path.DirectorySeparatorChar);
-        return Path.Combine(basePath, directoryPath, className, version, $"{className}-{version}-natives-windows.jar");
+        return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-natives-windows.jar");
     }
 
     // 完整路径
