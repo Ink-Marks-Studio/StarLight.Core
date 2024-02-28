@@ -65,7 +65,7 @@ public static class DownloadAPIs
                 Current = BmclApi;
                 break;
             default:
-                throw new ArgumentException("Invalid download source.");
+                throw new ArgumentException("[SL]未找到下载源");
         }
     }
 }

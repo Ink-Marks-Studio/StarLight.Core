@@ -253,13 +253,18 @@ namespace StarLight_Core.Installer
                 {
                     if (versionDownload?.Downloads != null)
                     {
-                        i++;
-                        Console.WriteLine(i);
                         var basePath = MinecraftInstallerModel.BuildFromName(versionDownload.Name, Path.DirectorySeparatorChar.ToString());
                         var jarFilePath = Path.Combine(GamePath, "libraries") + basePath;
                         var jarDownloadPath = DownloadAPIs.Current.Maven + basePath.Replace("\\", "/");
 
-                        downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                        if (!FileUtil.IsFile(jarFilePath))
+                        {
+                            downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                        }
+                        else if (!HashUtil.VerifyFileHash(jarFilePath, versionDownload.Downloads.Artifact.Sha1, SHA1.Create()))
+                        {
+                            downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                        }
                     }
                 }
                 
@@ -270,15 +275,20 @@ namespace StarLight_Core.Installer
                 
                 Action<int, int> downloadCompleted = (int downloaded, int total) =>
                 {
-                    //OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 20);
+                    OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 20);
                 };
                 
                 Action<string> downloadFailed = (string path) =>
                 {
-                    //OnProgressChanged?.Invoke($"下载游戏核心文件: {path}", 20);
+                    OnProgressChanged?.Invoke($"下载游戏核心文件: {path}", 20);
                 };
                 
                 var jarDownloadstatus = await librariesDownloader.DownloadFilesAsync(downloadList, null, progressChanged, downloadCompleted, downloadFailed);
+                if (jarDownloadstatus.Status != Status.Succeeded)
+                {
+                    OnProgressChanged?.Invoke("下载游戏核心文件失败" + jarDownloadstatus.Exception, 20);
+                    return;
+                }
             }
             catch (OperationCanceledException)
             {
