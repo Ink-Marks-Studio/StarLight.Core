@@ -299,6 +299,24 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 20);
             }
+            
+            try
+            {
+                OnProgressChanged?.Invoke("下载游戏资源", 20);
+                if (cancellationToken != default)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                OnProgressChanged?.Invoke("已取消安装", 0);
+                return;
+            }
+            catch (Exception e)
+            {
+                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 20);
+            }
         }
     }
 }
