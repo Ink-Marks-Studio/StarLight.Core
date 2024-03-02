@@ -8,8 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Utilities/LibraryJsonRule.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Installer/MinecraftInstallerModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/MinecraftInstallerModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/FileUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FileUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,6 +267,9 @@
       <workItem from="1709129356495" duration="73000" />
       <workItem from="1709292816672" duration="1504000" />
       <workItem from="1709307832387" duration="262000" />
+      <workItem from="1709349603722" duration="5684000" />
+      <workItem from="1709374327995" duration="1754000" />
+      <workItem from="1709377828241" duration="1351000" />
     </task>
     <servers />
   </component>

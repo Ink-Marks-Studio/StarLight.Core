@@ -136,7 +136,7 @@ public class FileUtil
         }
     }
     
-    private static bool ShouldIncludeLibrary(Rule[] rules)
+    private static bool ShouldIncludeLibrary(LibraryJsonRule[] rules)
     {
         if (rules == null || rules.Length == 0)
         {

@@ -249,21 +249,42 @@ namespace StarLight_Core.Installer
                 var librariesDownloader = new DownloadsUtil();
                 var downloadList = new List<DownloadItem>();
                 int i = 0;
+                
                 foreach (var versionDownload in versionEntity.Libraries)
                 {
                     if (versionDownload?.Downloads != null)
                     {
-                        var basePath = MinecraftInstallerModel.BuildFromName(versionDownload.Name, Path.DirectorySeparatorChar.ToString());
-                        var jarFilePath = Path.Combine(GamePath, "libraries") + basePath;
-                        var jarDownloadPath = DownloadAPIs.Current.Maven + basePath.Replace("\\", "/");
+                        if (ShouldIncludeLibrary(versionDownload.Rule))    
+                        {
+                            var basePath = MinecraftInstallerModel.BuildFromName(versionDownload.Name, Path.DirectorySeparatorChar.ToString());
+                            var jarFilePath = Path.Combine(GamePath, "libraries") + basePath;
+                            var jarDownloadPath = DownloadAPIs.Current.Maven + basePath.Replace("\\", "/");
 
-                        if (!FileUtil.IsFile(jarFilePath))
-                        {
-                            downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
-                        }
-                        else if (!HashUtil.VerifyFileHash(jarFilePath, versionDownload.Downloads.Artifact.Sha1, SHA1.Create()))
-                        {
-                            downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                            if (!FileUtil.IsFile(jarFilePath))
+                            {
+                                downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                            }
+                            else if (!HashUtil.VerifyFileHash(jarFilePath, versionDownload.Downloads.Artifact.Sha1, SHA1.Create()))
+                            {
+                                downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                            }
+                            
+                            if (versionDownload.Downloads.Classifiers != null)
+                            {
+                                Native nativesWindows = versionDownload.Downloads.Classifiers["natives-windows"];
+                                
+                                var jarFilePathClassifiers = Path.Combine(GamePath, "libraries") + nativesWindows.Path;
+                                var jarDownloadPathClassifiers = DownloadAPIs.Current.Maven + "/" + nativesWindows.Path;
+                                
+                                if (!FileUtil.IsFile(jarFilePathClassifiers))
+                                {
+                                    downloadList.Add(new DownloadItem(jarDownloadPathClassifiers, jarFilePathClassifiers));
+                                }
+                                else if (!HashUtil.VerifyFileHash(jarFilePathClassifiers, nativesWindows.Sha1, SHA1.Create()))
+                                {
+                                    downloadList.Add(new DownloadItem(jarDownloadPathClassifiers, jarFilePathClassifiers));
+                                }
+                            }
                         }
                     }
                 }
@@ -317,6 +338,31 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 20);
             }
+        }
+        
+        private bool ShouldIncludeLibrary(LibraryJsonRule[] rules)
+        {
+            if (rules == null || rules.Length == 0)
+            {
+                return true;
+            }
+
+            bool isAllow = false;
+            bool isDisallowForOsX = false;
+
+            foreach (var rule in rules)
+            {
+                if (rule.Action == "allow" && (rule.Os == null || rule.Os.Name.ToLower() != "osx"))
+                {
+                    isAllow = true;
+                }
+                else if (rule.Action == "disallow" && rule.Os != null && rule.Os.Name.ToLower() == "osx")
+                {
+                    isDisallowForOsX = true;
+                }
+            }
+        
+            return isDisallowForOsX || isAllow;
         }
     }
 }

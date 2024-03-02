@@ -17,16 +17,7 @@ public class Library
     public Download Downloads { get; set; }
     
     [JsonPropertyName("rules")]
-    public Rule[] Rule { get; set; }
-}
-
-public class Rule
-{
-    [JsonPropertyName("action")]
-    public string Action { get; set; }
-    
-    [JsonPropertyName("os")]
-    public Os Os { get; set; }
+    public LibraryJsonRule[] Rule { get; set; }
 }
 
 public class Os

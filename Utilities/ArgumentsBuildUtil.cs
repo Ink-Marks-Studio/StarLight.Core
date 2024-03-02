@@ -324,7 +324,7 @@ public class ArgumentsBuildUtil
         }
     }
 
-    private bool ShouldIncludeLibrary(Rule[] rules)
+    private bool ShouldIncludeLibrary(LibraryJsonRule[] rules)
     {
         if (rules == null || rules.Length == 0)
         {

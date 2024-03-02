@@ -67,7 +67,7 @@ namespace StarLight_Core.Launch
                 if (GameCoreConfig.IsVersionIsolation)
                 {
                     optionsFilePath = FileUtil.IsAbsolutePath(GameCoreConfig.Root) ? 
-                        Path.Combine(GameCoreConfig.Root, "versions", GameCoreConfig.Version, "options.txt") : 
+                        Path.Combine(GameCoreConfig.Root, "versions", GameCoreConfig.Version, "options.txt") :
                         Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Root, "versions", GameCoreConfig.Version, "options.txt");
                 }
                 else
