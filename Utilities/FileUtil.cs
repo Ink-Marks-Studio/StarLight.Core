@@ -145,19 +145,29 @@ public class FileUtil
 
         bool isAllow = false;
         bool isDisallowForOsX = false;
+        bool isDisallowForLinux = false;
 
         foreach (var rule in rules)
         {
-            if (rule.Action == "allow" && (rule.Os == null || rule.Os.Name.ToLower() != "osx"))
+            if (rule.Action == "allow")
             {
-                isAllow = true;
+                if (rule.Os == null || (rule.Os.Name.ToLower() != "linux" && rule.Os.Name.ToLower() != "osx"))
+                {
+                    isAllow = true;
+                }
             }
-            else if (rule.Action == "disallow" && rule.Os != null && rule.Os.Name.ToLower() == "osx")
+            else if (rule.Action == "disallow")
             {
-                isDisallowForOsX = true;
+                if (rule.Os != null && rule.Os.Name.ToLower() == "linux")
+                {
+                    isDisallowForLinux = true;
+                }
+                if (rule.Os != null && rule.Os.Name.ToLower() == "osx")
+                {
+                    isDisallowForOsX = true;
+                }
             }
         }
-        
-        return isDisallowForOsX || isAllow;
+        return !isDisallowForLinux && (isDisallowForOsX || isAllow);
     }
 }
