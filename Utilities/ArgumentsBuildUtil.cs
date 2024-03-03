@@ -309,7 +309,10 @@ public class ArgumentsBuildUtil
             if (lib == null || lib.Downloads == null)
             {
                 var path = BuildFromName(lib.Name, librariesPath);
-                yield return path;
+                if (path != null)
+                {
+                    yield return path;
+                }
                 continue;
             }
             
@@ -318,7 +321,10 @@ public class ArgumentsBuildUtil
                 if (ShouldIncludeLibrary(lib.Rule))
                 {
                     var path = BuildFromName(lib.Name, librariesPath);
-                    yield return path;
+                    if (path != null)
+                    {
+                        yield return path;
+                    }
                 }
             }
         }
@@ -383,7 +389,7 @@ public class ArgumentsBuildUtil
         var parts = name.Split(':');
         if (parts.Length != 3)
         {
-            throw new ArgumentException("[SL]名称格式无效,获取错误");
+            return null;
         }
         
         string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
@@ -406,6 +412,27 @@ public class ArgumentsBuildUtil
         string version = parts[2];
         
         return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-natives-windows.jar");
+    }
+    
+    public static string BuildNewNativesName(string name, string root)
+    {
+        var parts = name.Split(':');
+
+        string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
+        string artifactId = parts[1];
+        string version = parts[2];
+
+        string path = Path.Combine(root, groupIdPath, artifactId, version);
+        
+        if (parts.Length > 3 && parts[3].StartsWith("natives-"))
+        {
+            string classifier = parts[3];
+            return Path.Combine(path, $"{artifactId}-{version}-{classifier}.jar");
+        }
+        else
+        {
+            throw new ArgumentException("[SL]名称格式无效,获取错误");
+        }
     }
 
     // 完整路径

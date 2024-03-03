@@ -97,9 +97,9 @@ public class FileUtil
             
             GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(coreConfig.Version, coreConfig.Root);
             string versionJsonPath = Path.Combine(coreInfo.root, $"{coreConfig.Version}.json");
-            string librariesPath = FileUtil.IsAbsolutePath(coreConfig.Root) ? 
+            string librariesPath = IsAbsolutePath(coreConfig.Root) ? 
                 Path.Combine(coreConfig.Root, "libraries") : 
-                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), coreConfig.Root, "libraries");
+                Path.Combine(GetCurrentExecutingDirectory(), coreConfig.Root, "libraries");
 
             var natives = ProcessNativesPath(versionJsonPath, librariesPath);
             
@@ -124,11 +124,21 @@ public class FileUtil
         {
             if (lib.Downloads != null)
             {
-                if (lib.Downloads.Classifiers != null)
+                if (ShouldIncludeLibrary(lib.Rule))
                 {
-                    if (ShouldIncludeLibrary(lib.Rule))
+                    if (lib.Downloads.Classifiers != null)
                     {
                         var path = ArgumentsBuildUtil.BuildNativesName(lib.Name, librariesPath);
+                        yield return path;
+                    }
+                    else
+                    {
+                        var parts = lib.Name.Split(':');
+                        if (parts.Length <= 3)
+                        {
+                            continue;
+                        }
+                        var path = ArgumentsBuildUtil.BuildNewNativesName(lib.Name, librariesPath);
                         yield return path;
                     }
                 }

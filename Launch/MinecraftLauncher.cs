@@ -81,29 +81,37 @@ namespace StarLight_Core.Launch
                 progressReport.Description = "构建启动参数";
                 progressReport.Percentage = 70;
                 onProgressChanged?.Invoke(progressReport);
-                var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
-                
-                process = new Process
+                try
                 {
-                    StartInfo = new ProcessStartInfo
+                    var arguments = new ArgumentsBuildUtil(GameWindowConfig, GameCoreConfig, JavaConfig, BaseAccount).Build();
+                    
+                    process = new Process
                     {
-                        FileName = JavaConfig.JavaPath,
-                        Arguments = string.Join(" ", arguments),
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        WorkingDirectory = GameCoreConfig.Root
-                    },
-                    EnableRaisingEvents = true
-                };
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = JavaConfig.JavaPath,
+                            Arguments = string.Join(" ", arguments),
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            WorkingDirectory = GameCoreConfig.Root
+                        },
+                        EnableRaisingEvents = true
+                    };
                 
-                stopwatch.Start();
+                    stopwatch.Start();
 
-                progressReport.Description = "进程启动中...";
-                progressReport.Percentage = 90;
-                onProgressChanged?.Invoke(progressReport);
+                    progressReport.Description = "进程启动中...";
+                    progressReport.Percentage = 90;
+                    onProgressChanged?.Invoke(progressReport);
 
-                return new LaunchResponse(Status.Succeeded, stopwatch, process, arguments, new Exception());
+                    return new LaunchResponse(Status.Succeeded, stopwatch, process, arguments, new Exception());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
             catch (Exception e)
             {
