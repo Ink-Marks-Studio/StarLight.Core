@@ -324,7 +324,11 @@ namespace StarLight_Core.Installer
             try
             {
                 OnProgressChanged?.Invoke("下载游戏资源", 20);
-                var assetsJson = HttpUtil.GetJsonAsync("");
+                
+                string jsonContent = File.ReadAllText(jsonPath);
+                var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
+                
+                var assetsJson = HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
                 if (cancellationToken != default)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
