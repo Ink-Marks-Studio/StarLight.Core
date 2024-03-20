@@ -325,13 +325,25 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("下载游戏资源", 20);
                 
+                if (cancellationToken != default)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+                
                 string jsonContent = File.ReadAllText(jsonPath);
                 var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
                 
                 var assetsJson = HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
-                if (cancellationToken != default)
+
+                var assetsJsonPath = Path.Combine(GamePath, "assets", "indexes", assetsEntity.AssetIndex.Id + ".json");
+                
+                if (!FileUtil.IsDirectory(varPath, true) || !FileUtil.IsFile(jsonPath))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    await File.WriteAllTextAsync(assetsJsonPath, jsonContent, cancellationToken);
+                }
+                else
+                {
+                    await File.WriteAllTextAsync(assetsJsonPath, jsonContent, cancellationToken);
                 }
             }
             catch (OperationCanceledException)
