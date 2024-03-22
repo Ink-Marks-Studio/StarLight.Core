@@ -10,9 +10,6 @@ public class AssetIndex
     [JsonPropertyName("sha1")]
     public string Sha1 { get; set; }
     
-    [JsonPropertyName("totalSize")]
-    public string TotalSize { get; set; }
-    
     [JsonPropertyName("size")]
     public long Size { get; set; }
     

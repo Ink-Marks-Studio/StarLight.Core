@@ -237,7 +237,7 @@ namespace StarLight_Core.Installer
 
             try
             {
-                OnProgressChanged?.Invoke("下载游戏核心文件", 20);
+                OnProgressChanged?.Invoke("下载游戏核心文件", 40);
                 if (cancellationToken != default)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -296,18 +296,18 @@ namespace StarLight_Core.Installer
                 
                 Action<int, int> downloadCompleted = (int downloaded, int total) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 20);
+                    OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 40);
                 };
                 
                 Action<string> downloadFailed = (string path) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏核心文件: {path}", 20);
+                    OnProgressChanged?.Invoke($"下载游戏核心文件: {path}", 40);
                 };
                 
                 var jarDownloadstatus = await librariesDownloader.DownloadFilesAsync(downloadList, null, progressChanged, downloadCompleted, downloadFailed);
                 if (jarDownloadstatus.Status != Status.Succeeded)
                 {
-                    OnProgressChanged?.Invoke("下载游戏核心文件失败" + jarDownloadstatus.Exception, 20);
+                    OnProgressChanged?.Invoke("下载游戏核心文件失败" + jarDownloadstatus.Exception, 40);
                     return;
                 }
             }
@@ -318,12 +318,12 @@ namespace StarLight_Core.Installer
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 20);
+                OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 40);
             }
             
             try
             {
-                OnProgressChanged?.Invoke("下载游戏资源", 20);
+                OnProgressChanged?.Invoke("下载游戏资源", 60);
                 
                 if (cancellationToken != default)
                 {
@@ -333,18 +333,20 @@ namespace StarLight_Core.Installer
                 string jsonContent = File.ReadAllText(jsonPath);
                 var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
                 
-                var assetsJson = HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
-
+                var assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
                 var assetsJsonPath = Path.Combine(GamePath, "assets", "indexes", assetsEntity.AssetIndex.Id + ".json");
                 
                 if (!FileUtil.IsDirectory(varPath, true) || !FileUtil.IsFile(jsonPath))
                 {
-                    await File.WriteAllTextAsync(assetsJsonPath, jsonContent, cancellationToken);
+                    await File.WriteAllTextAsync(assetsJsonPath, assetsJsonContent, cancellationToken);
                 }
                 else
                 {
-                    await File.WriteAllTextAsync(assetsJsonPath, jsonContent, cancellationToken);
+                    File.Delete(assetsJsonPath);
+                    await File.WriteAllTextAsync(assetsJsonPath, assetsJsonContent, cancellationToken);
                 }
+                
+                var assetsInfo = JsonSerializer.Deserialize<AssetData>(assetsJsonContent);
             }
             catch (OperationCanceledException)
             {
@@ -353,7 +355,7 @@ namespace StarLight_Core.Installer
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 20);
+                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 60);
             }
         }
         
