@@ -8,13 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Installer/AssetData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/AssetInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/copilot/chatSessions/00000000000.xd" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/copilot/chatSessions/00000000000.xd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/copilot/chatSessions/xd.lck" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/copilot/chatSessions/xd.lck" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/AssetIndex.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/AssetIndex.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -279,6 +277,9 @@
       <workItem from="1710861786935" duration="444000" />
       <workItem from="1710948501785" duration="931000" />
       <workItem from="1711108914109" duration="6023000" />
+      <workItem from="1711189002810" duration="3081000" />
+      <workItem from="1711208131563" duration="317000" />
+      <workItem from="1711208529507" duration="36000" />
     </task>
     <servers />
   </component>

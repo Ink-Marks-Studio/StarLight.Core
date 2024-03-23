@@ -55,14 +55,21 @@ namespace StarLight_Core.Launch
             {
                 return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("Java 不存在或 Java 已损坏"));
             }
-            
+
             try
             {
                 progressReport.Description = "解压游戏资源";
                 progressReport.Percentage = 50;
                 onProgressChanged?.Invoke(progressReport);
                 await FileUtil.DecompressionNatives(GameCoreConfig);
-                
+            }
+            catch (Exception e)
+            {
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("解压游戏资源错误 : " + e));
+            }
+
+            try
+            {
                 string optionsFilePath;
                 if (GameCoreConfig.IsVersionIsolation)
                 {
@@ -80,6 +87,7 @@ namespace StarLight_Core.Launch
                 
                 progressReport.Description = "构建启动参数";
                 progressReport.Percentage = 70;
+                
                 onProgressChanged?.Invoke(progressReport);
                 try
                 {
