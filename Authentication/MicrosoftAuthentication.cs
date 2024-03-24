@@ -208,7 +208,7 @@ namespace StarLight_Core.Authentication
                     Uuid = uuid,
                     Name = name,
                     ClientToken = Guid.NewGuid().ToString("N"),
-                    AccessToken = xblAuthToken,
+                    AccessToken = accessToken,
                     RefreshToken = tokenInfo.RefreshToken,
                     SkinUrl = skinUrl,
                     DateTime = DateTime.Now
