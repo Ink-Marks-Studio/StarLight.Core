@@ -8,6 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Authentication/TokenResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -282,6 +286,9 @@
       <workItem from="1711260328741" duration="299000" />
       <workItem from="1711286164911" duration="1096000" />
       <workItem from="1711291729459" duration="199000" />
+      <workItem from="1711365615550" duration="600000" />
+      <workItem from="1711374258555" duration="1036000" />
+      <workItem from="1711379425910" duration="1791000" />
     </task>
     <servers />
   </component>

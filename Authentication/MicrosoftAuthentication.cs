@@ -82,8 +82,39 @@ namespace StarLight_Core.Authentication
             }
         }
 
-        public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action)
+        public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action, string? refreshToken = null)
         {
+            // 刷新令牌
+            if (refreshToken != null)
+            {
+                action("正在刷新令牌");
+                
+                var refreshPostContent = new {
+                    client_id = ClientId,
+                    refresh_token = refreshToken,
+                    grant_type = "refresh_token",
+                };
+
+                string refreshPostData = JsonSerializer.Serialize(refreshPostContent);
+                string refreshResponse;
+                
+                try
+                {
+                    refreshResponse = await HttpUtil.SendHttpPostRequest("https://login.live.com/oauth20_token.srf",
+                        refreshPostData, "application/json");
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("刷新令牌错误: " + e.Message);
+                }
+                
+                var refreshResponseData = JsonSerializer.Deserialize<TokenResponse>(refreshResponse);
+
+                tokenInfo.AccessToken = refreshResponseData.AccessToken;
+                tokenInfo.RefreshToken = refreshResponseData.RefreshToken;
+                tokenInfo.ExpiresIn = refreshResponseData.ExpiresIn;
+            }
+            
             action("开始获取Microsoft账号信息");
 
             // 获取XBL令牌
