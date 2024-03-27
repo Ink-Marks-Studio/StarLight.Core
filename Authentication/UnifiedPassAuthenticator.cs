@@ -68,6 +68,11 @@ namespace StarLight_Core.Authentication
 
             return result;
         }
+
+        public async Task<UnifiedPassAccount> RefreshUnifiedPassAsync(string refreshToken)
+        {
+            return new UnifiedPassAccount();
+        }
         
         // 获取玩家皮肤信息。
         public static async Task<Dictionary<string, string>> RetrieveSkinInfo(string baseUrl, string profileId)
