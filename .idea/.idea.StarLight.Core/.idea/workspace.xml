@@ -8,7 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Utilities/TextUtil.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -286,6 +288,7 @@
       <workItem from="1711374258555" duration="1036000" />
       <workItem from="1711379425910" duration="1791000" />
       <workItem from="1711554102847" duration="191000" />
+      <workItem from="1711639486800" duration="652000" />
     </task>
     <servers />
   </component>

@@ -190,7 +190,7 @@ public class ArgumentsBuildUtil
             { "${clientid}", "${clientid}" },
             { "${auth_xuid}", "${auth_xuid}" },
             { "${user_type}", userType },
-            { "${version_type}", $"\"{coreInfo.Type}/SL\"" }
+            { "${version_type}", $"\"SL/{TextUtil.ToTitleCase(coreInfo.Type)}\"" }
         };
 
         string gameDirectory = GameCoreConfig.IsVersionIsolation ?

@@ -50,7 +50,6 @@ namespace StarLight_Core.Authentication
             }
             catch (Exception ex)
             {
-                // Handle exceptions (e.g., network errors)
                 throw new ApplicationException("[SL]身份验证时出错: ", ex);
             }
 
@@ -69,8 +68,26 @@ namespace StarLight_Core.Authentication
             return result;
         }
 
-        public async Task<UnifiedPassAccount> RefreshUnifiedPassAsync(string refreshToken)
+        public async Task<UnifiedPassAccount> RefreshUnifiedPassAsync(string clientToken, string refreshToken)
         {
+            var refreshPostData = new
+            {
+                accessToken = refreshToken,
+                clientToken = clientToken,
+                requestUser = true
+            };
+            
+            string jsonData = JsonSerializer.Serialize(refreshPostData);
+            string response;
+            try
+            {
+                //response = await HttpUtil.SendHttpPostRequest(authenticateUri.ToString(), jsonData,"application/json");
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("[SL]刷新令牌时出错: ", ex);
+            }
+            
             return new UnifiedPassAccount();
         }
         
