@@ -81,14 +81,22 @@ namespace StarLight_Core.Authentication
             string response;
             try
             {
-                //response = await HttpUtil.SendHttpPostRequest(authenticateUri.ToString(), jsonData,"application/json");
+                response = await HttpUtil.SendHttpPostRequest(BaseUrl + "authserver/refresh", jsonData,"application/json");
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("[SL]刷新令牌时出错: ", ex);
             }
             
-            return new UnifiedPassAccount();
+            var authResponse = JsonSerializer.Deserialize<UnifiedPassRefreshResponse>(response);
+            return new UnifiedPassAccount
+            {
+                Name = authResponse.SelectedProfile.Name,
+                Uuid = authResponse.SelectedProfile.Uuid,
+                AccessToken = authResponse.AccessToken,
+                ClientToken = authResponse.ClientToken,
+                ServerId = ServerId
+            };
         }
         
         // 获取玩家皮肤信息。
