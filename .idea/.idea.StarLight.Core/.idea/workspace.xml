@@ -8,7 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,6 +294,16 @@
       <workItem from="1711976454166" duration="1732000" />
       <workItem from="1711979042346" duration="3776000" />
       <workItem from="1711984035221" duration="18000" />
+      <workItem from="1712070666973" duration="194000" />
+      <workItem from="1712156385265" duration="1204000" />
+      <workItem from="1712205603340" duration="610000" />
+      <workItem from="1712329161707" duration="62000" />
+      <workItem from="1712414617182" duration="29000" />
+      <workItem from="1712415635185" duration="608000" />
+      <workItem from="1712580264640" duration="3828000" />
+      <workItem from="1712671547879" duration="373000" />
+      <workItem from="1712676481617" duration="148000" />
+      <workItem from="1712676642645" duration="45000" />
     </task>
     <servers />
   </component>

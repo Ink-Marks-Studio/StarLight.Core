@@ -387,16 +387,24 @@ public class ArgumentsBuildUtil
     private string BuildFromName(string name, string root)
     {
         var parts = name.Split(':');
-        if (parts.Length != 3)
+        if (parts.Length == 3)
         {
-            return null;
+            string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
+            string artifactId = parts[1];
+            string version = parts[2];
+        
+            return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}.jar");
         }
+        else if (parts.Length == 4)
+        {
+            string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
+            string artifactId = parts[1];
+            string version = parts[2];
+            string natives = parts[3];
         
-        string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
-        string artifactId = parts[1];
-        string version = parts[2];
-        
-        return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}.jar");
+            return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-{natives}.jar");
+        }
+        return null;
     }
     
     public static string BuildNativesName(string name, string root)
