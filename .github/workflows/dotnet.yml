@@ -1,4 +1,4 @@
-name: 自动构建并提交到 Github Nuget
+name: 自动构建并提交到 Github 与 Nuget
 
 on:
   push:
