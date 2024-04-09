@@ -12,3 +12,6 @@
 
 ## 教程
 [StarLight_Core 使用文档与使用帮助](https://ink-marks-studio.github.io/)
+
+## 快速开始
+
