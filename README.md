@@ -9,9 +9,12 @@
 4. 版本下载,模组加载器下载（未完成）
 5. 版本自动安装（未完成）
 6. 整合包下载及自动安装（未完成）
+7. 模组下载及快捷安装
 
 ## 教程
 [StarLight_Core 使用文档与使用帮助](https://ink-marks-studio.github.io/)
 
 ## 快速开始
+
+在 [Github Packages](https://github.com/orgs/Ink-Marks-Studio/packages?repo_name=StarLight.Core) 中下载
 
