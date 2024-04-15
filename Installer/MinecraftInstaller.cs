@@ -1,4 +1,5 @@
-﻿using System.Runtime.Intrinsics.Arm;
+﻿using System.Net.Mime;
+using System.Runtime.Intrinsics.Arm;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -89,7 +90,11 @@ namespace StarLight_Core.Installer
                         return;
                     }
                     
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        WriteIndented = true
+                    };
                     var gameCoreData = JsonSerializer.Deserialize<Dictionary<string, object>>(gameCoreJson, options);
                     
                     if (gameCoreData != null && gameCoreData.ContainsKey("id"))
@@ -126,14 +131,18 @@ namespace StarLight_Core.Installer
                                 return;
                             }
                     
-                            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                            var options = new JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true,
+                                WriteIndented = true
+                            };
                             var gameCoreData = JsonSerializer.Deserialize<Dictionary<string, object>>(gameCoreJson, options);
                     
                             if (gameCoreData != null && gameCoreData.ContainsKey("id"))
                             {
                                 gameCoreData["id"] = gameCoreName;
                             }
-                    
+                            
                             string modifiedJson = JsonSerializer.Serialize(gameCoreData, options);
                             await File.WriteAllTextAsync(jsonPath, modifiedJson, cancellationToken);
                         }
@@ -332,18 +341,40 @@ namespace StarLight_Core.Installer
                 
                 string jsonContent = File.ReadAllText(jsonPath);
                 var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
+                string assetsJsonContent;
                 
-                var assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
+                if (DownloadAPIs.Current == DownloadAPIs.Mojang)
+                {
+                    assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
+                }
+                else
+                {
+                    assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url.Replace(DownloadAPIs.Mojang.Assets, DownloadAPIs.Current.Assets));
+                }
+                
                 var assetsJsonPath = Path.Combine(GamePath, "assets", "indexes", assetsEntity.AssetIndex.Id + ".json");
                 
                 if (!FileUtil.IsDirectory(varPath, true) || !FileUtil.IsFile(jsonPath))
                 {
-                    await File.WriteAllTextAsync(assetsJsonPath, assetsJsonContent, cancellationToken);
+                    var options = new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    };
+                    string formattedJson = JsonSerializer.Serialize(JsonSerializer.Deserialize<object>(assetsJsonContent), options);
+                    
+                    await File.WriteAllTextAsync(assetsJsonPath, formattedJson, cancellationToken);
                 }
                 else
                 {
                     File.Delete(assetsJsonPath);
-                    await File.WriteAllTextAsync(assetsJsonPath, assetsJsonContent, cancellationToken);
+                    
+                    var options = new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    };
+                    string formattedJson = JsonSerializer.Serialize(JsonSerializer.Deserialize<object>(assetsJsonContent), options);
+                    
+                    await File.WriteAllTextAsync(assetsJsonPath, formattedJson, cancellationToken);
                 }
                 
                 var assetsInfo = JsonSerializer.Deserialize<AssetData>(assetsJsonContent);
