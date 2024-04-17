@@ -43,13 +43,6 @@ public static class DownloadAPIs
         "https://bmclapi2.bangbang93.com/assets",
         "https://bmclapi2.bangbang93.com/maven"
     );
-    
-    //public static readonly DownloadAPI Mcbbs = new DownloadAPI(
-    //    "https://download.mcbbs.net",
-    //    "https://download.mcbbs.net/mc/game/version_manifest_v2.json",
-    //    "https://download.mcbbs.net/assets",
-    //    "https://download.mcbbs.net/maven"
-    //);
 
     public static void SwitchDownloadSource(DownloadSource source)
     {
