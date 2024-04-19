@@ -378,6 +378,16 @@ namespace StarLight_Core.Installer
                 }
                 
                 var assetsInfo = JsonSerializer.Deserialize<AssetData>(assetsJsonContent);
+                
+                if (assetsInfo != null && assetsInfo.Objects != null)
+                {
+                    foreach (var kvp in assetsInfo.Objects)
+                    {
+                        string hash = kvp.Value.Hash;
+                        string hashPrefix = hash.Substring(0, 2);
+                        string result = $"{hashPrefix}/{hash}";
+                    }
+                }
             }
             catch (OperationCanceledException)
             {
