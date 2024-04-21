@@ -378,15 +378,39 @@ namespace StarLight_Core.Installer
                 }
                 
                 var assetsInfo = JsonSerializer.Deserialize<AssetData>(assetsJsonContent);
+
+                var assetsDownloader = new DownloadsUtil();
+                var assetsDownloadList = new List<DownloadItem>();
                 
                 if (assetsInfo != null && assetsInfo.Objects != null)
                 {
                     foreach (var kvp in assetsInfo.Objects)
                     {
-                        string hash = kvp.Value.Hash;
-                        string hashPrefix = hash.Substring(0, 2);
-                        string result = $"{hashPrefix}/{hash}";
+                        string baseAssetsPath = $"{kvp.Value.Hash.Substring(0, 2)}/{kvp.Value.Hash}";
+                        assetsDownloadList.Add(new DownloadItem(DownloadAPIs.Current.Assets+ "/" + baseAssetsPath, Path.Combine(GamePath, "assets", "objects", baseAssetsPath)));
                     }
+                }
+                
+                Action<double> progressChanged = (double speed) =>
+                {
+                    OnSpeedChanged?.Invoke(speed / 1024);
+                };
+                
+                Action<int, int> downloadCompleted = (int downloaded, int total) =>
+                {
+                    OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 40);
+                };
+                
+                Action<string> downloadFailed = (string path) =>
+                {
+                    OnProgressChanged?.Invoke($"下载游戏资源文件: {path}", 40);
+                };
+                
+                var jarDownloadstatus = await assetsDownloader.DownloadFilesAsync(assetsDownloadList, null, progressChanged, downloadCompleted, downloadFailed);
+                if (jarDownloadstatus.Status != Status.Succeeded)
+                {
+                    OnProgressChanged?.Invoke("下载游戏资源文件失败" + jarDownloadstatus.Exception, 40);
+                    return;
                 }
             }
             catch (OperationCanceledException)
