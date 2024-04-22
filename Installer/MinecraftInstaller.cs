@@ -332,7 +332,7 @@ namespace StarLight_Core.Installer
             
             try
             {
-                OnProgressChanged?.Invoke("下载游戏资源", 60);
+                OnProgressChanged?.Invoke("下载游戏资源索引", 60);
                 
                 if (cancellationToken != default)
                 {
@@ -379,6 +379,8 @@ namespace StarLight_Core.Installer
                 
                 var assetsInfo = JsonSerializer.Deserialize<AssetData>(assetsJsonContent);
 
+                OnProgressChanged?.Invoke("下载游戏资源", 80);
+                
                 var assetsDownloader = new DownloadsUtil();
                 var assetsDownloadList = new List<DownloadItem>();
                 
@@ -398,20 +400,22 @@ namespace StarLight_Core.Installer
                 
                 Action<int, int> downloadCompleted = (int downloaded, int total) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 40);
+                    OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 80);
                 };
                 
                 Action<string> downloadFailed = (string path) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏资源文件: {path}", 40);
+                    OnProgressChanged?.Invoke($"下载游戏资源文件: {path}", 80);
                 };
                 
                 var jarDownloadstatus = await assetsDownloader.DownloadFilesAsync(assetsDownloadList, null, progressChanged, downloadCompleted, downloadFailed);
                 if (jarDownloadstatus.Status != Status.Succeeded)
                 {
-                    OnProgressChanged?.Invoke("下载游戏资源文件失败" + jarDownloadstatus.Exception, 40);
+                    OnProgressChanged?.Invoke("下载游戏资源文件失败" + jarDownloadstatus.Exception, 80);
                     return;
                 }
+                
+                OnProgressChanged?.Invoke("安装已完成 版本 : " + GameId, 100);
             }
             catch (OperationCanceledException)
             {
@@ -420,7 +424,7 @@ namespace StarLight_Core.Installer
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 60);
+                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 80);
             }
         }
         
