@@ -28,7 +28,7 @@ namespace StarLight_Core.Authentication
             Password = password;
         }
         
-        public async ValueTask<IEnumerable<YggdrasilAccount>> AuthAsync()
+        public async ValueTask<IEnumerable<YggdrasilAccount>> YggdrasilAuthAsync()
         {
             var requestJson = new
             {
