@@ -28,6 +28,13 @@ namespace StarLight_Core.Authentication
             Password = password;
         }
         
+        public YggdrasilAuthenticator(string email, string password)
+        {
+            Url = "https://littleskin.cn/api/yggdrasil";
+            Email = email;
+            Password = password;
+        }
+        
         public async ValueTask<IEnumerable<YggdrasilAccount>> YggdrasilAuthAsync()
         {
             var requestJson = new
