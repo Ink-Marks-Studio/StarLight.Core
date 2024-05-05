@@ -9,7 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -325,6 +324,7 @@
       <workItem from="1713708702873" duration="1866000" />
       <workItem from="1713798442419" duration="585000" />
       <workItem from="1714207195180" duration="1591000" />
+      <workItem from="1714560650551" duration="637000" />
     </task>
     <servers />
   </component>
