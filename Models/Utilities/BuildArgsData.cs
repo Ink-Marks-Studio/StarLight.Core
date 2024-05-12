@@ -29,4 +29,14 @@ public class BuildArgsData
         "-XX:-DontCompileHugeMethods",
         "-Djava.rmi.server.useCodebaseOnly=true"
     };
+    
+    public static List<string> JvmArgumentsTemplate = new List<string>
+    {
+        "-Djava.library.path=${natives_directory}",
+        "-Dminecraft.launcher.brand=${launcher_name}",
+        "-Dminecraft.launcher.version=${launcher_version}",
+        "-cp",
+        "${classpath}"
+    };
+    
 }

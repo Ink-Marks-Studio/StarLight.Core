@@ -13,7 +13,7 @@ namespace StarLight_Core.Authentication
         
         public OfflineAuthentication(string username)
         {
-            AccessToken = AccessToken = Guid.NewGuid().ToString("N");
+            AccessToken = Guid.NewGuid().ToString("N");
             ClientToken = Guid.NewGuid().ToString("N");
             Name = username;
             Uuid = Guid.NewGuid().ToString();
@@ -21,7 +21,7 @@ namespace StarLight_Core.Authentication
         
         public OfflineAuthentication(string username, string uuid)
         {
-            AccessToken = AccessToken = Guid.NewGuid().ToString("N");
+            AccessToken = Guid.NewGuid().ToString("N");
             ClientToken = Guid.NewGuid().ToString("N");
             Name = username;
             Uuid = uuid;

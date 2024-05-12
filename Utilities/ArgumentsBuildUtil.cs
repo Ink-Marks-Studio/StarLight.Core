@@ -116,41 +116,32 @@ public class ArgumentsBuildUtil
             { "${classpath_separator}", ";" }
         };
         
-
-        string jvmArgumentTemplate = "";
         
-        List<string> jvmArgumentsTemplate = new List<string>
-        {
-            "-Djava.library.path=${natives_directory}",
-            "-Dminecraft.launcher.brand=${launcher_name}",
-            "-Dminecraft.launcher.version=${launcher_version}",
-            "-cp",
-            "${classpath}"
-        };
+        string jvmArgumentTemplate = "";
         
         if (coreInfo.IsNewVersion)
         {
-            jvmArgumentsTemplate.Clear();
+            BuildArgsData.JvmArgumentsTemplate.Clear();
             foreach (var element in coreInfo.Arguments.Jvm)
             {
                 if (!ElementContainsRules(element))
                 {
-                    jvmArgumentsTemplate.Add(element.ToString());
+                    BuildArgsData.JvmArgumentsTemplate.Add(element.ToString());
                 }
             }
             
             List<string> updatedJvmArguments = new List<string>();
-            foreach (var argument in jvmArgumentsTemplate)
+            foreach (var argument in BuildArgsData.JvmArgumentsTemplate)
             {
                 updatedJvmArguments.Add(argument.Replace(" ", ""));
             }
             
-            jvmArgumentsTemplate = updatedJvmArguments;
-            jvmArgumentTemplate = string.Join(" ", jvmArgumentsTemplate);
+            BuildArgsData.JvmArgumentsTemplate = updatedJvmArguments;
+            jvmArgumentTemplate = string.Join(" ", BuildArgsData.JvmArgumentsTemplate);
         }
         else
         {
-            jvmArgumentTemplate = string.Join(" ", jvmArgumentsTemplate);
+            jvmArgumentTemplate = string.Join(" ", BuildArgsData.JvmArgumentsTemplate);
         }
         
         args.Add(ReplacePlaceholders(jvmArgumentTemplate, jvmPlaceholders));
