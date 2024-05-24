@@ -12,6 +12,8 @@ namespace StarLight_Core.Models.Launch
     
         public string Port { get; set; }
         
+        public string VersionTypeInfo { get; set; }
+        
         public string UnifiedPassServerId { get; set; }
         
         public string Nide8authPath { get; set; }
