@@ -113,7 +113,8 @@ public class ArgumentsBuildUtil
             { "${classpath}", BuildLibrariesArgs() },
             { "${version_name}", coreInfo.Id},
             { "${library_directory}", Path.Combine(rootPath, "libraries") },
-            { "${classpath_separator}", ";" }
+            { "${classpath_separator}", ";" },
+            { "${user_properties}", "{}"}
         };
         
         
