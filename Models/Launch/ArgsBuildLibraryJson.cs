@@ -18,7 +18,10 @@ public class Library
     
     [JsonPropertyName("rules")]
     public LibraryJsonRule[] Rule { get; set; }
-}
+    
+    [JsonPropertyName("natives")]
+    public Dictionary<string, string> Natives { get; set; }
+}   
 
 public class Os
 {
