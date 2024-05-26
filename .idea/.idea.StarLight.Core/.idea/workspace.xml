@@ -9,8 +9,11 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/FileUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FileUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/SystemUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/SystemUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -337,6 +340,8 @@
       <workItem from="1716565336294" duration="176000" />
       <workItem from="1716645448516" duration="306000" />
       <workItem from="1716649664166" duration="924000" />
+      <workItem from="1716696238484" duration="3711000" />
+      <workItem from="1716730335992" duration="1574000" />
     </task>
     <servers />
   </component>
