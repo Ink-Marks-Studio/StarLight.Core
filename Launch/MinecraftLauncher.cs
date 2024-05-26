@@ -65,7 +65,7 @@ namespace StarLight_Core.Launch
             }
             catch (Exception e)
             {
-                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("解压游戏资源错误 : " + e));
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception($"解压游戏资源错误 : {e}"));
             }
 
             try
