@@ -52,13 +52,13 @@ public class FileUtil
             if (File.Exists(filePath))
             {
                 string content = File.ReadAllText(filePath);
-                string updatedContent = Regex.Replace(content, @"lang:\w+", "lang:zh_cn");
+                string updatedContent = Regex.Replace(content, @"lang:\w+", "lang:zh_CN");
 
                 File.WriteAllText(filePath, updatedContent);
             }
             else
             {
-                File.WriteAllText(filePath, "lang:zh_cn");
+                File.WriteAllText(filePath, "lang:zh_CN");
             }
         }
         catch (Exception x)
@@ -128,7 +128,7 @@ public class FileUtil
                 {
                     if (lib.Downloads.Classifiers != null)
                     {
-                        var path = ArgumentsBuildUtil.BuildNativesName(lib.Name, librariesPath);
+                        var path = ArgumentsBuildUtil.BuildNativesName(lib, librariesPath);
                         yield return path;
                     }
                     else
