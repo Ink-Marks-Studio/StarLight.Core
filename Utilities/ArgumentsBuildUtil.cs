@@ -113,8 +113,7 @@ public class ArgumentsBuildUtil
             { "${classpath}", BuildLibrariesArgs() },
             { "${version_name}", coreInfo.Id},
             { "${library_directory}", Path.Combine(rootPath, "libraries") },
-            { "${classpath_separator}", ";" },
-            { "${user_properties}", "{}"}
+            { "${classpath_separator}", ";" }
         };
         
         
@@ -182,7 +181,8 @@ public class ArgumentsBuildUtil
             { "${clientid}", "${clientid}" },
             { "${auth_xuid}", "${auth_xuid}" },
             { "${user_type}", userType },
-            { "${version_type}", $"\"SL/{TextUtil.ToTitleCase(coreInfo.Type)}\"" }
+            { "${version_type}", $"\"SL/{TextUtil.ToTitleCase(coreInfo.Type)}\"" },
+            { "${user_properties}", "{}"}
         };
 
         string gameDirectory = GameCoreConfig.IsVersionIsolation ?
@@ -399,9 +399,9 @@ public class ArgumentsBuildUtil
         return null;
     }
     
-    public static string BuildNativesName(string name, string root)
+    public static string BuildNativesName(Library library, string root)
     {
-        var parts = name.Split(':');
+        var parts = library.Name.Split(':');
         if (parts.Length != 3)
         {
             throw new ArgumentException("[SL]名称格式无效,获取错误");
@@ -411,7 +411,20 @@ public class ArgumentsBuildUtil
         string artifactId = parts[1];
         string version = parts[2];
         
-        return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-natives-windows.jar");
+        string arch;
+
+        try
+        {
+            arch = SystemUtil.IsOperatingSystem64Bit() ? "64" : "32";
+        }
+        catch (Exception e)
+        {
+            arch = "64";
+        }
+        
+        string windowsNative = library.Natives["windows"].Replace("${arch}", arch);
+        
+        return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-{windowsNative}.jar");
     }
     
     public static string BuildNewNativesName(string name, string root)
