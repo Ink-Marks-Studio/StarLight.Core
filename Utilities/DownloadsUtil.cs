@@ -140,6 +140,30 @@ namespace StarLight_Core.Utilities
             }
         }
         
+        // 获取下载文件大小
+        public async Task<long> GetFileSizeAsync(string url)
+        {
+            try
+            {
+                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
+                response.EnsureSuccessStatusCode();
+                
+                var fileSize = response.Content.Headers.ContentLength;
+                if (fileSize.HasValue)
+                {
+                    return fileSize.Value;
+                }
+                else
+                {
+                    throw new Exception("无法获取文件大小，服务器未返回 Content-Length 头部字段");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"获取文件大小失败：{ex.Message}");
+            }
+        }
+        
         public void Dispose()
         {
             _httpClient.Dispose();
