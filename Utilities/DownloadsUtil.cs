@@ -23,7 +23,7 @@ namespace StarLight_Core.Utilities
             _httpClient.Timeout = TimeSpan.FromMinutes(10);
         }
 
-        // 下载文件
+        
         public async Task<DownloadStatus> DownloadAsync(DownloadItem downloadItem, string? outputFolder = null, Action<double>? speedChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
         {
             try
@@ -38,7 +38,6 @@ namespace StarLight_Core.Utilities
             }
         }
 
-        // 下载多个文件
         public async Task<DownloadStatus> DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
         {
             try
@@ -47,7 +46,7 @@ namespace StarLight_Core.Utilities
 
                 List<DownloadItem> downloadItemList = downloadItems.ToList();
                 _totalFiles = downloadItemList.Count;
-            
+
                 if (outputFolder == null)
                 {
                     foreach (var item in downloadItemList)
@@ -58,26 +57,15 @@ namespace StarLight_Core.Utilities
                         }
                     }
                 }
-            
+
                 downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
-            
-                var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsPath, downloadCompleted, downloadFailed)).ToList();
-            
-                using var timer = new Timer(_ =>
-                {
-                    var speed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
-                    progressChanged?.Invoke(speed);
-                }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
 
-                var tasksWithExpectedBytes = await Task.WhenAll(downloadTasks);
-                var totalExpectedBytes = tasksWithExpectedBytes.Sum(task => task.ExpectedBytes);
+                var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsPath, progressChanged, downloadCompleted, downloadFailed)).ToList();
 
-                timer.Change(Timeout.Infinite, Timeout.Infinite);
+                await Task.WhenAll(downloadTasks);
+
                 sw.Stop();
-            
-                var finalSpeed = _totalBytesReceived / sw.Elapsed.TotalSeconds;
-                progressChanged?.Invoke(finalSpeed);
-                
+
                 return new DownloadStatus(Status.Succeeded);
             }
             catch (Exception e)
@@ -86,11 +74,27 @@ namespace StarLight_Core.Utilities
             }
         }
 
-        // 下载单个文件
-        private async Task<(long ExpectedBytes, long DownloadedBytes)> DownloadFileAsync(string url, string? outputFolder, string? saveAsPath, Action<int, int>? downloadCompleted, Action<string>? downloadFailed)
+        private async Task DownloadFileAsync(string url, string? outputFolder, string? saveAsPath, Action<double>? progressChanged, Action<int, int>? downloadCompleted, Action<string>? downloadFailed)
         {
             const int maxRetryAttempts = 3;
             int retryCount = 0;
+
+            long previousBytesReceived = 0;
+            long currentBytesReceived = 0;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            using var timer = new Timer(_ =>
+            {
+                var elapsed = stopwatch.Elapsed.TotalSeconds;
+                if (elapsed >= 1)
+                {
+                    var currentSpeed = (currentBytesReceived - previousBytesReceived) / elapsed / 1024.0; // KB/s
+                    progressChanged?.Invoke(currentSpeed);
+
+                    previousBytesReceived = currentBytesReceived;
+                    stopwatch.Restart();
+                }
+            }, null, 0, 1000);
 
             while (true)
             {
@@ -104,29 +108,27 @@ namespace StarLight_Core.Utilities
                     var fileName = Path.GetFileName(new Uri(url).AbsolutePath); // 获取文件名
                     var outputPath = string.IsNullOrEmpty(saveAsPath) ? Path.Combine(outputFolder, fileName) : saveAsPath;
 
-                    FileUtil.IsDirectory(Path.GetDirectoryName(outputPath), true);
-                    
-                    var bytesReceived = 0L;
+                    Directory.CreateDirectory(Path.GetDirectoryName(outputPath) ?? throw new InvalidOperationException());
 
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var fileStream = new FileStream(outputPath, FileMode.Create))
                     {
                         var buffer = new byte[8192];
                         var bytesRead = 0;
+
                         while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                         {
                             await fileStream.WriteAsync(buffer, 0, bytesRead);
                             Interlocked.Add(ref _totalBytesReceived, bytesRead);
-                            bytesReceived += bytesRead;
+                            currentBytesReceived += bytesRead;
                         }
                     }
 
                     // 下载完成
                     _downloadedFiles++;
                     downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
-                    downloadFailed?.Invoke(outputPath);
 
-                    return (totalBytes, bytesReceived);
+                    return;
                 }
                 catch (HttpRequestException e) when (retryCount < maxRetryAttempts)
                 {
@@ -135,6 +137,7 @@ namespace StarLight_Core.Utilities
                 }
                 catch (Exception ex)
                 {
+                    downloadFailed?.Invoke($"下载失败：{ex.Message}");
                     throw new Exception($"[SL]下载失败，无法重试：{ex.Message}");
                 }
             }
@@ -155,12 +158,12 @@ namespace StarLight_Core.Utilities
                 }
                 else
                 {
-                    throw new Exception("无法获取文件大小，服务器未返回 Content-Length 头部字段");
+                    return 0;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"获取文件大小失败：{ex.Message}");
+                throw new Exception($"[SL]获取文件大小失败：{ex.Message}");
             }
         }
         
