@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Downloader\" />
   </ItemGroup>
 
 </Project>
