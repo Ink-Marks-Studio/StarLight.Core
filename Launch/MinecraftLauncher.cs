@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.Intrinsics.Arm;
+using StarLight_Core.Downloader;
 using StarLight_Core.Enum;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Models.Launch;
@@ -24,6 +25,8 @@ namespace StarLight_Core.Launch
             JavaConfig = launchConfig.JavaConfig;
             BaseAccount = launchConfig.Account.BaseAccount;
         }
+        
+        private static IDownloadService _downloadService;
 
         public async Task<LaunchResponse> LaunchAsync(Action<ProgressReport> onProgressChanged)
         {

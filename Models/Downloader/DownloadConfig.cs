@@ -4,7 +4,7 @@ namespace StarLight_Core.Models.Downloader
 {
     public class DownloadConfig
     {
-        public DownloadConfiguration DownloadOptions { get; set; } = new DownloadConfiguration()
+        public static DownloadConfiguration DownloadOptions { get; set; } = new DownloadConfiguration()
         {
             BufferBlockSize = 10240,
             ChunkCount = 4,

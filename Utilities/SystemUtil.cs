@@ -4,10 +4,8 @@ namespace StarLight_Core.Utilities
 {
     public class SystemUtil
     {
-        /// <summary>
-        /// 判断是否为 Windows 10 及以上版本
-        /// </summary>
-        /// <returns>是 Windows 10 及以上版本则为 True，否则为 False</returns>
+        /// <summary> 判断是否为 Windows 10 及以上版本 </summary>
+        /// <returns> 是 Windows 10 及以上版本则为 True，否则为 False </returns>
         public static bool IsOperatingSystemGreaterThanWin10()
         {
             const string subkey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
@@ -25,12 +23,8 @@ namespace StarLight_Core.Utilities
             return false;
         }
         
-        /// <summary>
-        /// 判断操作系统是否为 64 位
-        /// </summary>
-        /// <returns>
-        /// 如果操作系统是 64 位则返回 True，否则返回 False
-        /// </returns>
+        /// <summary> 判断操作系统是否为 64 位 </summary>
+        /// <returns> 如果操作系统是 64 位则返回 True，否则返回 False </returns>
         public static bool IsOperatingSystem64Bit()
         {
             return Environment.Is64BitOperatingSystem;
