@@ -25,8 +25,6 @@ namespace StarLight_Core.Launch
             JavaConfig = launchConfig.JavaConfig;
             BaseAccount = launchConfig.Account.BaseAccount;
         }
-        
-        private static IDownloadService _downloadService;
 
         public async Task<LaunchResponse> LaunchAsync(Action<ProgressReport> onProgressChanged)
         {

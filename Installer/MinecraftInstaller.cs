@@ -4,6 +4,7 @@ using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Channels;
+using StarLight_Core.Downloader;
 using StarLight_Core.Enum;
 using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
@@ -22,6 +23,8 @@ namespace StarLight_Core.Installer
         public string Root { get; set; }
         
         private string GamePath { get; set; }
+        
+        private static IDownloadService _downloadService;
         
         public MinecraftInstaller(string gameId, string root = ".minecraft", Action<string,int>? onProgressChanged = null, Action<double>? onSpeedChanged = null)
         {
