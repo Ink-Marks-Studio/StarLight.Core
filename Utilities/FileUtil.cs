@@ -52,13 +52,13 @@ public class FileUtil
             if (File.Exists(filePath))
             {
                 string content = File.ReadAllText(filePath);
-                string updatedContent = Regex.Replace(content, @"lang:\w+", "lang:zh_CN");
+                string updatedContent = Regex.Replace(content, @"lang:\w+", "lang:zh_cn");
 
                 File.WriteAllText(filePath, updatedContent);
             }
             else
             {
-                File.WriteAllText(filePath, "lang:zh_CN");
+                File.WriteAllText(filePath, "lang:zh_cn");
             }
         }
         catch (Exception x)
