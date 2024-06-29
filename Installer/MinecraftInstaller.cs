@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System.ComponentModel;
+using System.Net.Mime;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
@@ -14,24 +15,37 @@ namespace StarLight_Core.Installer
 {
     public class MinecraftInstaller
     {
-        public string GameId { get; set; }
+        private string GameId { get; set; }
         
-        public Action<string,int>? OnProgressChanged { get; set; }
+        private Action<string,int>? OnProgressChanged { get; set; }
         
-        public Action<double>? OnSpeedChanged { get; set; }
+        private Action<string>? OnSpeedChanged { get; set; }
         
-        public string Root { get; set; }
+        private string Root { get; set; }
         
         private string GamePath { get; set; }
         
         private static IDownloadService _downloadService;
         
-        public MinecraftInstaller(string gameId, string root = ".minecraft", Action<string,int>? onProgressChanged = null, Action<double>? onSpeedChanged = null)
+        public MinecraftInstaller(string gameId, string root = ".minecraft", Action<string,int>? onProgressChanged = null, Action<string>? onSpeedChanged = null)
         {
             Root = root;
             GameId = gameId;
             OnProgressChanged = onProgressChanged;
             OnSpeedChanged = onSpeedChanged;
+        }
+        
+        // 创建下载服务
+        private DownloadService CreateDownloadService(DownloadConfiguration config)
+        {
+            var downloadService = new DownloadService(config);
+            downloadService.DownloadProgressChanged += OnDownloadProgressChanged;
+            return downloadService;
+        }
+        
+        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(e.BytesPerSecondSpeed));
         }
 
         public async Task InstallAsync(string? gameCoreName = null, bool mandatory = false, CancellationToken cancellationToken = default)
@@ -198,7 +212,7 @@ namespace StarLight_Core.Installer
                 
                     Action<double> progressChanged = (double speed) =>
                     {
-                        OnSpeedChanged?.Invoke(speed / 1024);
+                        //OnSpeedChanged?.Invoke(speed);
                     };
                     var jarDownloadstatus =
                         await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
@@ -223,7 +237,7 @@ namespace StarLight_Core.Installer
                 
                     Action<double> progressChanged = (double speed) =>
                     {
-                        OnSpeedChanged?.Invoke(speed / 1024);
+                        //OnSpeedChanged?.Invoke(speed / 1024);
                     };
                     var jarDownloadstatus =
                         await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
@@ -303,7 +317,7 @@ namespace StarLight_Core.Installer
                 
                 Action<double> progressChanged = (double speed) =>
                 {
-                    OnSpeedChanged?.Invoke(speed / 1024);
+                    //OnSpeedChanged?.Invoke(speed / 1024);
                 };
                 
                 Action<int, int> downloadCompleted = (int downloaded, int total) =>
@@ -398,7 +412,7 @@ namespace StarLight_Core.Installer
                 
                 Action<double> progressChanged = (double speed) =>
                 {
-                    OnSpeedChanged?.Invoke(speed / 1024);
+                    //OnSpeedChanged?.Invoke(speed / 1024);
                 };
                 
                 Action<int, int> downloadCompleted = (int downloaded, int total) =>
@@ -464,6 +478,24 @@ namespace StarLight_Core.Installer
                 }
             }
             return !isDisallowForLinux && (isDisallowForOsX || isAllow);
+        }
+        
+        static string CalcMemoryMensurableUnit(double bytes)
+        {
+            double kb = bytes / 1024; // · 1024 Bytes = 1 Kilobyte 
+            double mb = kb / 1024;    // · 1024 Kilobytes = 1 Megabyte 
+            double gb = mb / 1024;    // · 1024 Megabytes = 1 Gigabyte 
+            double tb = gb / 1024;    // · 1024 Gigabytes = 1 Terabyte 
+
+            string result =
+                tb > 1 ? $"{tb:0.##}TB" :
+                gb > 1 ? $"{gb:0.##}GB" :
+                mb > 1 ? $"{mb:0.##}MB" :
+                kb > 1 ? $"{kb:0.##}KB" :
+                $"{bytes:0.##}B";
+
+            result = result.Replace("/", ".");
+            return result;
         }
     }
 }
