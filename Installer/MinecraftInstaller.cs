@@ -7,9 +7,11 @@ using System.Text.Json;
 using System.Threading.Channels;
 using StarLight_Core.Downloader;
 using StarLight_Core.Enum;
+using StarLight_Core.Models.Downloader;
 using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
 using StarLight_Core.Utilities;
+using Download = StarLight_Core.Downloader.Download;
 
 namespace StarLight_Core.Installer
 {
@@ -17,15 +19,15 @@ namespace StarLight_Core.Installer
     {
         private string GameId { get; set; }
         
-        private Action<string,int>? OnProgressChanged { get; set; }
+        public Action<string,int>? OnProgressChanged { get; set; }
         
-        private Action<string>? OnSpeedChanged { get; set; }
+        public Action<string>? OnSpeedChanged { get; set; }
         
         private string Root { get; set; }
         
         private string GamePath { get; set; }
         
-        private static IDownloadService _downloadService;
+        private DownloadService _downloadService;
         
         public MinecraftInstaller(string gameId, string root = ".minecraft", Action<string,int>? onProgressChanged = null, Action<string>? onSpeedChanged = null)
         {
@@ -33,6 +35,7 @@ namespace StarLight_Core.Installer
             GameId = gameId;
             OnProgressChanged = onProgressChanged;
             OnSpeedChanged = onSpeedChanged;
+            _downloadService = CreateDownloadService(DownloadConfig.DownloadOptions);
         }
         
         // 创建下载服务
@@ -207,9 +210,13 @@ namespace StarLight_Core.Installer
                     {
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
                     }
-                
-                    var jarDownloader = new DownloadsUtil();
-                
+
+                    await _downloadService.DownloadFileTaskAsync(jarDownloadPath, new DirectoryInfo(Path.GetDirectoryName(jarFilePath)),
+                        cancellationToken);
+                    
+                    /*
+                     var jarDownloader = new DownloadsUtil();
+                    
                     Action<double> progressChanged = (double speed) =>
                     {
                         //OnSpeedChanged?.Invoke(speed);
@@ -217,12 +224,14 @@ namespace StarLight_Core.Installer
                     var jarDownloadstatus =
                         await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
                             progressChanged);
+                    
                 
                     if (jarDownloadstatus.Status != Status.Succeeded)
                     {
                         OnProgressChanged?.Invoke("下载游戏核心失败", 20);
                         return;
                     }
+                    */
                 }
                 else if (!HashUtil.VerifyFileHash(jarFilePath, coreJarSha1, SHA1.Create()))
                 {
