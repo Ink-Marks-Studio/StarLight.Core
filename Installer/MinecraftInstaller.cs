@@ -211,8 +211,7 @@ namespace StarLight_Core.Installer
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
                     }
 
-                    await _downloadService.DownloadFileTaskAsync(jarDownloadPath, new DirectoryInfo(Path.GetDirectoryName(jarFilePath)),
-                        cancellationToken);
+                    await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
                     
                     /*
                      var jarDownloader = new DownloadsUtil();
