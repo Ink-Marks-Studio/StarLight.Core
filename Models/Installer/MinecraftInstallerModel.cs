@@ -4,7 +4,6 @@ public class MinecraftInstallerModel
 {
     public static string BuildFromName(string name, string root)
     {
-        Console.WriteLine(name);
         var parts = name.Split(':');
         if (parts.Length < 3)
         {
