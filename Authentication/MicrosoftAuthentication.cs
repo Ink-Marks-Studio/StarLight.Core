@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Utilities;
@@ -20,7 +21,7 @@ namespace StarLight_Core.Authentication
         public async ValueTask<RetrieveDeviceCode> RetrieveDeviceCodeInfo()
         {
             if (string.IsNullOrEmpty(ClientId))
-                throw new ArgumentNullException(nameof(ClientId), "ClientId为空！");
+                throw new ArgumentNullException(nameof(ClientId), "ClientId为空");
 
             string postData = $"client_id={ClientId}&scope={string.Join(" ", Scopes)}";
             string deviceCodeUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
@@ -82,14 +83,16 @@ namespace StarLight_Core.Authentication
             }
         }
 
-        public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action, string? refreshToken = null)
+        public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action,
+            string? refreshToken = null)
         {
             // 刷新令牌
             if (refreshToken != null)
             {
                 action("正在刷新令牌");
-                
-                var refreshPostContent = new {
+
+                var refreshPostContent = new
+                {
                     client_id = ClientId,
                     refresh_token = refreshToken,
                     grant_type = "refresh_token",
@@ -97,7 +100,7 @@ namespace StarLight_Core.Authentication
 
                 string refreshPostData = JsonSerializer.Serialize(refreshPostContent);
                 string refreshResponse;
-                
+
                 try
                 {
                     refreshResponse = await HttpUtil.SendHttpPostRequest("https://login.live.com/oauth20_token.srf",
@@ -107,14 +110,19 @@ namespace StarLight_Core.Authentication
                 {
                     throw new Exception("刷新令牌错误: " + e.Message);
                 }
-                
+
                 var refreshResponseData = JsonSerializer.Deserialize<TokenResponse>(refreshResponse);
 
                 tokenInfo.AccessToken = refreshResponseData.AccessToken;
                 tokenInfo.RefreshToken = refreshResponseData.RefreshToken;
                 tokenInfo.ExpiresIn = refreshResponseData.ExpiresIn;
             }
-            
+
+            return await GetMicrosoftAuthInfo(tokenInfo, action);
+        }
+        private async ValueTask<MicrosoftAccount> GetMicrosoftAuthInfo(GetTokenResponse tokenInfo, Action<string> action,
+            string? refreshToken = null)
+        {
             action("开始获取Microsoft账号信息");
 
             // 获取XBL令牌

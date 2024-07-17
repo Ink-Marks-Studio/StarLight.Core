@@ -241,21 +241,15 @@ namespace StarLight_Core.Installer
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
                     }
                 
-                    var jarDownloader = new DownloadsUtil();
+                    //var jarDownloader = new DownloadsUtil();
                 
-                    Action<double> progressChanged = (double speed) =>
-                    {
-                        //OnSpeedChanged?.Invoke(speed / 1024);
-                    };
-                    var jarDownloadstatus =
-                        await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
-                            progressChanged);
+                    await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
                 
-                    if (jarDownloadstatus.Status != Status.Succeeded)
-                    {
-                        OnProgressChanged?.Invoke("下载游戏核心失败", 20);
-                        return;
-                    }
+                    //if (jarDownloadstatus.Status != Status.Succeeded)
+                    //{
+                    //    OnProgressChanged?.Invoke("下载游戏核心失败", 20);
+                    //    return;
+                    //}
                 }
             }
             catch (OperationCanceledException)
@@ -324,8 +318,9 @@ namespace StarLight_Core.Installer
                 }
                 
                 Action<double> progressChanged = (double speed) =>
+                 
                 {
-                    //OnSpeedChanged?.Invoke(speed / 1024);
+                    OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                 };
                 
                 Action<int, int> downloadCompleted = (int downloaded, int total) =>
@@ -420,7 +415,7 @@ namespace StarLight_Core.Installer
                 
                 Action<double> progressChanged = (double speed) =>
                 {
-                    //OnSpeedChanged?.Invoke(speed / 1024);
+                    OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                 };
                 
                 Action<int, int> downloadCompleted = (int downloaded, int total) =>
@@ -504,6 +499,32 @@ namespace StarLight_Core.Installer
 
             result = result.Replace("/", ".");
             return result;
+        }
+        
+        async Task DownloadFilesAsync(List<DownloadItem> downloadItems, CancellationToken cancellationToken = default)
+        {
+            var downloadTasks = new List<Task>();
+
+            int i = 0;
+            foreach (var downloadItem in downloadItems)
+            {
+                i++;
+                Console.WriteLine(i);
+                var task = _downloadService.DownloadFileTaskAsync(downloadItem.Url, downloadItem.SaveAsPath,
+                    cancellationToken);
+                downloadTasks.Add(task);
+            }
+
+            // 任务数量
+            var maxConcurrentDownloads = 128;
+            
+            while (downloadTasks.Count > maxConcurrentDownloads)
+            {
+                await Task.WhenAny(downloadTasks);
+                downloadTasks.RemoveAll(t => t.IsCompleted);
+            }
+            
+            await Task.WhenAll(downloadTasks);
         }
     }
 }
