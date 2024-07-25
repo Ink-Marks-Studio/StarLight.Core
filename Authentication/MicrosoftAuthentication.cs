@@ -120,21 +120,23 @@ namespace StarLight_Core.Authentication
 
             return await GetMicrosoftAuthInfo(tokenInfo, action);
         }
-        private async ValueTask<MicrosoftAccount> GetMicrosoftAuthInfo(GetTokenResponse tokenInfo, Action<string> action,
-            string? refreshToken = null)
+        
+        public async ValueTask<MicrosoftAccount> GetMicrosoftAuthInfo(GetTokenResponse tokenInfo, Action<string> action,
+            bool isNewXbl = true)
         {
-            action("开始获取Microsoft账号信息");
+            action("开始获取 Microsoft 账号信息");
 
             // 获取XBL令牌
-            action("正在获取XBL令牌");
-            var rpsTicketValue = $"d={tokenInfo.AccessToken}";
+            action("正在获取 XBL 令牌");
+            var rpsTicketValue = isNewXbl ? "d=" : "";
+
             var xboxLoginContent = new
             {
                 Properties = new
                 {
                     AuthMethod = "RPS",
                     SiteName = "user.auth.xboxlive.com",
-                    RpsTicket = rpsTicketValue
+                    RpsTicket = $"{rpsTicketValue}{tokenInfo.AccessToken}"
                 },
                 RelyingParty = "http://auth.xboxlive.com",
                 TokenType = "JWT"
@@ -152,7 +154,7 @@ namespace StarLight_Core.Authentication
             }
             catch (Exception e)
             {
-                throw new Exception("获取XBL令牌错误: " + e.Message);
+                throw new Exception("获取 XBL 令牌错误: " + e.Message);
             }
             
             var xboxResponseData = JsonSerializer.Deserialize<XboxResponse>(xboxResponseString);
@@ -160,7 +162,7 @@ namespace StarLight_Core.Authentication
             string userHash = xboxResponseData.DisplayClaims.Xui[0].UserHash;
     
             // 获取XSTS令牌
-            action("正在获取XSTS令牌");
+            action("正在获取 XSTS 令牌");
             var getXSTSJsonData = new
             {
                 Properties = new

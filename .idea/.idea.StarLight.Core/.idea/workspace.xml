@@ -9,8 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/ModUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ModUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -362,6 +361,13 @@
       <workItem from="1720435409233" duration="697000" />
       <workItem from="1720798682221" duration="510000" />
       <workItem from="1720852592489" duration="106000" />
+      <workItem from="1721207227021" duration="863000" />
+      <workItem from="1721289808183" duration="421000" />
+      <workItem from="1721359527825" duration="641000" />
+      <workItem from="1721662238469" duration="22000" />
+      <workItem from="1721719287821" duration="2000" />
+      <workItem from="1721786417350" duration="119000" />
+      <workItem from="1721881331395" duration="3178000" />
     </task>
     <servers />
   </component>
