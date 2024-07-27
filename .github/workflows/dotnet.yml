@@ -23,11 +23,13 @@ jobs:
       run: dotnet test --no-build -c Release
     - name: 构建 NuGet 包
       run: dotnet pack --no-build -c Release -o nupkg
+    - name: 列出 NuGet 包文件
+      run: dir nupkg
     - name: 获取 NuGet 包版本
       id: get_version
       shell: pwsh
       run: |
-        $version = (Select-String -Path nupkg/*.nupkg -Pattern "\d+\.\d+\.\d+\.\d+" | Select-Object -First 1).Matches.Value
+        $version = (Select-String -Path nupkg/*.nupkg -Pattern "\d+\.\d+\.\d+" | Select-Object -First 1).Matches.Value
         echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
   publish:
@@ -39,12 +41,14 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '8.0.x'
+    - name: 列出 NuGet 包文件
+      run: dir nupkg
     - name: 推送至 Github NuGet
-      run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push "nupkg/*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: 推送至 NuGet.org
-      run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push "nupkg/*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
 
   release:
     needs: publish
