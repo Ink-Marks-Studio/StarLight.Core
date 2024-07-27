@@ -25,8 +25,11 @@ jobs:
       run: dotnet pack --no-build -c Release -o nupkg
     - name: 获取 NuGet 包版本
       id: get_version
-      run: echo "::set-output name=VERSION::$(dotnet list package --include-transitive | grep -oP '(?<=\()\d+\.\d+\.\d+\.\d+(?=\))')"
-      
+      shell: pwsh
+      run: |
+        $version = (Select-String -Path nupkg/*.nupkg -Pattern "\d+\.\d+\.\d+\.\d+" | Select-Object -First 1).Matches.Value
+        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+
   publish:
     needs: build
     runs-on: windows-latest
@@ -52,7 +55,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ needs.build.outputs.VERSION }}
-        release_name: Release v${{ needs.build.outputs.VERSION }}
+        tag_name: v${{ env.VERSION }}
+        release_name: Release v${{ env.VERSION }}
         draft: false
         prerelease: false
