@@ -29,7 +29,14 @@ jobs:
       id: get_version
       shell: pwsh
       run: |
-        $version = (Select-String -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+        $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
+        Write-Host "Found .nupkg files:"
+        $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
+        
+        $file = $nupkgFiles[0]
+        Write-Host "Processing file: $($file.Name)"
+        $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+        Write-Host "Extracted version from $($file.Name): $version"
         echo "VERSION=$version" >> $env:GITHUB_ENV
     - name: 检查版本
       run: echo "VERSION=${{ env.VERSION }}"
