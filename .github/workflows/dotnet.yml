@@ -23,9 +23,36 @@ jobs:
       run: dotnet test --no-build -c Release
     - name: 构建 NuGet 包
       run: dotnet pack --no-build -c Release -o nupkg
+    - name: 获取 NuGet 包版本
+      id: get_version
+      run: echo "::set-output name=VERSION::$(dotnet list package --include-transitive | grep -oP '(?<=\()\d+\.\d+\.\d+\.\d+(?=\))')"
+      
+  publish:
+    needs: build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: 安装 .NET 8.0 环境
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x'
     - name: 推送至 Github NuGet
       run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: 推送至 NuGet.org
       run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+
+  release:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+    - name: 创建 GitHub 发布
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ needs.build.outputs.VERSION }}
+        release_name: Release v${{ needs.build.outputs.VERSION }}
+        draft: false
+        prerelease: false
