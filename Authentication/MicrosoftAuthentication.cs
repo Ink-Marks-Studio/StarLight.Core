@@ -90,21 +90,14 @@ namespace StarLight_Core.Authentication
             if (refreshToken != null)
             {
                 action("正在刷新令牌");
-
-                var refreshPostContent = new
-                {
-                    client_id = ClientId,
-                    refresh_token = refreshToken,
-                    grant_type = "refresh_token",
-                };
-
-                string refreshPostData = JsonSerializer.Serialize(refreshPostContent);
+                
+                var refreshPostData = $"client_id={ClientId}&refresh_token={refreshToken}&grant_type=refresh_token";
                 string refreshResponse;
 
                 try
                 {
                     refreshResponse = await HttpUtil.SendHttpPostRequest("https://login.live.com/oauth20_token.srf",
-                        refreshPostData, "application/json");
+                        refreshPostData);
                 }
                 catch (Exception e)
                 {

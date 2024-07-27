@@ -9,7 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -376,7 +375,7 @@
       <workItem from="1721984193422" duration="4575000" />
       <workItem from="1722002722551" duration="1705000" />
       <workItem from="1722006980142" duration="1485000" />
-      <workItem from="1722049201362" duration="4134000" />
+      <workItem from="1722049201362" duration="14747000" />
     </task>
     <servers />
   </component>
