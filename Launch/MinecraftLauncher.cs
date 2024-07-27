@@ -20,7 +20,7 @@ namespace StarLight_Core.Launch
         
         public MinecraftLauncher(LaunchConfig launchConfig)
         {
-            GameWindowConfig = launchConfig.GameWindowConfig;
+            GameWindowConfig = new launchConfig.GameWindowConfig;
             GameCoreConfig = launchConfig.GameCoreConfig;
             JavaConfig = launchConfig.JavaConfig;
             BaseAccount = launchConfig.Account.BaseAccount;
