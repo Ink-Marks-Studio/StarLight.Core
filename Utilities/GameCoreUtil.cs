@@ -5,8 +5,12 @@ namespace StarLight_Core.Utilities
 {
     public class GameCoreUtil
     {
-        
-        // 获取游戏核心信息
+        /// <summary>
+        /// 获取游戏核心信息
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns>指定路径的游戏列表</returns>
+        /// <exception cref="Exception"></exception>
         public static IEnumerable<GameCoreInfo> GetGameCores(string root = ".minecraft")
         {
             string rootPath = "null";
