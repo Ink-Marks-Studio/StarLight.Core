@@ -29,8 +29,10 @@ jobs:
       id: get_version
       shell: pwsh
       run: |
-        $version = (Select-String -Path nupkg/*.nupkg -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+        $version = (Select-String -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         echo "VERSION=$version" >> $env:GITHUB_ENV
+    - name: 检查版本
+      run: echo "VERSION=${{ env.VERSION }}"
     - name: 上传构建工件
       uses: actions/upload-artifact@v3
       with:
@@ -53,6 +55,8 @@ jobs:
         path: nupkg
     - name: 列出 NuGet 包文件
       run: dir nupkg
+    - name: 检查版本
+      run: echo "VERSION=${{ env.VERSION }}"
     - name: 推送至 Github NuGet
       run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
       env:
@@ -71,6 +75,8 @@ jobs:
         path: nupkg
     - name: 列出 NuGet 包文件
       run: ls nupkg
+    - name: 检查版本
+      run: echo "VERSION=${{ env.VERSION }}"
     - name: 创建 GitHub 发布
       id: create_release
       uses: actions/create-release@v1
