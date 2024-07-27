@@ -7,7 +7,7 @@ namespace StarLight_Core.Models.Launch
     {
         public Account Account { get; set; }
 
-        public GameWindowConfig GameWindowConfig { get; set; }
+        public GameWindowConfig GameWindowConfig { get; set; } = new GameWindowConfig();
 
         public GameCoreConfig GameCoreConfig { get; set; }
 
