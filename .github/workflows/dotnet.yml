@@ -31,6 +31,11 @@ jobs:
       run: |
         $version = (Select-String -Path nupkg/*.nupkg -Pattern "\d+\.\d+\.\d+" | Select-Object -First 1).Matches.Value
         echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+    - name: 上传构建工件
+      uses: actions/upload-artifact@v3
+      with:
+        name: nupkg
+        path: nupkg/*.nupkg
 
   publish:
     needs: build
@@ -41,6 +46,11 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '8.0.x'
+    - name: 下载构建工件
+      uses: actions/download-artifact@v3
+      with:
+        name: nupkg
+        path: nupkg
     - name: 列出 NuGet 包文件
       run: dir nupkg
     - name: 推送至 Github NuGet
@@ -63,3 +73,5 @@ jobs:
         release_name: Release v${{ env.VERSION }}
         draft: false
         prerelease: false
+        body: |
+          自动构建
