@@ -118,8 +118,7 @@ namespace StarLight_Core.Launch
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    return new LaunchResponse(Status.Failed, stopwatch, process, e);
                 }
             }
             catch (Exception e)
