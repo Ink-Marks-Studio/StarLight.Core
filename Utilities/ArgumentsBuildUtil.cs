@@ -107,10 +107,10 @@ public class ArgumentsBuildUtil
         
         var jvmPlaceholders = new Dictionary<string, string>
         {
-            { "${natives_directory}", nativesPath },
+            { "${natives_directory}", $"\"{nativesPath}\"" },
             { "${launcher_name}", "StarLight" },
             { "${launcher_version}", "1" },
-            { "${classpath}", BuildLibrariesArgs() },
+            { "${classpath}", $"\"{BuildLibrariesArgs()}\"" },
             { "${version_name}", coreInfo.Id},
             { "${library_directory}", Path.Combine(rootPath, "libraries") },
             { "${classpath_separator}", ";" }
@@ -149,7 +149,7 @@ public class ArgumentsBuildUtil
         return string.Join(" ", args);
     }
     
-    private string BuildClientJarArgs() => "-Dminecraft.client.jar=" + jarPath;
+    private string BuildClientJarArgs() => "-Dminecraft.client.jar=" + $"\"{jarPath}\"";
     
     // 系统参数
     private string BuildSystemArgs()
@@ -173,7 +173,7 @@ public class ArgumentsBuildUtil
         var gamePlaceholders = new Dictionary<string, string>
         {
             { "${auth_player_name}", BaseAccount.Name },
-            { "${version_name}", VersionId },
+            { "${version_name}", $"\"{VersionId}\"" },
             { "${assets_root}", Path.Combine(CurrentExecutingDirectory(Root), "assets") },
             { "${assets_index_name}", coreInfo.Assets },
             { "${auth_uuid}", BaseAccount.Uuid.Replace("-","") },
@@ -189,7 +189,7 @@ public class ArgumentsBuildUtil
             Path.Combine(CurrentExecutingDirectory(Root), "versions", VersionId) :
             Path.Combine(CurrentExecutingDirectory(Root));
 
-        gamePlaceholders.Add("${game_directory}", gameDirectory);
+        gamePlaceholders.Add("${game_directory}", $"\"{gameDirectory}\"");
         
         string gameArgumentTemplate = "";
         
