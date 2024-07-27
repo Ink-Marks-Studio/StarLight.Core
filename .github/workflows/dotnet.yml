@@ -29,8 +29,8 @@ jobs:
       id: get_version
       shell: pwsh
       run: |
-        $version = (Select-String -Path nupkg/*.nupkg -Pattern "\d+\.\d+\.\d+" | Select-Object -First 1).Matches.Value
-        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+        $version = (Select-String -Path nupkg/*.nupkg -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+        echo "VERSION=$version" >> $env:GITHUB_ENV
     - name: 上传构建工件
       uses: actions/upload-artifact@v3
       with:
@@ -64,14 +64,29 @@ jobs:
     needs: publish
     runs-on: ubuntu-latest
     steps:
+    - name: 下载构建工件
+      uses: actions/download-artifact@v3
+      with:
+        name: nupkg
+        path: nupkg
+    - name: 列出 NuGet 包文件
+      run: ls nupkg
     - name: 创建 GitHub 发布
+      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v${{ env.VERSION }}
-        release_name: Release v${{ env.VERSION }}
+        release_name: v${{ env.VERSION }}
         draft: false
         prerelease: false
         body: |
-          自动构建
+          自动构建 - v${{ env.VERSION }}
+    - name: 上传 NuGet 包到 GitHub 发布
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: nupkg/StarLight_Core.${{ env.VERSION }}.nupkg
+        asset_name: StarLight_Core.${{ env.VERSION }}.nupkg
+        asset_content_type: application/zip
