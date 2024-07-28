@@ -37,7 +37,7 @@ jobs:
         Write-Host "Processing file: $($file.Name)"
         $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         Write-Host "Extracted version from $($file.Name): $version"
-        echo "VERSION=$version" >> $GITHUB_ENV
+        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: 检查版本
       run: echo "VERSION=${{ env.VERSION }}"
     - name: 上传构建工件
@@ -75,7 +75,7 @@ jobs:
         Write-Host "Processing file: $($file.Name)"
         $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         Write-Host "Extracted version from $($file.Name): $version"
-        echo "VERSION=$version" >> $GITHUB_ENV
+        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: 检查版本
       run: echo "VERSION=${{ env.VERSION }}"
     - name: 推送至 Github NuGet
@@ -108,7 +108,7 @@ jobs:
         Write-Host "Processing file: $($file.Name)"
         $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         Write-Host "Extracted version from $($file.Name): $version"
-        echo "VERSION=$version" >> $GITHUB_ENV
+        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: 检查版本
       run: echo "VERSION=${{ env.VERSION }}"
     - name: 创建 GitHub 发布
