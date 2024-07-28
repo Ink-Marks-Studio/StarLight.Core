@@ -21,9 +21,11 @@ namespace StarLight_Core.Models.Launch
         
         public event Action<string> ErrorReceived;
         
-        public LaunchResponse(Status Status, Stopwatch stopwatch, Process process, List<string> args, Exception exception)
+        public event EventHandler<int> Exited;
+        
+        public LaunchResponse(Status status, Stopwatch stopwatch, Process process, List<string> args, Exception exception)
         {
-            Status = Status;
+            Status = status;
             RunTime = stopwatch;
             Process = process;
             Args = args;
@@ -54,6 +56,11 @@ namespace StarLight_Core.Models.Launch
                 {
                     Name = Process.ProcessName,
                     Pid = Process.Id
+                };
+
+                Process.Exited += (sender, e) =>
+                {
+                    Exited?.Invoke(this, Process.ExitCode);
                 };
             }
         }
