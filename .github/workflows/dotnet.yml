@@ -64,8 +64,21 @@ jobs:
         path: nupkg
     - name: 列出 NuGet 包文件
       run: dir nupkg
+    - name: 获取 NuGet 包版本
+      id: get_version
+      shell: pwsh
+      run: |
+        $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
+        Write-Host "Found .nupkg files:"
+        $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
+        
+        $file = $nupkgFiles[0]
+        Write-Host "Processing file: $($file.Name)"
+        $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+        Write-Host "Extracted version from $($file.Name): $version"
+        echo "::set-output name=VERSION::$version"
     - name: 检查版本
-      run: echo "VERSION=${{ needs.build.outputs.VERSION }}"
+      run: echo "VERSION=${{ steps.get_version.outputs.VERSION }}"
     - name: 推送至 Github NuGet
       run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
       env:
@@ -84,8 +97,21 @@ jobs:
         path: nupkg
     - name: 列出 NuGet 包文件
       run: ls nupkg
+    - name: 获取 NuGet 包版本
+      id: get_version
+      shell: pwsh
+      run: |
+        $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
+        Write-Host "Found .nupkg files:"
+        $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
+        
+        $file = $nupkgFiles[0]
+        Write-Host "Processing file: $($file.Name)"
+        $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+        Write-Host "Extracted version from $($file.Name): $version"
+        echo "::set-output name=VERSION::$version"
     - name: 检查版本
-      run: echo "VERSION=${{ needs.publish.outputs.VERSION }}"
+      run: echo "VERSION=${{ steps.get_version.outputs.VERSION }}"
     - name: 创建 GitHub 发布
       id: create_release
       uses: actions/create-release@v1
