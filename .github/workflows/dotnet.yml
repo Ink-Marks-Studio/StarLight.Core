@@ -44,6 +44,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: nupkg
+
         path: nupkg/*.nupkg
 
   publish:
@@ -126,6 +127,8 @@ jobs:
           自动构建 - v${{ needs.publish.outputs.VERSION }}
     - name: 上传 NuGet 包到 GitHub 发布
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: nupkg/StarLight_Core.${{ steps.get_version.outputs.VERSION }}.nupkg
