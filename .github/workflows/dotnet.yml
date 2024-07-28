@@ -101,7 +101,7 @@ jobs:
       id: get_version
       shell: pwsh
       run: |
-        $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
+        $nupkgFiles = Get-ChildItem -Path /home/runner/work/StarLight.Core/StarLight.Core/nupkg/*.nupkg
         Write-Host "Found .nupkg files:"
         $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
         
@@ -118,8 +118,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ needs.publish.outputs.VERSION }}
-        release_name: v${{ needs.publish.outputs.VERSION }}
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        release_name: v${{ steps.get_version.outputs.VERSION }}
         draft: false
         prerelease: false
         body: |
@@ -128,6 +128,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: nupkg/StarLight_Core.${{ needs.publish.outputs.VERSION }}.nupkg
-        asset_name: StarLight_Core.${{ needs.publish.outputs.VERSION }}.nupkg
+        asset_path: nupkg/StarLight_Core.${{ steps.get_version.outputs.VERSION }}.nupkg
+        asset_name: StarLight_Core.${{ steps.get_version.outputs.VERSION }}.nupkg
         asset_content_type: application/zip
