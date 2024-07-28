@@ -4,8 +4,8 @@
 
 # StarLight.Core 
 
+#### 一个简单,模块化,全能的启动器核心
 
-### 一个简单,模块化,全能的启动器核心
 
 ![Star](https://img.shields.io/github/stars/Ink-Marks-Studio/StarLight.Core?logo=github&label=Star&style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/Ink-Marks-Studio/StarLight.Core?logo=github&label=Forks&style=for-the-badge)
@@ -19,7 +19,10 @@
 
 <br></br>
 
-支持列表(别看了，没更新，新README再写了)
+## 简介
+
+## 支持列表
+别看了，没更新，新README再写了
 1. 快速启动
 2. 微软登录,离线登录,外置登录,统一通行证等多种登录方式
 3. 常用小工具封装
