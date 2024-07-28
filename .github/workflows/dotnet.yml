@@ -37,9 +37,9 @@ jobs:
         Write-Host "Processing file: $($file.Name)"
         $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         Write-Host "Extracted version from $($file.Name): $version"
-        echo "::set-output name=VERSION::$version"
+        echo "VERSION=$version" >> $GITHUB_ENV
     - name: 检查版本
-      run: echo "VERSION=${{ steps.get_version.outputs.VERSION }}"
+      run: echo "VERSION=${{ env.VERSION }}"
     - name: 上传构建工件
       uses: actions/upload-artifact@v3
       with:
@@ -50,8 +50,6 @@ jobs:
   publish:
     needs: build
     runs-on: windows-latest
-    outputs:
-      VERSION: ${{ steps.get_version.outputs.VERSION }}
     steps:
     - uses: actions/checkout@v3
     - name: 安装 .NET 8.0 环境
@@ -77,9 +75,9 @@ jobs:
         Write-Host "Processing file: $($file.Name)"
         $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         Write-Host "Extracted version from $($file.Name): $version"
-        echo "::set-output name=VERSION::$version"
+        echo "VERSION=$version" >> $GITHUB_ENV
     - name: 检查版本
-      run: echo "VERSION=${{ steps.get_version.outputs.VERSION }}"
+      run: echo "VERSION=${{ env.VERSION }}"
     - name: 推送至 Github NuGet
       run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
       env:
@@ -110,17 +108,17 @@ jobs:
         Write-Host "Processing file: $($file.Name)"
         $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         Write-Host "Extracted version from $($file.Name): $version"
-        echo "::set-output name=VERSION::$version"
+        echo "VERSION=$version" >> $GITHUB_ENV
     - name: 检查版本
-      run: echo "VERSION=${{ steps.get_version.outputs.VERSION }}"
+      run: echo "VERSION=${{ env.VERSION }}"
     - name: 创建 GitHub 发布
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.get_version.outputs.VERSION }}
-        release_name: v${{ steps.get_version.outputs.VERSION }}
+        tag_name: v${{ env.VERSION }}
+        release_name: v${{ env.VERSION }}
         draft: false
         prerelease: false
         body: |
@@ -131,6 +129,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: nupkg/StarLight_Core.${{ steps.get_version.outputs.VERSION }}.nupkg
-        asset_name: StarLight_Core.${{ steps.get_version.outputs.VERSION }}.nupkg
+        asset_path: nupkg/StarLight_Core.${{ env.VERSION }}.nupkg
+        asset_name: StarLight_Core.${{ env.VERSION }}.nupkg
         asset_content_type: application/zip
