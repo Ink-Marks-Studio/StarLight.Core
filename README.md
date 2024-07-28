@@ -1,6 +1,23 @@
+<div align="center">
+
+<img Height="300" Width="300" src="Assets/logo-256.png"/>
+
 # StarLight.Core 
 
-## 一个简单,模块化,全能的启动器核心
+
+### 一个简单,模块化,全能的启动器核心
+
+![Star](https://img.shields.io/github/stars/Ink-Marks-Studio/StarLight.Core?logo=github&label=Star&style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/Ink-Marks-Studio/StarLight.Core?logo=github&label=Forks&style=for-the-badge)
+![NugetVersion](https://img.shields.io/nuget/v/StarLight_Core?logo=nuget&label=Nuget包版本&style=for-the-badge)
+![NugetDownload](https://img.shields.io/nuget/dt/StarLight_Core?logo=nuget&label=Nuget包下载量&style=for-the-badge)
+![Issues](https://img.shields.io/github/issues-closed/Ink-Marks-Studio/StarLight.Core?logo=github&label=Issues&style=for-the-badge)
+![PR](https://img.shields.io/github/issues-pr-closed/Ink-Marks-Studio/StarLight.Core?logo=github&label=Pull%20requests&style=for-the-badge)
+![License](https://img.shields.io/github/license/Ink-Marks-Studio/StarLight.Core?logo=github&label=开源协议&style=for-the-badge&color=ff7a35)
+
+</div>
+
+<br></br>
 
 支持列表(别看了，没更新，新README再写了)
 1. 快速启动
