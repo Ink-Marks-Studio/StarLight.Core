@@ -372,9 +372,11 @@ namespace StarLight_Core.Installer
                     assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url.Replace(DownloadAPIs.Mojang.Assets, DownloadAPIs.Current.Assets));
                 }
                 
-                var assetsJsonPath = Path.Combine(GamePath, "assets", "indexes", assetsEntity.AssetIndex.Id + ".json");
+                var assetsPath = Path.Combine(GamePath, "assets");
+                var assetsIndex = Path.Combine(assetsPath, "indexes");
+                var assetsJsonPath = Path.Combine(assetsIndex, assetsEntity.AssetIndex.Id + ".json");
                 
-                if (!FileUtil.IsDirectory(varPath, true) || !FileUtil.IsFile(jsonPath))
+                if (!FileUtil.IsDirectory(assetsIndex, true) || !FileUtil.IsFile(jsonPath))
                 {
                     var options = new JsonSerializerOptions
                     {

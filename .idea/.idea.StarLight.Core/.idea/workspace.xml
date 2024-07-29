@@ -9,6 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -380,6 +381,8 @@
       <workItem from="1722098108124" duration="20000" />
       <workItem from="1722167917835" duration="2017000" />
       <workItem from="1722170203621" duration="18000" />
+      <workItem from="1722178692618" duration="2692000" />
+      <workItem from="1722215079454" duration="5431000" />
     </task>
     <servers />
   </component>
