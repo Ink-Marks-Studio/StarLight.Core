@@ -61,6 +61,8 @@ namespace StarLight_Core.Utilities
                     }
                     else
                     {
+                        // TODO: 添加状态代码识别
+                        // HTTP POST 请求失败，状态代码 TooManyRequests
                         throw new HttpRequestException($"HTTP POST 请求失败，状态代码 {res.StatusCode}");
                     }
                 }

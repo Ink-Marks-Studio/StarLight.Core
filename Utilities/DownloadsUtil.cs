@@ -88,7 +88,7 @@ namespace StarLight_Core.Utilities
                 var elapsed = stopwatch.Elapsed.TotalSeconds;
                 if (elapsed >= 1)
                 {
-                    var currentSpeed = (currentBytesReceived - previousBytesReceived) / elapsed / 1024.0; // KB/s
+                    var currentSpeed = (currentBytesReceived - previousBytesReceived) / elapsed; // KB/s
                     progressChanged?.Invoke(currentSpeed);
 
                     previousBytesReceived = currentBytesReceived;

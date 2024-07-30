@@ -245,6 +245,8 @@ namespace StarLight_Core.Installer
                 
                     await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
                 
+                    _downloadService.Dispose();
+                    
                     //if (jarDownloadstatus.Status != Status.Succeeded)
                     //{
                     //    OnProgressChanged?.Invoke("下载游戏核心失败", 20);

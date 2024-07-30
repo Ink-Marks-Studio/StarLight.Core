@@ -5,6 +5,6 @@
         public const string Version = "1.3.6";
 
         // Preview / Release
-        public const string Type = "Preview";
+        public const string Type = "Release";
     }
 }
