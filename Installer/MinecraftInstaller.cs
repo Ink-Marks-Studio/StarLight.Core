@@ -212,25 +212,6 @@ namespace StarLight_Core.Installer
                     }
 
                     await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
-                    
-                    /*
-                     var jarDownloader = new DownloadsUtil();
-                    
-                    Action<double> progressChanged = (double speed) =>
-                    {
-                        //OnSpeedChanged?.Invoke(speed);
-                    };
-                    var jarDownloadstatus =
-                        await jarDownloader.DownloadAsync(new DownloadItem(jarDownloadPath, jarFilePath), null,
-                            progressChanged);
-                    
-                
-                    if (jarDownloadstatus.Status != Status.Succeeded)
-                    {
-                        OnProgressChanged?.Invoke("下载游戏核心失败", 20);
-                        return;
-                    }
-                    */
                 }
                 else if (!HashUtil.VerifyFileHash(jarFilePath, coreJarSha1, SHA1.Create()))
                 {
@@ -241,17 +222,9 @@ namespace StarLight_Core.Installer
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
                     }
                 
-                    //var jarDownloader = new DownloadsUtil();
-                
                     await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
                 
                     _downloadService.Dispose();
-                    
-                    //if (jarDownloadstatus.Status != Status.Succeeded)
-                    //{
-                    //    OnProgressChanged?.Invoke("下载游戏核心失败", 20);
-                    //    return;
-                    //}
                 }
             }
             catch (OperationCanceledException)
@@ -319,28 +292,22 @@ namespace StarLight_Core.Installer
                     }
                 }
                 
-                Action<double> progressChanged = (double speed) =>
-                 
+                librariesDownloader.OnSpeedChanged = (double speed) =>
                 {
                     OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                 };
                 
-                Action<int, int> downloadCompleted = (int downloaded, int total) =>
+                librariesDownloader.ProgressChanged = (int downloaded, int total) =>
                 {
                     OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 40);
                 };
                 
-                Action<string> downloadFailed = (string path) =>
+                librariesDownloader.DownloadFailed = (DownloadItem path) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏核心文件: {path}", 40);
+                    OnProgressChanged?.Invoke($"下载游戏核心文件失败: {path.SaveAsPath}", 40);
                 };
-                
-                var jarDownloadstatus = await librariesDownloader.DownloadFilesAsync(downloadList, null, progressChanged, downloadCompleted, downloadFailed);
-                if (jarDownloadstatus.Status != Status.Succeeded)
-                {
-                    OnProgressChanged?.Invoke("下载游戏核心文件失败" + jarDownloadstatus.Exception, 40);
-                    return;
-                }
+
+                await librariesDownloader.DownloadFiles(downloadList);
             }
             catch (OperationCanceledException)
             {
@@ -408,36 +375,46 @@ namespace StarLight_Core.Installer
                 var assetsDownloader = new DownloadsUtil();
                 var assetsDownloadList = new List<DownloadItem>();
                 
+                var seenAssets = new HashSet<string>();
+                var duplicateAssets = new List<string>();
+
                 if (assetsInfo != null && assetsInfo.Objects != null)
                 {
                     foreach (var kvp in assetsInfo.Objects)
                     {
                         string baseAssetsPath = $"{kvp.Value.Hash.Substring(0, 2)}/{kvp.Value.Hash}";
-                        assetsDownloadList.Add(new DownloadItem(DownloadAPIs.Current.Assets+ "/" + baseAssetsPath, Path.Combine(GamePath, "assets", "objects", baseAssetsPath)));
+                        string downloadUrl = DownloadAPIs.Current.Assets + "/" + baseAssetsPath;
+                        string localPath = Path.Combine(GamePath, "assets", "objects", baseAssetsPath.Replace("/", Path.DirectorySeparatorChar.ToString()));
+                        
+                        // 去重
+                        if (seenAssets.Contains(downloadUrl))
+                        {
+                            duplicateAssets.Add(downloadUrl);
+                        }
+                        else
+                        {
+                            seenAssets.Add(downloadUrl);
+                            assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
+                        }
                     }
                 }
                 
-                Action<double> progressChanged = (double speed) =>
+                assetsDownloader.OnSpeedChanged = (double speed) =>
                 {
                     OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                 };
                 
-                Action<int, int> downloadCompleted = (int downloaded, int total) =>
+                assetsDownloader.ProgressChanged = (int downloaded, int total) =>
                 {
                     OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 80);
                 };
                 
-                Action<string> downloadFailed = (string path) =>
+                assetsDownloader.DownloadFailed = (DownloadItem path) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏资源文件: {path}", 80);
+                    OnProgressChanged?.Invoke($"下载游戏资源文件失败: {path.SaveAsPath}", 80);
                 };
-                
-                var jarDownloadstatus = await assetsDownloader.DownloadFilesAsync(assetsDownloadList, null, progressChanged, downloadCompleted, downloadFailed);
-                if (jarDownloadstatus.Status != Status.Succeeded)
-                {
-                    OnProgressChanged?.Invoke("下载游戏资源文件失败" + jarDownloadstatus.Exception, 80);
-                    return;
-                }
+
+                await assetsDownloader.DownloadFiles(assetsDownloadList);
                 
                 OnProgressChanged?.Invoke("安装已完成 版本 : " + GameId, 100);
             }
@@ -489,10 +466,10 @@ namespace StarLight_Core.Installer
         
         static string CalcMemoryMensurableUnit(double bytes)
         {
-            double kb = bytes / 1024; // · 1024 Bytes = 1 Kilobyte 
-            double mb = kb / 1024;    // · 1024 Kilobytes = 1 Megabyte 
-            double gb = mb / 1024;    // · 1024 Megabytes = 1 Gigabyte 
-            double tb = gb / 1024;    // · 1024 Gigabytes = 1 Terabyte 
+            double kb = bytes / 1024;
+            double mb = kb / 1024;
+            double gb = mb / 1024;
+            double tb = gb / 1024;
 
             string result =
                 tb > 1 ? $"{tb:0.##}TB" :
@@ -503,32 +480,6 @@ namespace StarLight_Core.Installer
 
             result = result.Replace("/", ".");
             return result;
-        }
-        
-        async Task DownloadFilesAsync(List<DownloadItem> downloadItems, CancellationToken cancellationToken = default)
-        {
-            var downloadTasks = new List<Task>();
-
-            int i = 0;
-            foreach (var downloadItem in downloadItems)
-            {
-                i++;
-                Console.WriteLine(i);
-                var task = _downloadService.DownloadFileTaskAsync(downloadItem.Url, downloadItem.SaveAsPath,
-                    cancellationToken);
-                downloadTasks.Add(task);
-            }
-
-            // 任务数量
-            var maxConcurrentDownloads = 128;
-            
-            while (downloadTasks.Count > maxConcurrentDownloads)
-            {
-                await Task.WhenAny(downloadTasks);
-                downloadTasks.RemoveAll(t => t.IsCompleted);
-            }
-            
-            await Task.WhenAll(downloadTasks);
         }
     }
 }

@@ -8,10 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Installer/ResourceInspector.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Installer/DownloaderConfig.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/DownloadItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/DownloadItem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/HttpUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/HttpUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +59,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="PerforceDirect.Settings">
+    <option name="CHARSET" value="无" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -389,6 +394,15 @@
       <workItem from="1722215079454" duration="6165000" />
       <workItem from="1722255815936" duration="2440000" />
       <workItem from="1722311104773" duration="776000" />
+      <workItem from="1722315340981" duration="67000" />
+      <workItem from="1722315419729" duration="16000" />
+      <workItem from="1722315443242" duration="7000" />
+      <workItem from="1722342330165" duration="912000" />
+      <workItem from="1722350761569" duration="1571000" />
+      <workItem from="1722396549289" duration="6424000" />
+      <workItem from="1722415934772" duration="3777000" />
+      <workItem from="1722421223078" duration="18000" />
+      <workItem from="1722421250826" duration="7833000" />
     </task>
     <servers />
   </component>

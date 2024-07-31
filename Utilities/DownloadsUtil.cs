@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using StarLight_Core.Enum;
+using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities 
@@ -14,133 +16,97 @@ namespace StarLight_Core.Utilities
     public class DownloadsUtil 
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private long _totalBytesReceived = 0;
-        private int _totalFiles = 0;
-        private int _downloadedFiles = 0;
+        private int _maxThreads = DownloaderConfig.MaxThreads; 
+            
+        public Action<double>? OnSpeedChanged = null;
+        public Action<int, int>? ProgressChanged = null;
+        public Action<DownloadItem>? DownloadFailed = null;
         
-        public DownloadsUtil()
+        public DownloadsUtil(Action<double>? onSpeedChanged = null, Action<int, int>? progressChanged = null, Action<DownloadItem>? downloadFailed = null)
         {
             _httpClient.Timeout = TimeSpan.FromMinutes(10);
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(DownloaderConfig.UserAgent);
+            
+            OnSpeedChanged = onSpeedChanged;
+            ProgressChanged = progressChanged;
+            DownloadFailed = downloadFailed;
         }
 
-        
-        public async Task<DownloadStatus> DownloadAsync(DownloadItem downloadItem, string? outputFolder = null, Action<double>? speedChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
+        public async Task DownloadFiles(IEnumerable<DownloadItem> downloadItems)
         {
-            try
-            {
-                var downloadItems = new List<DownloadItem> { downloadItem };
-                var result = await DownloadFilesAsync(downloadItems, outputFolder, speedChanged, downloadCompleted, downloadFailed);
-                return result;
-            }
-            catch (Exception e)
-            {
-                return new DownloadStatus(Status.Failed, e);
-            }
-        }
+            SemaphoreSlim semaphore = new SemaphoreSlim(_maxThreads);
+            ConcurrentDictionary<int, long> threadDownloadSpeeds = new ConcurrentDictionary<int, long>();
+            ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
+            CancellationTokenSource cts = new CancellationTokenSource();
 
-        public async Task<DownloadStatus> DownloadFilesAsync(IEnumerable<DownloadItem> downloadItems, string? outputFolder = null, Action<double>? progressChanged = null, Action<int, int>? downloadCompleted = null, Action<string>? downloadFailed = null)
-        {
-            try
+            var downloadItemList = downloadItems.ToList();
+            int totalFiles = downloadItemList.Count;
+            int filesDownloaded = 0;
+            long totalDownloadedBytes = 0;
+            Stopwatch reportStopwatch = new Stopwatch();
+            
+            Task reportingTask = Task.Run(async () =>
             {
-                var sw = Stopwatch.StartNew();
-
-                List<DownloadItem> downloadItemList = downloadItems.ToList();
-                _totalFiles = downloadItemList.Count;
-
-                if (outputFolder == null)
+                reportStopwatch.Start();
+                while (!cts.Token.IsCancellationRequested)
                 {
-                    foreach (var item in downloadItemList)
+                    long elapsed = reportStopwatch.ElapsedMilliseconds;
+                    if (elapsed >= 1000)
                     {
-                        if (item.SaveAsPath == null)
-                        {
-                            throw new Exception("[SL]未设置保存路径");
-                        }
+                        long totalSpeed = (totalDownloadedBytes * 1000) / elapsed;
+                        OnSpeedChanged?.Invoke(totalSpeed);
+                        reportStopwatch.Restart();
+                        Interlocked.Exchange(ref totalDownloadedBytes, 0); // 重置下载字节数
                     }
+                    await Task.Delay(1000 - (int)(reportStopwatch.ElapsedMilliseconds % 1000)); // 校准间隔
                 }
+            }, cts.Token);
 
-                downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
-
-                var downloadTasks = downloadItemList.Select(item => DownloadFileAsync(item.Url, outputFolder, item.SaveAsPath, progressChanged, downloadCompleted, downloadFailed)).ToList();
-
-                await Task.WhenAll(downloadTasks);
-
-                sw.Stop();
-
-                return new DownloadStatus(Status.Succeeded);
-            }
-            catch (Exception e)
+            foreach (var downloadItem in downloadItemList)
             {
-                return new DownloadStatus(Status.Failed, e);
-            }
-        }
-
-        private async Task DownloadFileAsync(string url, string? outputFolder, string? saveAsPath, Action<double>? progressChanged, Action<int, int>? downloadCompleted, Action<string>? downloadFailed)
-        {
-            const int maxRetryAttempts = 3;
-            int retryCount = 0;
-
-            long previousBytesReceived = 0;
-            long currentBytesReceived = 0;
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            using var timer = new Timer(_ =>
-            {
-                var elapsed = stopwatch.Elapsed.TotalSeconds;
-                if (elapsed >= 1)
+                await semaphore.WaitAsync();
+                Task task = Task.Run(async () =>
                 {
-                    var currentSpeed = (currentBytesReceived - previousBytesReceived) / elapsed; // KB/s
-                    progressChanged?.Invoke(currentSpeed);
-
-                    previousBytesReceived = currentBytesReceived;
-                    stopwatch.Restart();
-                }
-            }, null, 0, 1000);
-
-            while (true)
-            {
-                try
-                {
-                    var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                    response.EnsureSuccessStatusCode();
-
-                    var totalBytes = response.Content.Headers.ContentLength ?? 0;
-
-                    var fileName = Path.GetFileName(new Uri(url).AbsolutePath); // 获取文件名
-                    var outputPath = string.IsNullOrEmpty(saveAsPath) ? Path.Combine(outputFolder, fileName) : saveAsPath;
-
-                    Directory.CreateDirectory(Path.GetDirectoryName(outputPath) ?? throw new InvalidOperationException());
-
-                    using (var stream = await response.Content.ReadAsStreamAsync())
-                    using (var fileStream = new FileStream(outputPath, FileMode.Create))
+                    try
                     {
-                        var buffer = new byte[8192];
-                        var bytesRead = 0;
+                        HttpResponseMessage response = await _httpClient.GetAsync(downloadItem.Url, HttpCompletionOption.ResponseHeadersRead);
+                        response.EnsureSuccessStatusCode();
 
-                        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                        FileUtil.IsDirectory(Path.GetDirectoryName(downloadItem.SaveAsPath), true);
+                        
+                        using (var contentStream = await response.Content.ReadAsStreamAsync())
+                        using (var fileStream = new FileStream(downloadItem.SaveAsPath, FileMode.Create, FileAccess.Write, FileShare.None))
                         {
-                            await fileStream.WriteAsync(buffer, 0, bytesRead);
-                            Interlocked.Add(ref _totalBytesReceived, bytesRead);
-                            currentBytesReceived += bytesRead;
+                            byte[] buffer = new byte[8192];
+                            int bytesRead;
+                            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                            {
+                                await fileStream.WriteAsync(buffer, 0, bytesRead);
+                                Interlocked.Add(ref totalDownloadedBytes, bytesRead);
+                            }
                         }
+                        Interlocked.Increment(ref filesDownloaded);
+                        ProgressChanged?.Invoke(filesDownloaded, totalFiles);
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(downloadItem.Url + "下载失败：" + ex.Message);
+                        DownloadFailed?.Invoke(downloadItem);
+                    }
+                    finally
+                    {
+                        semaphore.Release();
+                    }
+                });
 
-                    // 下载完成
-                    _downloadedFiles++;
-                    downloadCompleted?.Invoke(_downloadedFiles, _totalFiles);
-
-                    return;
-                }
-                catch (HttpRequestException e) when (retryCount < maxRetryAttempts)
-                {
-                    retryCount++;
-                    await Task.Delay(TimeSpan.FromSeconds(3));
-                }
-                catch (Exception ex)
-                {
-                    downloadFailed?.Invoke($"下载失败：{ex.Message}");
-                    throw new Exception($"[SL]下载失败，无法重试：{ex.Message}");
-                }
+                tasks.Add(task);
             }
+            
+            await Task.WhenAll(tasks);
+            cts.Cancel();
+            await reportingTask;
+
+            Console.WriteLine("所有文件下载完成");
         }
         
         // 获取下载文件大小
