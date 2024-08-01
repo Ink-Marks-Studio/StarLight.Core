@@ -410,19 +410,10 @@ public class ArgumentsBuildUtil
         string groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
         string artifactId = parts[1];
         string version = parts[2];
-        
-        string arch;
 
-        try
-        {
-            arch = SystemUtil.IsOperatingSystem64Bit() ? "64" : "32";
-        }
-        catch (Exception e)
-        {
-            arch = "64";
-        }
+        int arch = SystemUtil.GetOperatingSystemBit();
         
-        string windowsNative = library.Natives["windows"].Replace("${arch}", arch);
+        string windowsNative = library.Natives["windows"].Replace("${arch}", arch.ToString());
         
         return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-{windowsNative}.jar");
     }
