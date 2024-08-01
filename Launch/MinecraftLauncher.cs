@@ -42,7 +42,7 @@ namespace StarLight_Core.Launch
             }
             if (JavaConfig == null)
             {
-                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置Java"));   
+                return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置Java"));
             }
             if (BaseAccount == null)
             {
@@ -84,7 +84,7 @@ namespace StarLight_Core.Launch
                         Path.Combine(GameCoreConfig.Root, "options.txt") : 
                         Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Root, "options.txt");
                 }
-                FileUtil.ModifyLangValue(optionsFilePath);
+                FileUtil.ModifyLangValue(optionsFilePath, GameCoreConfig.Version, GameCoreConfig.Root, GameCoreConfig.Language);
                 
                 progressReport.Description = "构建启动参数";
                 progressReport.Percentage = 70;

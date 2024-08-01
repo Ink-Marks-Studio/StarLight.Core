@@ -45,25 +45,33 @@ public class FileUtil
     }
     
     // 修改语言
-    public static void ModifyLangValue(string filePath)
+    public static void ModifyLangValue(string filePath, string gameId, string root, GameLanguage language = GameLanguage.zh_cn)
     {
         try
         {
+            var gameInfo = GameCoreUtil.GetGameCore(gameId, root);
+            var versionMember = GameCoreUtil.GetMajorVersion(gameInfo.Assets);
+            
+            string langCode = language.ToString().ToLower();
+            if (versionMember <= 10 && versionMember != 0)
+            {
+                langCode = langCode.Substring(0, langCode.Length - 2) + langCode.Substring(langCode.Length - 2).ToUpper();
+            }
+            
             if (File.Exists(filePath))
             {
                 string content = File.ReadAllText(filePath);
-                string updatedContent = Regex.Replace(content, @"lang:\w+", "lang:zh_cn");
-
+                string updatedContent = Regex.Replace(content, @"lang:\w+", $"lang:{langCode}");
                 File.WriteAllText(filePath, updatedContent);
             }
             else
             {
-                File.WriteAllText(filePath, "lang:zh_cn");
+                File.WriteAllText(filePath, $"lang:{langCode}");
             }
         }
         catch (Exception x)
         {
-            throw new("修改设置异常: " + x);
+            throw new Exception("修改设置异常: " + x.Message);
         }
     }
     

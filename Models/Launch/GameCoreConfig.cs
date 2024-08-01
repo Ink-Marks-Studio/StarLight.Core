@@ -17,6 +17,8 @@ namespace StarLight_Core.Models.Launch
         public string UnifiedPassServerId { get; set; }
         
         public string Nide8authPath { get; set; }
+
+        public GameLanguage Language { get; set; } = GameLanguage.zh_cn;
     
         public IEnumerable<string> GameArguments { get; set; }
     }
