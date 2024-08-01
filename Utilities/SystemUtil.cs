@@ -29,5 +29,10 @@ namespace StarLight_Core.Utilities
         {
             return Environment.Is64BitOperatingSystem;
         }
+
+        public static int GetOperatingSystemBit()
+        {
+            return Environment.Is64BitOperatingSystem ? 64 : 32;
+        }
     }
 }

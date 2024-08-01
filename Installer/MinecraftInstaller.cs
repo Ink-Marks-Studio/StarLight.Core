@@ -259,22 +259,28 @@ namespace StarLight_Core.Installer
                     {
                         if (ShouldIncludeLibrary(versionDownload.Rule))    
                         {
-                            var basePath = MinecraftInstallerModel.BuildFromName(versionDownload.Name, Path.DirectorySeparatorChar.ToString());
-                            var jarFilePath = Path.Combine(GamePath, "libraries") + basePath;
-                            var jarDownloadPath = DownloadAPIs.Current.Maven + basePath.Replace("\\", "/");
+                            if (versionDownload.Downloads.Artifact != null)
+                            {
+                                var basePath = MinecraftInstallerModel.BuildFromName(versionDownload.Name, Path.DirectorySeparatorChar.ToString());
+                                var jarFilePath = Path.Combine(GamePath, "libraries") + basePath;
+                                var jarDownloadPath = DownloadAPIs.Current.Maven + basePath.Replace("\\", "/");
 
-                            if (!FileUtil.IsFile(jarFilePath))
-                            {
-                                downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
-                            }
-                            else if (!HashUtil.VerifyFileHash(jarFilePath, versionDownload.Downloads.Artifact.Sha1, SHA1.Create()))
-                            {
-                                downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                                if (!FileUtil.IsFile(jarFilePath))
+                                {
+                                    downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                                }
+                                else if (!HashUtil.VerifyFileHash(jarFilePath, versionDownload.Downloads.Artifact.Sha1, SHA1.Create()))
+                                {
+                                    downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                                }
                             }
                             
-                            if (versionDownload.Downloads.Classifiers != null)
+                            if (versionDownload.Natives != null)
                             {
-                                Native nativesWindows = versionDownload.Downloads.Classifiers["natives-windows"];
+                                string nativeTemplate = versionDownload.Natives["windows"];
+                                string native = nativeTemplate.Replace("${arch}", SystemUtil.GetOperatingSystemBit().ToString());
+                                
+                                Native nativesWindows = versionDownload.Downloads.Classifiers[native];
                                 
                                 var jarFilePathClassifiers = Path.Combine(GamePath, "libraries", nativesWindows.Path.Replace("/", Path.DirectorySeparatorChar.ToString()));
                                 var jarDownloadPathClassifiers = DownloadAPIs.Current.Maven + "/" + nativesWindows.Path;

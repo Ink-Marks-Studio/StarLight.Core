@@ -203,5 +203,15 @@ namespace StarLight_Core.Utilities
 
             return null!;
         }
+        
+        internal static int GetMajorVersion(string version)
+        {
+            var parts = version.Split('.');
+            if (parts.Length > 1)
+            {
+                return int.Parse(parts[1]);
+            }
+            return 0;
+        }
     }
 }
