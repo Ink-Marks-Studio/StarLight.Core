@@ -65,9 +65,9 @@ namespace StarLight_Core.Models.Launch
             }
         }
         
-        public LaunchResponse(Status Status, Stopwatch stopwatch, Process process, Exception exception)
+        public LaunchResponse(Status status, Stopwatch stopwatch, Process process, Exception exception)
         {
-            Status = Status;
+            Status = status;
             RunTime = stopwatch;
             Process = process;
             Exception = exception;

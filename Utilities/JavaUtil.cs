@@ -160,8 +160,8 @@ namespace StarLight_Core.Utilities
                             var searchTerms = new List<string>
                             {
                                 "android", "bin", "cache", "client", "corretto", "craft", "data", "eclipse", "env", "file", "game",
-                                "lib", "idea", "tools", "runtime", "jdk", "jre", "starry", "ssml", "launcher", "launcher", "pcl", "hmcl", "html", "users", "software", "server", "hotspot",
-                                "java", "jdk", "jbr", "jre", "jvm", "mc", "microsoft", "mojang", "net", "oracle", "program", "roaming", "run",
+                                "lib", "idea", "tools", "runtime", "jdk", "jre", "starry", "ssml", "launch", "launcher", "pcl", "hmcl", "html", "users", "software", "server", "hotspot",
+                                "java", "jdk", "jbr", "jre", "jvm", "mc", "minecraft", "microsoft", "mcl", "mclauncher", "mojang", "net", "oracle", "program", "roaming", "run",
                                 "services", "新建文件夹", "我的世界", "必备", "依赖", "官启", "客户", "服务", "应用", "整合", "游戏", "环境", "软件", "运行", "前置", "世界"
                             };
                             if (isFullSearch || subDirectory.Parent?.Name.ToLower() == "users" || searchTerms.Any(term => directoryNameLower.Contains(term)))
