@@ -122,7 +122,7 @@ jobs:
         draft: false
         prerelease: false
         body: |
-          自动构建 - v${{ needs.publish.outputs.VERSION }}
+          自动构建 - v${{ env.VERSION }}
     - name: 上传 NuGet 包到 GitHub 发布
       uses: actions/upload-release-asset@v1
       env:
