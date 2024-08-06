@@ -238,6 +238,8 @@ namespace StarLight_Core.Installer
                 return;
             }
 
+            var failedList = new List<DownloadItem>();
+            
             try
             {
                 OnProgressChanged?.Invoke("下载游戏核心文件", 40);
@@ -308,12 +310,12 @@ namespace StarLight_Core.Installer
                     OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 40);
                 };
                 
-                librariesDownloader.DownloadFailed = (DownloadItem path) =>
+                librariesDownloader.DownloadFailed = (DownloadItem item) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏核心文件失败: {path.SaveAsPath}", 40);
+                    failedList.Add(item);
                 };
 
-                await librariesDownloader.DownloadFiles(downloadList);
+                await librariesDownloader.DownloadFiles(downloadList, cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -415,12 +417,12 @@ namespace StarLight_Core.Installer
                     OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 80);
                 };
                 
-                assetsDownloader.DownloadFailed = (DownloadItem path) =>
+                assetsDownloader.DownloadFailed = (DownloadItem item) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏资源文件失败: {path.SaveAsPath}", 80);
+                    failedList.Add(item);
                 };
 
-                await assetsDownloader.DownloadFiles(assetsDownloadList);
+                await assetsDownloader.DownloadFiles(assetsDownloadList, cancellationToken);
                 
                 OnProgressChanged?.Invoke("安装已完成 版本 : " + GameId, 100);
             }

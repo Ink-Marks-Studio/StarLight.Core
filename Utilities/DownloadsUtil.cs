@@ -32,7 +32,7 @@ namespace StarLight_Core.Utilities
             DownloadFailed = downloadFailed;
         }
 
-        public async Task DownloadFiles(IEnumerable<DownloadItem> downloadItems)
+        public async Task DownloadFiles(IEnumerable<DownloadItem> downloadItems, CancellationToken cancellationToken = default)
         {
             SemaphoreSlim semaphore = new SemaphoreSlim(_maxThreads);
             ConcurrentDictionary<int, long> threadDownloadSpeeds = new ConcurrentDictionary<int, long>();
@@ -48,7 +48,7 @@ namespace StarLight_Core.Utilities
             Task reportingTask = Task.Run(async () =>
             {
                 reportStopwatch.Start();
-                while (!cts.Token.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested && !cts.Token.IsCancellationRequested)
                 {
                     long elapsed = reportStopwatch.ElapsedMilliseconds;
                     if (elapsed >= 1000)
@@ -60,44 +60,47 @@ namespace StarLight_Core.Utilities
                     }
                     await Task.Delay(1000 - (int)(reportStopwatch.ElapsedMilliseconds % 1000)); // 校准间隔
                 }
-            }, cts.Token);
+            }, cancellationToken);
 
             foreach (var downloadItem in downloadItemList)
             {
-                await semaphore.WaitAsync();
+                await semaphore.WaitAsync(cancellationToken);
                 Task task = Task.Run(async () =>
                 {
                     try
                     {
-                        HttpResponseMessage response = await _httpClient.GetAsync(downloadItem.Url, HttpCompletionOption.ResponseHeadersRead);
+                        HttpResponseMessage response = await _httpClient.GetAsync(downloadItem.Url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
                         response.EnsureSuccessStatusCode();
 
                         FileUtil.IsDirectory(Path.GetDirectoryName(downloadItem.SaveAsPath), true);
                         
-                        using (var contentStream = await response.Content.ReadAsStreamAsync())
+                        using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
                         using (var fileStream = new FileStream(downloadItem.SaveAsPath, FileMode.Create, FileAccess.Write, FileShare.None))
                         {
                             byte[] buffer = new byte[8192];
                             int bytesRead;
-                            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
                             {
-                                await fileStream.WriteAsync(buffer, 0, bytesRead);
+                                await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
                                 Interlocked.Add(ref totalDownloadedBytes, bytesRead);
                             }
                         }
                         Interlocked.Increment(ref filesDownloaded);
                         ProgressChanged?.Invoke(filesDownloaded, totalFiles);
                     }
+                    catch (OperationCanceledException e)
+                    {
+                        throw;
+                    }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(downloadItem.Url + "下载失败：" + ex.Message);
                         DownloadFailed?.Invoke(downloadItem);
                     }
                     finally
                     {
                         semaphore.Release();
                     }
-                });
+                }, cancellationToken);
 
                 tasks.Add(task);
             }
@@ -105,8 +108,6 @@ namespace StarLight_Core.Utilities
             await Task.WhenAll(tasks);
             cts.Cancel();
             await reportingTask;
-
-            Console.WriteLine("所有文件下载完成");
         }
         
         // 获取下载文件大小
