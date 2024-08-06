@@ -54,6 +54,7 @@ namespace StarLight_Core.Utilities
                                 MainClass = gameCore.MainClass,
                                 InheritsFrom = gameCore.InheritsFrom,
                                 ReleaseTime = gameCore.ReleaseTime,
+                                IsNewVersion = gameCore.Arguments?.Game != null,
                                 Time = gameCore.Time,
                                 root = rootPath + "\\" + gameCore.Id,
                                 Version = gameCore.ClientVersion
@@ -67,22 +68,6 @@ namespace StarLight_Core.Utilities
                         else if (gameCoreInfo.Version == null)
                         {
                             gameCoreInfo.Version = gameCoreInfo.Id;
-                        }
-                        
-                        try
-                        {
-                            if (gameCore.Arguments.Game != null)
-                            {
-                                gameCoreInfo.IsNewVersion = true;
-                            }
-                            else
-                            {
-                                gameCoreInfo.IsNewVersion = false;
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            gameCoreInfo.IsNewVersion = false;
                         }
                         
                         gameCores.Add(gameCoreInfo);
@@ -171,14 +156,12 @@ namespace StarLight_Core.Utilities
                             
                             try
                             {
-                                if (gameCore.Arguments.Game != null)
+                                if (gameCore.Arguments != null)
                                 {
-                                    gameCoreInfo.IsNewVersion = true;
                                     gameCoreInfo.Arguments = gameCore.Arguments;
                                 }
                                 else
                                 {
-                                    gameCoreInfo.IsNewVersion = false;
                                     gameCoreInfo.MinecraftArguments = gameCore.MinecraftArguments;
                                 }
                             }

@@ -9,8 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/JavaInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/JavaInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/JavaUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/JavaUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,18 +34,17 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/34a109148c7d8a2c8e6431e83e4bce5712dd8083/src/libraries/System.Private.CoreLib/src/System/Threading/CancellationToken.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Security.Cryptography/src/System/Security/Cryptography/HashAlgorithm.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enum/DownloadSource.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Installer/MinecraftInstaller.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://D:/StarLight.Core/StarLight.Core/Installer/MinecraftInstaller.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/AssetData.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/GameCoreDownloadInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/MinecraftInstallerModel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://D:/StarLight.Core/StarLight.Core/Models/Installer/MinecraftInstallerModel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/StarLightInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" root0="FORCE_HIGHLIGHTING" />
@@ -402,6 +401,9 @@
       <workItem from="1722501881129" duration="2100000" />
       <workItem from="1722510347500" duration="8445000" />
       <workItem from="1722576790279" duration="1098000" />
+      <workItem from="1722579936251" duration="106000" />
+      <workItem from="1722753115168" duration="1471000" />
+      <workItem from="1722937466993" duration="2406000" />
     </task>
     <servers />
   </component>
