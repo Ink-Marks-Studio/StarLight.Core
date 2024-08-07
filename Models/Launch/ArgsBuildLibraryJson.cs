@@ -62,7 +62,7 @@ public class Artifact
     public string Sha1 { get; set; }
 
     [JsonPropertyName("size")]
-    public int Size { get; set; }
+    public long Size { get; set; }
 
     [JsonPropertyName("url")]
     public string Url { get; set; }
