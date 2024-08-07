@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using StarLight_Core.Enum;
 using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities
@@ -57,7 +58,8 @@ namespace StarLight_Core.Utilities
                                 IsNewVersion = gameCore.Arguments?.Game != null,
                                 Time = gameCore.Time,
                                 root = rootPath + "\\" + gameCore.Id,
-                                Version = gameCore.ClientVersion
+                                Version = gameCore.ClientVersion,
+                                LoaderType = GetLoader(gameCore.MainClass)
                             };
                         }
                         
@@ -130,7 +132,8 @@ namespace StarLight_Core.Utilities
                                 root = rootPath + "\\" + gameCore.Id,
                                 Assets = gameCore.Assets,
                                 MinecraftArguments = gameCore.MinecraftArguments,
-                                Version = gameCore.ClientVersion
+                                Version = gameCore.ClientVersion,
+                                LoaderType = GetLoader(gameCore.MainClass)
                             };
 
                             try
@@ -185,6 +188,16 @@ namespace StarLight_Core.Utilities
             }
 
             return null!;
+        }
+
+        internal static LoaderType GetLoader(string mainClass)
+        {
+            if (mainClass == "net.fabricmc.loader.impl.launch.knot.KnotClient")
+                return LoaderType.Fabric;
+            if (mainClass == "net.minecraft.launchwrapper.Launch")
+                return LoaderType.Forge;
+            else
+                return LoaderType.Vanilla;
         }
         
         internal static int GetMajorVersion(string version)
