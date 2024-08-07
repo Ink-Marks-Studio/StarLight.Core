@@ -5,5 +5,7 @@ namespace StarLight_Core.Models.Downloader
         public static int MaxThreads { get; set; } = 64;
 
         public static string UserAgent { get; set; } = "StarLight/" + StarLightInfo.Version;
+        
+        public static bool VerificationFile { get; set; } = false;
     }
 }

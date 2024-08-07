@@ -1,4 +1,5 @@
-﻿using StarLight_Core.Utilities;
+﻿using StarLight_Core.Enum;
+using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Models.Utilities;
 
@@ -25,8 +26,10 @@ public class GameCoreInfo
     public string root { get; set; }
     
     public string Assets { get; set; }
-    
-    public ArgumentsJson Arguments { get; set; }
 
     public string MinecraftArguments { get; set; }
+    
+    public LoaderType LoaderType { get; set; }
+    
+    public ArgumentsJson Arguments { get; set; }
 }

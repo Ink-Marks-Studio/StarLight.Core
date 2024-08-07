@@ -268,13 +268,14 @@ namespace StarLight_Core.Installer
                                 var jarDownloadPath = DownloadAPIs.Current.Maven + basePath.Replace("\\", "/");
 
                                 if (!FileUtil.IsFile(jarFilePath))
-                                {
                                     downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
-                                }
-                                else if (!HashUtil.VerifyFileHash(jarFilePath, versionDownload.Downloads.Artifact.Sha1, SHA1.Create()))
+                                else if (DownloaderConfig.VerificationFile)
                                 {
-                                    downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
+                                    if (!HashUtil.VerifyFileHash(jarFilePath, versionDownload.Downloads.Artifact.Sha1, SHA1.Create())) 
+                                        downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
                                 }
+                                else if (FileUtil.GetFileSize(jarFilePath) != versionDownload.Downloads.Artifact.Size)
+                                    downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
                             }
                             
                             if (versionDownload.Natives != null)
@@ -288,10 +289,13 @@ namespace StarLight_Core.Installer
                                 var jarDownloadPathClassifiers = DownloadAPIs.Current.Maven + "/" + nativesWindows.Path;
                                 
                                 if (!FileUtil.IsFile(jarFilePathClassifiers))
-                                {
                                     downloadList.Add(new DownloadItem(jarDownloadPathClassifiers, jarFilePathClassifiers));
+                                else if (DownloaderConfig.VerificationFile)
+                                {
+                                    if (!HashUtil.VerifyFileHash(jarFilePathClassifiers, nativesWindows.Sha1, SHA1.Create()))
+                                        downloadList.Add(new DownloadItem(jarDownloadPathClassifiers, jarFilePathClassifiers));
                                 }
-                                else if (!HashUtil.VerifyFileHash(jarFilePathClassifiers, nativesWindows.Sha1, SHA1.Create()))
+                                else if (FileUtil.GetFileSize(jarFilePathClassifiers) != nativesWindows.Size)
                                 {
                                     downloadList.Add(new DownloadItem(jarDownloadPathClassifiers, jarFilePathClassifiers));
                                 }
@@ -332,22 +336,16 @@ namespace StarLight_Core.Installer
                 OnProgressChanged?.Invoke("下载游戏资源索引", 60);
                 
                 if (cancellationToken != default)
-                {
                     cancellationToken.ThrowIfCancellationRequested();
-                }
                 
                 string jsonContent = File.ReadAllText(jsonPath);
                 var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
                 string assetsJsonContent;
                 
                 if (DownloadAPIs.Current == DownloadAPIs.Mojang)
-                {
                     assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
-                }
                 else
-                {
                     assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url.Replace(DownloadAPIs.Mojang.Assets, DownloadAPIs.Current.Assets));
-                }
                 
                 var assetsPath = Path.Combine(GamePath, "assets");
                 var assetsIndex = Path.Combine(assetsPath, "indexes");
@@ -384,7 +382,6 @@ namespace StarLight_Core.Installer
                 var assetsDownloadList = new List<DownloadItem>();
                 
                 var seenAssets = new HashSet<string>();
-                var duplicateAssets = new List<string>();
 
                 if (assetsInfo != null && assetsInfo.Objects != null)
                 {
@@ -395,32 +392,32 @@ namespace StarLight_Core.Installer
                         string localPath = Path.Combine(GamePath, "assets", "objects", baseAssetsPath.Replace("/", Path.DirectorySeparatorChar.ToString()));
                         
                         // 去重
-                        if (seenAssets.Contains(downloadUrl))
-                        {
-                            duplicateAssets.Add(downloadUrl);
-                        }
-                        else
+                        if (!seenAssets.Contains(downloadUrl))
                         {
                             seenAssets.Add(downloadUrl);
-                            assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
+                            if (!FileUtil.IsFile(localPath))
+                                assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
+                            else if (DownloaderConfig.VerificationFile)
+                            {
+                                if (!HashUtil.VerifyFileHash(localPath, kvp.Value.Hash, SHA1.Create()))
+                                {
+                                    assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
+                                }
+                            }
+                            else if (FileUtil.GetFileSize(localPath) != kvp.Value.Size)
+                                assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
                         }
                     }
                 }
                 
                 assetsDownloader.OnSpeedChanged = (double speed) =>
-                {
                     OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
-                };
                 
                 assetsDownloader.ProgressChanged = (int downloaded, int total) =>
-                {
                     OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 80);
-                };
                 
-                assetsDownloader.DownloadFailed = (DownloadItem item) =>
-                {
+                assetsDownloader.DownloadFailed = (DownloadItem item) => 
                     failedList.Add(item);
-                };
 
                 await assetsDownloader.DownloadFiles(assetsDownloadList, cancellationToken);
                 
