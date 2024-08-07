@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using StarLight_Core.Enum;
+using StarLight_Core.Models.Downloader;
 using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
 

@@ -10,7 +10,6 @@
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -403,7 +402,9 @@
       <workItem from="1722576790279" duration="1098000" />
       <workItem from="1722579936251" duration="106000" />
       <workItem from="1722753115168" duration="1471000" />
-      <workItem from="1722937466993" duration="2406000" />
+      <workItem from="1722937466993" duration="5772000" />
+      <workItem from="1722946624459" duration="1944000" />
+      <workItem from="1722959422045" duration="834000" />
     </task>
     <servers />
   </component>

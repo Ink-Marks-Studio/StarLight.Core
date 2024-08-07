@@ -1,4 +1,4 @@
-namespace StarLight_Core.Models.Installer
+namespace StarLight_Core.Models.Downloader
 {
     public static class DownloaderConfig
     {
