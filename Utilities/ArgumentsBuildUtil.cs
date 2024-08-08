@@ -38,14 +38,14 @@ public class ArgumentsBuildUtil
     }
 
     // 参数构建器
-    public List<string> Build()
+    public async Task<List<string>> Build()
     {
         List<string> arguments = new List<string>();
         
         arguments.Add(BuildMemoryArgs());
-        arguments.Add(BuildJvmArgs());
-        arguments.Add(BuildGameArgs());
+        arguments.Add(await BuildJvmArgs());
         arguments.Add(BuildWindowArgs());
+        arguments.Add(BuildGameArgs());
         
         return arguments;
     }
@@ -62,31 +62,45 @@ public class ArgumentsBuildUtil
     }
 
     // Jvm 参数
-    private string BuildJvmArgs()
+    private async Task<string> BuildJvmArgs()
     {
         ProcessAccount();
         
         List<string> args = new List<string>();
-        
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
 
+        var appDataPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "jar");
+        var tempPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "temp");
+        
         if (BaseAccount is UnifiedPassAccount)
         {
-            string authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath) ? 
-                Path.Combine(GameCoreConfig.Nide8authPath) : 
-                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
-            args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+            FileUtil.IsDirectory(appDataPath, true);
+            FileUtil.IsDirectory(tempPath, true);
+            
+            if (!FileUtil.IsFile(GameCoreConfig.Nide8authPath))
+            {
+                var nidePath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "nide8auth.jar");
+                var downloader = new DownloadsUtil();
+                await downloader.DownloadFiles(new List<DownloadItem>
+                {
+                    new ("https://login.mc-user.com:233/index/jar", nidePath)
+                });
+                args.Add("-javaagent:\"" + nidePath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+            }
+            else
+            {
+                string authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath) ? 
+                    Path.Combine(GameCoreConfig.Nide8authPath) : 
+                    Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
+                args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+            }
         }
 
         if (coreInfo.IsNewVersion)
-        {
             args.Add(BuildClientJarArgs());
-        }
         
         if (SystemUtil.IsOperatingSystemGreaterThanWin10())
-        {
             args.Add(BuildSystemArgs());
-        }
         
         args.Add(BuildGcAndAdvancedArguments());
         
@@ -100,9 +114,7 @@ public class ArgumentsBuildUtil
             string[] nativesDirectories = Directory.GetDirectories(coreInfo.root, "*natives*", SearchOption.AllDirectories);
             
             if (nativesDirectories.Length > 0)
-            {
                 nativesPath = nativesDirectories[0];
-            }
         }
         
         var jvmPlaceholders = new Dictionary<string, string>
@@ -115,7 +127,6 @@ public class ArgumentsBuildUtil
             { "${library_directory}", Path.Combine(rootPath, "libraries") },
             { "${classpath_separator}", ";" }
         };
-        
         
         string jvmArgumentTemplate = "";
         
@@ -145,6 +156,25 @@ public class ArgumentsBuildUtil
         }
         
         args.Add(ReplacePlaceholders(jvmArgumentTemplate, jvmPlaceholders));
+        
+        var wrapperPath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "launch_wrapper.jar");
+        
+        FileUtil.IsDirectory(appDataPath, true);
+        FileUtil.IsDirectory(tempPath, true);
+        
+        if (FileUtil.IsFile(jarPath))
+            args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
+        else
+        {
+            var downloader = new DownloadsUtil();
+            await downloader.DownloadFiles(new List<DownloadItem>
+            {
+                new ("http://cdn.hjdczy.top/starlight.core/launch_wrapper.jar", wrapperPath)
+            });
+            args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
+        }
+        
+        args.Add(coreInfo.MainClass);
         
         return string.Join(" ", args);
     }
@@ -191,31 +221,29 @@ public class ArgumentsBuildUtil
 
         gamePlaceholders.Add("${game_directory}", $"\"{gameDirectory}\"");
         
-        string gameArgumentTemplate = "";
+        string gameArguments = coreInfo.IsNewVersion 
+            ? string.Join(" ", coreInfo.Arguments.Game.Where(element => !ElementContainsRules(element)))
+            : coreInfo.MinecraftArguments;
+
+        string[] tweakClasses = new[] { "--tweakClass optifine.OptiFineForgeTweaker ", "--tweakClass optifine.OptiFineTweaker " };
+        string foundTweakClass = null;
         
-        List<string> gameArgumentsTemplate = new List<string>();
-        
-        gameArgumentsTemplate.Add(coreInfo.MainClass);
-        
-        if (coreInfo.IsNewVersion)
+        foreach (var tweakClass in tweakClasses)
         {
-            foreach (var element in coreInfo.Arguments.Game)
+            if (gameArguments.Contains(tweakClass))
             {
-                if (!ElementContainsRules(element))
-                {
-                    if (!ElementContainsRules(element))
-                    {
-                        gameArgumentsTemplate.Add(element.ToString());
-                    }
-                }
+                foundTweakClass = tweakClass;
+                gameArguments = gameArguments.Replace(tweakClass, "").Trim();
+                break;
             }
         }
-        else
+        
+        if (foundTweakClass != null)
         {
-            gameArgumentsTemplate.Add(coreInfo.MinecraftArguments);
+            gameArguments = $"{gameArguments} {foundTweakClass}".Trim();
         }
         
-        return ReplacePlaceholders(string.Join(" ", gameArgumentsTemplate), gamePlaceholders);
+        return ReplacePlaceholders(gameArguments, gamePlaceholders);
     }
 
     // Gc 与 Advanced 参数
@@ -224,13 +252,9 @@ public class ArgumentsBuildUtil
         var allArguments = BuildArgsData.DefaultGcArguments.Concat(BuildArgsData.DefaultAdvancedArguments);
 
         if (!JavaConfig.DisabledOptimizationGcArgs)
-        {
             allArguments = allArguments.Concat(BuildArgsData.OptimizationGcArguments);
-        }
         if (!JavaConfig.DisabledOptimizationAdvancedArgs)
-        {
             allArguments = allArguments.Concat(BuildArgsData.OptimizationAdvancedArguments);
-        }
         
         return string.Join(" ", allArguments);
     }
@@ -253,20 +277,14 @@ public class ArgumentsBuildUtil
                 null;
 
             if (InheritFromPath != null)
-            {
                 cps.AddRange(ProcessLibraryPath(InheritFromPath, librariesPath));
-            }
 
             cps.AddRange(ProcessLibraryPath(versionPath, librariesPath));
 
             if (coreInfo.InheritsFrom != null && coreInfo.InheritsFrom != "null")
-            {
                 cps.Add(Path.Combine(Root, "versions", coreInfo.InheritsFrom, $"{coreInfo.InheritsFrom}.jar"));
-            }
             else
-            {
                 cps.Add(Path.Combine(coreInfo.root, $"{VersionId}.jar"));
-            }
 
             return string.Join(";", cps);
         }
@@ -284,9 +302,7 @@ public class ArgumentsBuildUtil
         args.Add("--width " + GameWindowConfig.Width);
         args.Add("--height " + GameWindowConfig.Height);
         if (GameWindowConfig.IsFullScreen)
-        {
             args.Add("--fullscreen");
-        }
 
         return string.Join(" ", args);
     }
@@ -296,30 +312,41 @@ public class ArgumentsBuildUtil
         var jsonData = File.ReadAllText(filePath);
         var argsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(jsonData);
 
+        var optifinePaths = new List<string>();
+        var normalPaths = new List<string>();
+
         foreach (var lib in argsLibraries.Libraries)
         {
             if (lib == null || lib.Downloads == null)
             {
                 var path = BuildFromName(lib.Name, librariesPath);
                 if (path != null)
-                {
-                    yield return path;
-                }
+                    if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
+                        optifinePaths.Add(path);
+                    else
+                        normalPaths.Add(path);
                 continue;
             }
-            
+
             if (lib.Downloads.Classifiers == null || lib.Downloads.Classifiers.Count == 0)
             {
                 if (ShouldIncludeLibrary(lib.Rule))
                 {
                     var path = BuildFromName(lib.Name, librariesPath);
                     if (path != null)
-                    {
-                        yield return path;
-                    }
+                        if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
+                            optifinePaths.Add(path);
+                        else
+                            normalPaths.Add(path);
                 }
             }
         }
+        
+        foreach (var path in normalPaths)
+            yield return path;
+        
+        foreach (var optifinePath in optifinePaths)
+            yield return optifinePath;
     }
 
     private bool ShouldIncludeLibrary(LibraryJsonRule[] rules)
