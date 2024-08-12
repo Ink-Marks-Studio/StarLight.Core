@@ -4,12 +4,11 @@ using StarLight_Core.Models.Authentication;
 
 namespace StarLight_Core.Authentication
 {
-    public class OfflineAuthentication
+    public class OfflineAuthentication : BaseAuthentication
     {
-        public string AccessToken { get; set; }
-        public string ClientToken { get; set; }
-        public string Name { get; set; }
-        public string Uuid { get; set; }
+        private string AccessToken { get; set; }
+        private string Name { get; set; }
+        private string Uuid { get; set; }
         
         public OfflineAuthentication(string username)
         {
@@ -50,15 +49,6 @@ namespace StarLight_Core.Authentication
             };
 
             return result;
-        }
-        
-        // 验证Uuid是否合法
-        public static bool IsValidUuid(string uuid)
-        {
-            string pattern = @"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-            Regex regex = new Regex(pattern);
-
-            return regex.IsMatch(uuid);
         }
     }
 }

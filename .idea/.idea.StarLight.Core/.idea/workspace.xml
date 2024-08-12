@@ -8,17 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Enum/LoaderType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Authentication/BaseAuthentication.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Downloader/DownloaderConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Downloader/DownloaderConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/UnifiedPassAuthenticator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/FileUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FileUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +58,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -415,6 +413,12 @@
       <workItem from="1722946624459" duration="1944000" />
       <workItem from="1722959422045" duration="834000" />
       <workItem from="1723024637259" duration="12093000" />
+      <workItem from="1723102889962" duration="7087000" />
+      <workItem from="1723269603896" duration="1052000" />
+      <workItem from="1723282080139" duration="621000" />
+      <workItem from="1723305177408" duration="6000" />
+      <workItem from="1723385645475" duration="225000" />
+      <workItem from="1723443830379" duration="2933000" />
     </task>
     <servers />
   </component>

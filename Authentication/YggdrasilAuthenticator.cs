@@ -4,42 +4,35 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Authentication
 {
-    public class YggdrasilAuthenticator
+    public class YggdrasilAuthenticator : BaseAuthentication
     {
-        public string Url { get; set; }
+        private string Url { get; set; }
 
-        public string Email { get; set; }
+        private string Email { get; set; }
 
-        public string Password { get; set; }
-
-        public string ClientToken { get; private set; }
+        private string Password { get; set; }
         
-        public YggdrasilAuthenticator(string url, string email, string password)
+        public YggdrasilAuthenticator(string url, string email, string password, string clientToken = "")
         {
-            if (Url == "LittleSkin")
-            {
-                Url = "https://littleskin.cn/api/yggdrasil";
-            }
-            else
-            {
-                Url = url;
-            }
+            Url = Url == "LittleSkin" ? "https://littleskin.cn/api/yggdrasil" : url;
             Email = email;
             Password = password;
+            ClientToken = clientToken;
         }
         
-        public YggdrasilAuthenticator(string email, string password)
+        public YggdrasilAuthenticator(string email, string password, string clientToken = "")
         {
             Url = "https://littleskin.cn/api/yggdrasil";
             Email = email;
             Password = password;
+            ClientToken = clientToken;
         }
         
         public async ValueTask<IEnumerable<YggdrasilAccount>> YggdrasilAuthAsync()
         {
             var requestJson = new
             {
-                clientToken = Guid.NewGuid().ToString("N"),
+                clientToken = IsValidUuid(ClientToken) ? ClientToken : Guid.NewGuid().ToString("N"),
                 username = Email,
                 password = Password,
                 requestUser = false,
@@ -51,7 +44,7 @@ namespace StarLight_Core.Authentication
             };
 
             string baseUrl = string.IsNullOrEmpty(Url) ? "https://authserver.mojang.com" : Url;
-            string requestUrl = $"{baseUrl}/authenticate";
+            string requestUrl = $"{baseUrl}/authserver/authenticate";
 
             var postResponseContent = await HttpUtil.SendHttpPostRequest(requestUrl, JsonSerializer.Serialize(requestJson), "application/json");
 

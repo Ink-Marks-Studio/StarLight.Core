@@ -11,13 +11,13 @@ namespace StarLight_Core.Authentication
     {
         private const string UnifiedPassBaseUrl = "https://auth.mc-user.com:233/";
 
-        public string Username { get; set; }
+        private string Username { get; set; }
         
-        public string Password { get; set; }
+        private string Password { get; set; }
         
-        public string ServerId { get; set; }
+        private string ServerId { get; set; }
         
-        public string BaseUrl { get; set; }
+        private string BaseUrl { get; set; }
         
         public UnifiedPassAuthenticator(string username, string password, string serverId, string baseUrl = UnifiedPassBaseUrl)
         {
