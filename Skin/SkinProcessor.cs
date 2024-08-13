@@ -6,6 +6,24 @@ namespace StarLight_Core.Skin
     public class SkinProcessor
     {
         /// <summary>
+        /// 放大图像到指定尺寸
+        /// </summary>
+        /// <param name="originalImage">原始图像</param>
+        /// <param name="newWidth">新宽度</param>
+        /// <param name="newHeight">新高度</param>
+        /// <returns>放大后的图像</returns>
+        public static void ResizeImage(string inputFilePath, string outputFilePath, int width, int height)
+        {
+            using (var image = Image.FromFile(inputFilePath))
+            {
+                using (var resizedImage = new Bitmap(image, new Size(width, height)))
+                {
+                    resizedImage.Save(outputFilePath, ImageFormat.Png);
+                }
+            }
+        }
+        
+        /// <summary>
         /// 获取 Alex 皮肤左腿
         /// </summary>
         /// <param name="base64Image"></param>
