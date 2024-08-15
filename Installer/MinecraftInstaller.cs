@@ -93,14 +93,10 @@ namespace StarLight_Core.Installer
                 {
                     string gameCoreJson;
                     
-                    if (DownloadAPIs.Current == DownloadAPIs.Mojang)
-                    {
+                    if (DownloadAPIs.Current.Source == DownloadSource.Official)
                          gameCoreJson = await HttpUtil.GetJsonAsync(versionsJson.Url);
-                    }
                     else
-                    {
                         gameCoreJson = await HttpUtil.GetJsonAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
-                    }
                     
                     await File.WriteAllTextAsync(jsonPath, gameCoreJson, cancellationToken);
                     
@@ -118,9 +114,7 @@ namespace StarLight_Core.Installer
                     var gameCoreData = JsonSerializer.Deserialize<Dictionary<string, object>>(gameCoreJson, options);
                     
                     if (gameCoreData != null && gameCoreData.ContainsKey("id"))
-                    {
                         gameCoreData["id"] = gameCoreName;
-                    }
                     
                     string modifiedJson = JsonSerializer.Serialize(gameCoreData, options);
                     await File.WriteAllTextAsync(jsonPath, modifiedJson, cancellationToken);
@@ -134,14 +128,10 @@ namespace StarLight_Core.Installer
                             File.Delete(jsonPath);
                             string gameCoreJson;
                     
-                            if (DownloadAPIs.Current == DownloadAPIs.Mojang)
-                            {
+                            if (DownloadAPIs.Current.Source == DownloadSource.Official)
                                 gameCoreJson = await HttpUtil.GetJsonAsync(versionsJson.Url);
-                            }
                             else
-                            {
                                 gameCoreJson = await HttpUtil.GetJsonAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
-                            }
                     
                             await File.WriteAllTextAsync(jsonPath, gameCoreJson, cancellationToken);
                     
@@ -159,9 +149,7 @@ namespace StarLight_Core.Installer
                             var gameCoreData = JsonSerializer.Deserialize<Dictionary<string, object>>(gameCoreJson, options);
                     
                             if (gameCoreData != null && gameCoreData.ContainsKey("id"))
-                            {
                                 gameCoreData["id"] = gameCoreName;
-                            }
                             
                             string modifiedJson = JsonSerializer.Serialize(gameCoreData, options);
                             await File.WriteAllTextAsync(jsonPath, modifiedJson, cancellationToken);
@@ -206,10 +194,8 @@ namespace StarLight_Core.Installer
                 {
                     string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
 
-                    if (DownloadAPIs.Current != DownloadAPIs.Mojang)
-                    {
+                    if (DownloadAPIs.Current.Source == DownloadSource.Official)
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
-                    }
 
                     await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
                 }
@@ -217,10 +203,8 @@ namespace StarLight_Core.Installer
                 {
                     string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
 
-                    if (DownloadAPIs.Current != DownloadAPIs.Mojang)
-                    {
+                    if (DownloadAPIs.Current.Source == DownloadSource.Official)
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
-                    }
                 
                     await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
                 
@@ -244,9 +228,7 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("下载游戏核心文件", 40);
                 if (cancellationToken != default)
-                {
                     cancellationToken.ThrowIfCancellationRequested();
-                }
                 
                 string jsonContent = File.ReadAllText(jsonPath);
                 var versionEntity = JsonSerializer.Deserialize<GameDownloadJsonEntity>(jsonContent);
@@ -341,11 +323,10 @@ namespace StarLight_Core.Installer
                 string jsonContent = File.ReadAllText(jsonPath);
                 var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
                 string assetsJsonContent;
-                
-                if (DownloadAPIs.Current == DownloadAPIs.Mojang)
+                if (DownloadAPIs.Current.Source == DownloadSource.Official)
                     assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
                 else
-                    assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url.Replace(DownloadAPIs.Mojang.Assets, DownloadAPIs.Current.Assets));
+                    assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url.Replace(DownloadAPIs.Official.Assets, DownloadAPIs.Current.Assets));
                 
                 var assetsPath = Path.Combine(GamePath, "assets");
                 var assetsIndex = Path.Combine(assetsPath, "indexes");
@@ -353,10 +334,7 @@ namespace StarLight_Core.Installer
                 
                 if (!FileUtil.IsDirectory(assetsIndex, true) || !FileUtil.IsFile(jsonPath))
                 {
-                    var options = new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    };
+                    var options = new JsonSerializerOptions { WriteIndented = true };
                     string formattedJson = JsonSerializer.Serialize(JsonSerializer.Deserialize<object>(assetsJsonContent), options);
                     
                     await File.WriteAllTextAsync(assetsJsonPath, formattedJson, cancellationToken);
@@ -365,10 +343,7 @@ namespace StarLight_Core.Installer
                 {
                     File.Delete(assetsJsonPath);
                     
-                    var options = new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    };
+                    var options = new JsonSerializerOptions { WriteIndented = true };
                     string formattedJson = JsonSerializer.Serialize(JsonSerializer.Deserialize<object>(assetsJsonContent), options);
                     
                     await File.WriteAllTextAsync(assetsJsonPath, formattedJson, cancellationToken);
