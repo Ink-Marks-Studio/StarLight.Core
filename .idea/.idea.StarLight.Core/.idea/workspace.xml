@@ -8,17 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Installer/FabricInstaller.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/CheckResult.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/FabricLauncherMeta.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/FabricMavenItem.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/FabricVersionEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/Installer/FabricVersionJsonEntity.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Enum/DownloadSource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enum/DownloadSource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/ResourceInspector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/ResourceInspector.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -430,6 +424,8 @@
       <workItem from="1723631940196" duration="2477000" />
       <workItem from="1723637148639" duration="4586000" />
       <workItem from="1723693492414" duration="5047000" />
+      <workItem from="1723714702823" duration="12592000" />
+      <workItem from="1723773152302" duration="13665000" />
     </task>
     <servers />
   </component>

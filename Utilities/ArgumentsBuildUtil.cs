@@ -32,11 +32,14 @@ public class ArgumentsBuildUtil
         JavaConfig = javaConfig;
         BaseAccount = baseAccount;
         VersionId = gameCoreConfig.Version;
-        Root = gameCoreConfig.Root;
+        Root = FileUtil.IsAbsolutePath(gameCoreConfig.Root) ? 
+            Path.Combine(gameCoreConfig.Root) : 
+            Path.Combine(FileUtil.GetCurrentExecutingDirectory(), gameCoreConfig.Root);
         userType = "Mojang";
         jarPath = GetVersionJarPath();
     }
 
+    // TODO: -Dfabric.log.level=DEBUG
     // 参数构建器
     public async Task<List<string>> Build()
     {
@@ -68,6 +71,11 @@ public class ArgumentsBuildUtil
         
         List<string> args = new List<string>();
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+        GameCoreInfo inheritsFromInfo = new GameCoreInfo();
+        if (coreInfo.InheritsFrom != null)
+        {
+            inheritsFromInfo = GameCoreUtil.GetGameCore(coreInfo.InheritsFrom, Root);
+        }
 
         var appDataPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "jar");
         var tempPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "temp");
@@ -133,6 +141,18 @@ public class ArgumentsBuildUtil
         if (coreInfo.IsNewVersion)
         {
             BuildArgsData.JvmArgumentsTemplate.Clear();
+
+            if (coreInfo.InheritsFrom != null)
+            {
+                foreach (var element in inheritsFromInfo.Arguments.Jvm)
+                {
+                    if (!ElementContainsRules(element))
+                    {
+                        BuildArgsData.JvmArgumentsTemplate.Add(element.ToString());
+                    }
+                }
+            }
+            
             foreach (var element in coreInfo.Arguments.Jvm)
             {
                 if (!ElementContainsRules(element))
@@ -199,6 +219,11 @@ public class ArgumentsBuildUtil
     private string BuildGameArgs()
     {
         GameCoreInfo coreInfo = GameCoreUtil.GetGameCore(VersionId, Root);
+        GameCoreInfo inheritsFromInfo = new GameCoreInfo();
+        if (coreInfo.InheritsFrom != null)
+        {
+            inheritsFromInfo = GameCoreUtil.GetGameCore(coreInfo.InheritsFrom, Root);
+        }
         
         var gamePlaceholders = new Dictionary<string, string>
         {
@@ -224,6 +249,13 @@ public class ArgumentsBuildUtil
         string gameArguments = coreInfo.IsNewVersion 
             ? string.Join(" ", coreInfo.Arguments.Game.Where(element => !ElementContainsRules(element)))
             : coreInfo.MinecraftArguments;
+
+        if (coreInfo.InheritsFrom != null)
+        {
+            gameArguments += inheritsFromInfo.IsNewVersion
+                ? $" {string.Join(" ", inheritsFromInfo.Arguments.Game.Where(element => !ElementContainsRules(element)))}"
+                : $" {inheritsFromInfo.MinecraftArguments}";
+        }
 
         string[] tweakClasses = new[] { "--tweakClass optifine.OptiFineForgeTweaker ", "--tweakClass optifine.OptiFineTweaker " };
         string foundTweakClass = null;
@@ -284,7 +316,7 @@ public class ArgumentsBuildUtil
             if (coreInfo.InheritsFrom != null && coreInfo.InheritsFrom != "null")
                 cps.Add(Path.Combine(Root, "versions", coreInfo.InheritsFrom, $"{coreInfo.InheritsFrom}.jar"));
             else
-                cps.Add(Path.Combine(coreInfo.root, $"{VersionId}.jar"));
+                cps.Add(Path.Combine(Root, $"{VersionId}.jar"));
 
             return string.Join(";", cps);
         }
