@@ -4,6 +4,7 @@ public enum AuthType
 {
     Offline,
     Microsoft,
+    Polaris,
     UnifiedPass,
     Yggdrasil
 }

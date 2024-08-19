@@ -13,6 +13,7 @@ public class GetTokenResponse
     public string RefreshToken { get; set; }
     
     // 客户端Id
+    [JsonIgnore]
     public string ClientId { get; set; }
     
     // 过期时间

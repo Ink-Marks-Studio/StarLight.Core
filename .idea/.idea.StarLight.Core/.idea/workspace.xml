@@ -9,10 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enum/DownloadSource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enum/DownloadSource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enum/AuthType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enum/AuthType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +55,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="PerforceDirect.Settings">
+    <option name="CHARSET" value="无" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -426,6 +427,9 @@
       <workItem from="1723693492414" duration="5047000" />
       <workItem from="1723714702823" duration="12592000" />
       <workItem from="1723773152302" duration="13665000" />
+      <workItem from="1723862408011" duration="8756000" />
+      <workItem from="1723957174649" duration="265000" />
+      <workItem from="1724056559262" duration="3923000" />
     </task>
     <servers />
   </component>
