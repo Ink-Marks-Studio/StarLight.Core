@@ -15,6 +15,9 @@
 ![PR](https://img.shields.io/github/issues-pr-closed/Ink-Marks-Studio/StarLight.Core?logo=github&label=Pull%20requests&style=for-the-badge)
 ![License](https://img.shields.io/github/license/Ink-Marks-Studio/StarLight.Core?logo=github&label=开源协议&style=for-the-badge&color=ff7a35)
 
+
+![Alt](https://repobeats.axiom.co/api/embed/ba6e9977d1c23baebac22caa8629dc6f2ae14dd9.svg "Repobeats analytics image")
+
 </div>
 
 <br></br>
