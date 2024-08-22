@@ -11,10 +11,10 @@ namespace StarLight_Core.Models.Installer
         public string Branch { get; set; }
 
         [JsonPropertyName("mcversion")]
-        public string McVersion { get; set; }
+        public string GameVersion { get; set; }
 
         [JsonPropertyName("version")]
-        public string ForgeVersion { get; set; }
+        public string Version { get; set; }
 
         [JsonPropertyName("modified")]
         public DateTime ModifiedTime { get; set; }
