@@ -14,4 +14,6 @@ public class MicrosoftAccount : BaseAccount
     
     //获取时间
     public DateTime DateTime { get; set; }
+    
+    public bool IsNewAccount { get; set; } = false;
 }
