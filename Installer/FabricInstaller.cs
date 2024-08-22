@@ -135,16 +135,15 @@ namespace StarLight_Core.Installer
             return new FabricInstallResult(Status.Succeeded, GameVersion, FabricVersion, customId);
         }
         
-        public static async Task<IEnumerable<FabricVersionEntity>> GetFabricVersionsAsync(string version)
+        public static async Task<IEnumerable<FabricVersionEntity>> FetchFabricVersionsAsync(string version)
         {
             try
             {
                 var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.FabricRoot + $"/v2/versions/loader/{version}");
                 if (string.IsNullOrWhiteSpace(json))
                     throw new InvalidOperationException("[SL]版本列表为空");
-
-                var versionsManifest = JsonSerializer.Deserialize<IEnumerable<FabricVersionJsonEntity>>(json);
-                var result = versionsManifest.Select(manifest =>
+                
+                var result = json.ToJsonEntry<IEnumerable<FabricVersionJsonEntity>>().Select(manifest =>
                     new FabricVersionEntity
                     {
                         Intermediary = manifest.Intermediary,

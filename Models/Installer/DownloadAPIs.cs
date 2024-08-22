@@ -48,7 +48,7 @@ public static class DownloadAPIs
         DownloadSource.Official
     );
 
-    public static readonly DownloadAPI BmclApi = new DownloadAPI(
+    private static readonly DownloadAPI BmclApi = new DownloadAPI(
         "https://bmclapi2.bangbang93.com",
         "https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json",
         "https://bmclapi2.bangbang93.com/assets",
@@ -58,13 +58,10 @@ public static class DownloadAPIs
         DownloadSource.BmclApi
     );
 
-    public static void SwitchDownloadSource(DownloadSource source)
+    public static void SwitchDownloadSource(DownloadSource source) => Current = source switch
     {
-        Current = source switch
-        {
-            DownloadSource.Official => Official,
-            DownloadSource.BmclApi => BmclApi,
-            _ => throw new ArgumentException("[SL]未找到下载源")
-        };
-    }
+        DownloadSource.Official => Official,
+        DownloadSource.BmclApi => BmclApi,
+        _ => throw new ArgumentException("[SL]未找到下载源")
+    };
 }
