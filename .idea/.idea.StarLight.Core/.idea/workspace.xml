@@ -9,8 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/MicrosoftAccount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/MicrosoftAccount.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -430,6 +428,9 @@
       <workItem from="1724228125596" duration="2157000" />
       <workItem from="1724303650815" duration="4665000" />
       <workItem from="1724319131593" duration="48000" />
+      <workItem from="1724320707623" duration="4467000" />
+      <workItem from="1724330721563" duration="173000" />
+      <workItem from="1724418016276" duration="5306000" />
     </task>
     <servers />
   </component>

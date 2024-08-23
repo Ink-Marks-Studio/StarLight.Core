@@ -34,7 +34,7 @@ namespace StarLight_Core.Authentication
             Uuid = uuid;
         }
         
-        public BaseAccount OfflineAuth()
+        public OfflineAccount OfflineAuth()
         {
             if (!IsValidUuid(Uuid)) {
                 Uuid = Guid.NewGuid().ToString("N");

@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace StarLight_Core.Authentication
 { 
-    public class BaseAuthentication
+    public abstract class BaseAuthentication
     {
         protected string ClientToken { get; set; }
         
