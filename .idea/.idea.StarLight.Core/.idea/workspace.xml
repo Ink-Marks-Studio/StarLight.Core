@@ -9,6 +9,9 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/GameCoreInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +56,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="PerforceDirect.Settings">
+    <option name="CHARSET" value="无" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -430,7 +436,8 @@
       <workItem from="1724319131593" duration="48000" />
       <workItem from="1724320707623" duration="4467000" />
       <workItem from="1724330721563" duration="173000" />
-      <workItem from="1724418016276" duration="5306000" />
+      <workItem from="1724418016276" duration="5904000" />
+      <workItem from="1724485243660" duration="2310000" />
     </task>
     <servers />
   </component>

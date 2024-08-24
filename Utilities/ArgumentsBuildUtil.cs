@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using StarLight_Core.Models.Utilities;
 using System.Text.Json;
+using StarLight_Core.Models;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Models.Launch;
 
@@ -129,7 +130,7 @@ public class ArgumentsBuildUtil
         {
             { "${natives_directory}", $"\"{nativesPath}\"" },
             { "${launcher_name}", "StarLight" },
-            { "${launcher_version}", "1" },
+            { "${launcher_version}", StarLightInfo.Version },
             { "${classpath}", $"\"{BuildLibrariesArgs()}\"" },
             { "${version_name}", coreInfo.Id},
             { "${library_directory}", Path.Combine(rootPath, "libraries") },
@@ -182,7 +183,7 @@ public class ArgumentsBuildUtil
         FileUtil.IsDirectory(appDataPath, true);
         FileUtil.IsDirectory(tempPath, true);
         
-        if (FileUtil.IsFile(jarPath))
+        if (FileUtil.IsFile(wrapperPath))
             args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
         else
         {
@@ -304,19 +305,15 @@ public class ArgumentsBuildUtil
 
             var cps = new List<string>();
 
-            string InheritFromPath = coreInfo.InheritsFrom != null ?
+            string inheritFromPath = coreInfo.InheritsFrom != null ?
                 Path.Combine(Root, "versions", coreInfo.InheritsFrom, $"{coreInfo.InheritsFrom}.json") : 
                 null;
 
-            if (InheritFromPath != null)
-                cps.AddRange(ProcessLibraryPath(InheritFromPath, librariesPath));
+            if (inheritFromPath != null)
+                cps.AddRange(ProcessLibraryPath(inheritFromPath, librariesPath));
 
             cps.AddRange(ProcessLibraryPath(versionPath, librariesPath));
-
-            if (coreInfo.InheritsFrom != null && coreInfo.InheritsFrom != "null")
-                cps.Add(Path.Combine(Root, "versions", coreInfo.InheritsFrom, $"{coreInfo.InheritsFrom}.jar"));
-            else
-                cps.Add(Path.Combine(Root, $"{VersionId}.jar"));
+            cps.Add(jarPath);
 
             return string.Join(";", cps);
         }
@@ -526,6 +523,9 @@ public class ArgumentsBuildUtil
         string versionPath = FileUtil.IsAbsolutePath(Root) ? 
             Path.Combine(Root, "versions") : 
             Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root, "versions");
-        return Path.Combine(versionPath, coreInfo.Version, $"{coreInfo.Version}.jar");
+        if (coreInfo.InheritsFrom != null && coreInfo.InheritsFrom != "null")
+            return Path.Combine(Root, "versions", coreInfo.InheritsFrom, $"{coreInfo.InheritsFrom}.jar");
+        else
+            return Path.Combine(versionPath, coreInfo.Id, $"{coreInfo.Id}.jar");
     }
 }

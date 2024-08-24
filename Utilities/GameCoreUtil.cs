@@ -18,14 +18,8 @@ namespace StarLight_Core.Utilities
             
             FileUtil.IsDirectory(root, true);
             
-            if (FileUtil.IsAbsolutePath(root))
-            {
-                rootPath = root + "\\versions";
-            }
-            else
-            {
-                rootPath = FileUtil.GetCurrentExecutingDirectory() + root + "\\versions";
-            }
+            rootPath = FileUtil.IsAbsolutePath(root) ? Path.Combine(root, "versions") : 
+                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root, "versions");
 
             FileUtil.IsDirectory(rootPath, true);
             
@@ -57,8 +51,9 @@ namespace StarLight_Core.Utilities
                                 ReleaseTime = gameCore.ReleaseTime,
                                 IsNewVersion = gameCore.Arguments?.Game != null,
                                 Time = gameCore.Time,
-                                root = rootPath + "\\" + gameCore.Id,
+                                root = rootPath + Path.DirectorySeparatorChar + gameCore.Id,
                                 Version = gameCore.ClientVersion,
+                                Assets = gameCore.Assets,
                                 LoaderType = GetLoader(gameCore.MainClass)
                             };
                         }
@@ -67,20 +62,17 @@ namespace StarLight_Core.Utilities
                         {
                             gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
                         }
-                        else if (gameCoreInfo.Version == null)
-                        {
-                            gameCoreInfo.Version = gameCoreInfo.Id;
-                        }
+
+                        Console.WriteLine(version + ": " + gameCoreInfo.Assets);
+                        
+                        gameCoreInfo.Version ??= gameCoreInfo.Assets;
+                        gameCoreInfo.Version ??= "0.0.0";
                         
                         gameCores.Add(gameCoreInfo);
                     }
-                    catch (JsonException ex)
-                    {
-                        throw new Exception($"[SL]版本 JSON 解析错误: {ex.Message}");
-                    }
                     catch (Exception ex)
                     {
-                        throw new Exception($"[SL]发生错误: {ex.Message}");
+                        gameCores.Add(new GameCoreInfo{Exception = ex});
                     }
                 }
             }
@@ -94,14 +86,8 @@ namespace StarLight_Core.Utilities
 
             FileUtil.IsDirectory(root, true);
             
-            if (FileUtil.IsAbsolutePath(root))
-            {
-                rootPath = root + "\\versions";
-            }
-            else
-            {
-                rootPath = FileUtil.GetCurrentExecutingDirectory() + root + "\\versions";
-            }
+            rootPath = FileUtil.IsAbsolutePath(root) ? Path.Combine(root, "versions") : 
+                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root, "versions");
             
             var versions = Directory.GetDirectories(rootPath);
 
@@ -145,17 +131,16 @@ namespace StarLight_Core.Utilities
                             }
                             catch (Exception e)
                             {
-                                //
+                                _ = e;
                             }
 
                             if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
                             {
                                 gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
                             }
-                            else if (gameCoreInfo.Version == null)
-                            {
-                                gameCoreInfo.Version = gameCoreInfo.Id;
-                            }
+                            
+                            gameCoreInfo.Version ??= gameCoreInfo.Assets;
+                            gameCoreInfo.Version ??= "0.0.0";
                             
                             try
                             {

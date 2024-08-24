@@ -32,4 +32,6 @@ public class GameCoreInfo
     public LoaderType LoaderType { get; set; }
     
     public ArgumentsJson Arguments { get; set; }
+    
+    public Exception Exception { get; set; }
 }
