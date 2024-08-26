@@ -6,7 +6,7 @@
 
 中文 / [English](/README_EN.md)
 
-#### 一个高效,模块化,全能的我的世界启动器核心
+#### 一个高效, 模块化, 全能的我的世界启动器核心
 
 
 ![Star](https://img.shields.io/github/stars/Ink-Marks-Studio/StarLight.Core?logo=github&label=Star&style=for-the-badge)
