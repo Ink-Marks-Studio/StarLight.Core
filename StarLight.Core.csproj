@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.1-Preview5</Version>
+    <Version>2.0.1-Preview6</Version>
     <Title>StarLight.Core</Title>
     <Authors>Ink Marks Studio</Authors>
     <Description>StarLight.Core 一个简单,模块化,全能的启动器核心</Description>
@@ -20,8 +20,8 @@
     <PackageReleaseNotes>无</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>StarLight_Core</AssemblyName>
-    <AssemblyVersion>2.0.1.5</AssemblyVersion>
-    <FileVersion>2.0.1.5</FileVersion>
+    <AssemblyVersion>2.0.1.6</AssemblyVersion>
+    <FileVersion>2.0.1.6</FileVersion>
     <Copyright>Copyright (c) 2024 zhi-feng2008</Copyright>
   </PropertyGroup>
 
