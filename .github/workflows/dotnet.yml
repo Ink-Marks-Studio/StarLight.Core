@@ -118,7 +118,7 @@ jobs:
       - name: 检查版本
         run: echo "VERSION=${{ env.VERSION }}"
   
-      - name: 获取最新提交信息
+      - name: 获取提交信息
         id: get_commit_info
         run: |
           COMMIT_TITLE=$(git log -1 --pretty=%s | tr -d '\r\n' | sed 's/[[:space:]]*$//')
@@ -131,8 +131,8 @@ jobs:
       - name: 获取提交信息并处理换行符
         id: process_commit_description
         run: |
-          # 获取提交描述，并将换行符替换为 \n
-          COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | sed ':a;N;$!ba;s/\r\n/\\n/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          # 获取提交描述，并将换行符替换为实际换行符
+          COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | sed ':a;N;$!ba;s/\r\n/\n/g' | sed ':a;N;$!ba;s/\n/\n/g')
           echo "COMMIT_DESCRIPTION=$COMMIT_DESCRIPTION" >> $GITHUB_ENV
       
       - name: 创建 GitHub 发布
