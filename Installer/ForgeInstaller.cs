@@ -45,6 +45,13 @@ namespace StarLight_Core.Installer
             throw new NotImplementedException();
         }
         
+        /// <summary>
+        /// 获取指定 Minecraft 版本的所有 Forge 版本列表
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="Exception"></exception>
         public static async Task<IEnumerable<ForgeVersionEntity>> FetchForgeVersionsAsync(string version)
         {
             try

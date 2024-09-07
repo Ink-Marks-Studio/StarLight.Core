@@ -85,17 +85,19 @@ jobs:
     - name: 推送至 NuGet.org
       run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
 
-  release:
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
+release:
+  needs: publish
+  runs-on: ubuntu-latest
+  steps:
     - name: 下载构建工件
       uses: actions/download-artifact@v3
       with:
         name: nupkg
         path: nupkg
+
     - name: 列出 NuGet 包文件
       run: ls nupkg
+
     - name: 获取 NuGet 包版本
       id: get_version
       shell: pwsh
@@ -109,8 +111,17 @@ jobs:
         $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
         Write-Host "Extracted version from $($file.Name): $version"
         echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
     - name: 检查版本
       run: echo "VERSION=${{ env.VERSION }}"
+
+    - name: 获取最新提交信息
+      id: get_commit_info
+      run: |
+        echo "COMMIT_TITLE=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
+        echo "COMMIT_DESCRIPTION=$(git log -1 --pretty=%b)" >> $GITHUB_ENV
+        echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
+
     - name: 创建 GitHub 发布
       id: create_release
       uses: actions/create-release@v1
@@ -118,11 +129,19 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v${{ env.VERSION }}
-        release_name: v${{ env.VERSION }}
+        release_name: v${{ env.VERSION }} - ${{ env.COMMIT_TITLE }}
         draft: false
         prerelease: false
         body: |
           自动构建 - v${{ env.VERSION }}
+
+          **标题**: ${{ env.COMMIT_TITLE }}
+          
+          **提交者**: ${{ env.COMMIT_AUTHOR }}
+
+          **描述**:
+          ${{ env.COMMIT_DESCRIPTION }}
+
     - name: 上传 NuGet 包到 GitHub 发布
       uses: actions/upload-release-asset@v1
       env:
