@@ -121,10 +121,13 @@ jobs:
       - name: 获取最新提交信息
         id: get_commit_info
         run: |
-          echo "COMMIT_TITLE=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
-          echo "COMMIT_DESCRIPTION=$(git log -1 --pretty=%b)" >> $GITHUB_ENV
-          echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
-  
+          COMMIT_TITLE=$(git log -1 --pretty=%s | tr -d '\r\n' | sed 's/[[:space:]]*$//')
+          echo "COMMIT_TITLE=$COMMIT_TITLE" >> $GITHUB_ENV
+          COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | tr '\r\n' ' ' | sed 's/[[:space:]]*$//')
+          echo "COMMIT_DESCRIPTION=$COMMIT_DESCRIPTION" >> $GITHUB_ENV
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
+
       - name: 创建 GitHub 发布
         id: create_release
         uses: actions/create-release@v1
@@ -143,7 +146,7 @@ jobs:
             **提交者**: ${{ env.COMMIT_AUTHOR }}
   
             **描述**:
-            ${{ env.COMMIT_DESCRIPTION }}
+            ${{ env.COMMIT_DESCRIPTION | replace: ' ', '\n' }}
   
       - name: 上传 NuGet 包到 GitHub 发布
         uses: actions/upload-release-asset@v1
