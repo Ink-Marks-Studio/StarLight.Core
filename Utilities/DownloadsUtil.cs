@@ -86,6 +86,8 @@ namespace StarLight_Core.Utilities
                     }
                     catch (Exception ex)
                     {
+                        Interlocked.Increment(ref filesDownloaded);
+                        ProgressChanged?.Invoke(filesDownloaded, totalFiles);
                         DownloadFailed?.Invoke(downloadItem);
                     }
                     finally

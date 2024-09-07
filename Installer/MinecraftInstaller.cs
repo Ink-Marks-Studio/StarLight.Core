@@ -373,16 +373,46 @@ namespace StarLight_Core.Installer
                     }
                 }
                 
-                assetsDownloader.OnSpeedChanged = (double speed) =>
+                assetsDownloader.OnSpeedChanged = speed =>
                     OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                 
-                assetsDownloader.ProgressChanged = (int downloaded, int total) =>
+                assetsDownloader.ProgressChanged = (downloaded, total) =>
                     OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 80);
                 
-                assetsDownloader.DownloadFailed = (DownloadItem item) => 
+                assetsDownloader.DownloadFailed = item => 
                     failedList.Add(item);
 
                 await assetsDownloader.DownloadFiles(assetsDownloadList, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                OnProgressChanged?.Invoke("已取消安装", 0);
+                return;
+            }
+            catch (Exception e)
+            {
+                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 80);
+            }
+            
+            try
+            {
+                OnProgressChanged?.Invoke("补全游戏资源", 90);
+                
+                if (cancellationToken != default)
+                    cancellationToken.ThrowIfCancellationRequested();
+                
+                var assetsDownloader = new DownloadsUtil();
+                
+                assetsDownloader.OnSpeedChanged = speed =>
+                    OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
+                
+                assetsDownloader.ProgressChanged = (downloaded, total) =>
+                    OnProgressChanged?.Invoke($"补全游戏资源文件: {downloaded}/{total}", 90);
+                
+                assetsDownloader.DownloadFailed = item => 
+                    Console.WriteLine(item.Url);
+
+                await assetsDownloader.DownloadFiles(failedList, cancellationToken);
                 
                 OnProgressChanged?.Invoke("安装已完成 版本 : " + GameId, 100);
             }
@@ -393,7 +423,7 @@ namespace StarLight_Core.Installer
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 80);
+                OnProgressChanged?.Invoke("补全游戏资源文件错误: " + e.Message, 90);
             }
         }
         
