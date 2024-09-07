@@ -89,6 +89,9 @@ jobs:
     needs: publish
     runs-on: ubuntu-latest
     steps:
+      - name: 检出代码库
+        uses: actions/checkout@v3
+    
       - name: 下载构建工件
         uses: actions/download-artifact@v3
         with:
