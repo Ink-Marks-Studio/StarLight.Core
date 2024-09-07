@@ -102,17 +102,17 @@ namespace StarLight_Core.Installer
                     if (!FileUtil.IsFile(jarFilePath))
                         downloadList.Add(new DownloadItem(jarDownloadPath, jarFilePath));
                     
-                    librariesDownloader.OnSpeedChanged = (double speed) =>
+                    librariesDownloader.OnSpeedChanged = speed =>
                     {
                         OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                     };
                 
-                    librariesDownloader.ProgressChanged = (int downloaded, int total) =>
+                    librariesDownloader.ProgressChanged = (downloaded, total) =>
                     {
                         OnProgressChanged?.Invoke($"下载加载器核心文件: {downloaded}/{total}", 60);
                     };
                 
-                    librariesDownloader.DownloadFailed = (DownloadItem item) =>
+                    librariesDownloader.DownloadFailed = item =>
                     {
                         failedList.Add(item);
                     };
@@ -135,6 +135,13 @@ namespace StarLight_Core.Installer
             return new FabricInstallResult(Status.Succeeded, GameVersion, FabricVersion, customId);
         }
         
+        /// <summary>
+        /// 获取指定 Minecraft 版本的所有 Fabric 版本列表
+        /// </summary>
+        /// <param name="version">Minecraft 版本</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="Exception"></exception>
         public static async Task<IEnumerable<FabricVersionEntity>> FetchFabricVersionsAsync(string version)
         {
             try

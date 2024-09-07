@@ -1,17 +1,11 @@
-﻿using System.ComponentModel;
-using System.Net.Mime;
-using System.Runtime.Intrinsics.Arm;
-using System.Security.AccessControl;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text.Json;
-using System.Threading.Channels;
 using StarLight_Core.Downloader;
 using StarLight_Core.Enum;
 using StarLight_Core.Models.Downloader;
 using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
 using StarLight_Core.Utilities;
-using Download = StarLight_Core.Downloader.Download;
 
 namespace StarLight_Core.Installer
 {
@@ -27,7 +21,7 @@ namespace StarLight_Core.Installer
         
         private string GamePath { get; set; }
         
-        private DownloadService _downloadService;
+        private readonly DownloadService _downloadService;
         
         public MinecraftInstaller(string gameId, string root = ".minecraft", Action<string,int>? onProgressChanged = null, Action<string>? onSpeedChanged = null)
         {
@@ -36,6 +30,9 @@ namespace StarLight_Core.Installer
             OnProgressChanged = onProgressChanged;
             OnSpeedChanged = onSpeedChanged;
             _downloadService = CreateDownloadService(DownloadConfig.DownloadOptions);
+            GamePath = FileUtil.IsAbsolutePath(Root)
+                ? Path.Combine(Root)
+                : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
         }
         
         // 创建下载服务
@@ -46,7 +43,7 @@ namespace StarLight_Core.Installer
             return downloadService;
         }
         
-        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void OnDownloadProgressChanged(object? sender, DownloadProgressChangedEventArgs e)
         {
             OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(e.BytesPerSecondSpeed));
         }
@@ -57,18 +54,9 @@ namespace StarLight_Core.Installer
             {
                 OnProgressChanged?.Invoke("开始安装", 0);
                 if (cancellationToken != default)
-                {
                     cancellationToken.ThrowIfCancellationRequested();
-                }
                 
-                if (gameCoreName == null)
-                {
-                    gameCoreName = GameId;
-                }
-                
-                GamePath = FileUtil.IsAbsolutePath(Root)
-                    ? Path.Combine(Root)
-                    : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
+                gameCoreName ??= GameId;
             }
             catch (OperationCanceledException)
             {
@@ -81,8 +69,8 @@ namespace StarLight_Core.Installer
                 return;
             }
 
-            string varPath = Path.Combine(GamePath, "versions", gameCoreName);
-            string jsonPath = Path.Combine(varPath, gameCoreName + ".json");
+            var varPath = Path.Combine(GamePath, "versions", gameCoreName);
+            var jsonPath = Path.Combine(varPath, gameCoreName + ".json");
             
             try
             {
@@ -230,7 +218,7 @@ namespace StarLight_Core.Installer
                 if (cancellationToken != default)
                     cancellationToken.ThrowIfCancellationRequested();
                 
-                string jsonContent = File.ReadAllText(jsonPath);
+                string jsonContent = await File.ReadAllTextAsync(jsonPath, cancellationToken);
                 var versionEntity = JsonSerializer.Deserialize<GameDownloadJsonEntity>(jsonContent);
 
                 var librariesDownloader = new DownloadsUtil();
@@ -286,17 +274,17 @@ namespace StarLight_Core.Installer
                     }
                 }
                 
-                librariesDownloader.OnSpeedChanged = (double speed) =>
+                librariesDownloader.OnSpeedChanged = speed =>
                 {
                     OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                 };
                 
-                librariesDownloader.ProgressChanged = (int downloaded, int total) =>
+                librariesDownloader.ProgressChanged = (downloaded, total) =>
                 {
                     OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 40);
                 };
                 
-                librariesDownloader.DownloadFailed = (DownloadItem item) =>
+                librariesDownloader.DownloadFailed = item =>
                 {
                     failedList.Add(item);
                 };
