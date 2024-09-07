@@ -145,8 +145,7 @@ jobs:
             
             **提交者**: ${{ env.COMMIT_AUTHOR }}
   
-            **描述**:
-            ${{ env.COMMIT_DESCRIPTION | replace: ' ', '\n' }}
+            **描述**: ${{ env.COMMIT_DESCRIPTION | replace: ' ', '\n' }}
   
       - name: 上传 NuGet 包到 GitHub 发布
         uses: actions/upload-release-asset@v1
