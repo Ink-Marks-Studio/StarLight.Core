@@ -128,6 +128,13 @@ jobs:
           COMMIT_AUTHOR=$(git log -1 --pretty=%an)
           echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
 
+      - name: 获取提交信息并处理换行符
+        id: process_commit_description
+        run: |
+          # 获取提交描述，并将换行符替换为 \n
+          COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | sed ':a;N;$!ba;s/\r\n/\\n/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "COMMIT_DESCRIPTION=$COMMIT_DESCRIPTION" >> $GITHUB_ENV
+      
       - name: 创建 GitHub 发布
         id: create_release
         uses: actions/create-release@v1
@@ -140,13 +147,14 @@ jobs:
           prerelease: false
           body: |
             自动构建 - v${{ env.VERSION }}
-  
+      
             **标题**: ${{ env.COMMIT_TITLE }}
             
             **提交者**: ${{ env.COMMIT_AUTHOR }}
-  
-            **描述**: ${{ env.COMMIT_DESCRIPTION | replace: ' ', '\n' }}
-  
+      
+            **描述**: |
+              ${{ env.COMMIT_DESCRIPTION }}
+      
       - name: 上传 NuGet 包到 GitHub 发布
         uses: actions/upload-release-asset@v1
         env:
