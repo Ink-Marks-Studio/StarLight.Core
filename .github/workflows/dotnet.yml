@@ -146,9 +146,7 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            自动构建 - v${{ env.VERSION }}
-      
-            **标题**: ${{ env.COMMIT_TITLE }}
+            **类型**: 自动构建 - v${{ env.VERSION }} - ${{ env.COMMIT_TITLE }}
             
             **提交者**: ${{ env.COMMIT_AUTHOR }}
       
