@@ -8,7 +8,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Downloader/DownloaderBase.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Downloader/MultiThreadedFileDownloader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Installer/InstallerBase.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Installer/InstallResult.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/AbstractDownloadService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Bandwidth.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Chunk.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/ChunkDownloader.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/ChunkHub.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/ConcurrentPacketBuffer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/ConcurrentStream.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Download.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloadBuilder.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloadConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloadPackage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloadProgressChangedEventArgs.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloadService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloadStartedEventArgs.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloadStatus.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Helpers/ExceptionHelper.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Helpers/FileHelper.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/IDownload.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/IDownloadService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/ISizeableObject.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Logging/ILogger.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Packet.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/PauseToken.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/PauseTokenSource.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/Request.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/RequestConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/TaskStateManagement.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/ThrottledStream.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/FabricInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/FabricInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Downloader/DownloadConfig.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Downloader/DownloaderConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Downloader/DownloaderConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/DownloadsUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Downloader/MultiFileDownloader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/FileUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FileUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,12 +72,12 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/34a109148c7d8a2c8e6431e83e4bce5712dd8083/src/libraries/System.Private.CoreLib/src/System/Threading/CancellationToken.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/808851b07acfa1c5c94b0d4f9fb50debedb2df70/src/libraries/System.Security.Cryptography/src/System/Security/Cryptography/HashAlgorithm.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Downloader/MultiFileDownloader.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enum/DownloadSource.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Installer/MinecraftInstaller.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Models/Downloader/DownloaderConfig.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/AssetData.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/GameCoreDownloadInfo.cs" root0="FORCE_HIGHLIGHTING" />
@@ -46,7 +86,6 @@
     <setting file="file://$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/StarLightInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Utilities/DownloadsUtil.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Utilities/FileUtil.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -434,7 +473,8 @@
       <workItem from="1724903571959" duration="484000" />
       <workItem from="1725025317869" duration="65000" />
       <workItem from="1725682634993" duration="2245000" />
-      <workItem from="1725689863868" duration="6260000" />
+      <workItem from="1725689863868" duration="8090000" />
+      <workItem from="1725761856025" duration="8533000" />
     </task>
     <servers />
   </component>

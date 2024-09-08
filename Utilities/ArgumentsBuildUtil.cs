@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using StarLight_Core.Models.Utilities;
 using System.Text.Json;
+using StarLight_Core.Downloader;
 using StarLight_Core.Models;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Models.Launch;
@@ -89,7 +90,7 @@ public class ArgumentsBuildUtil
             if (!FileUtil.IsFile(GameCoreConfig.Nide8authPath))
             {
                 var nidePath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "nide8auth.jar");
-                var downloader = new DownloadsUtil();
+                var downloader = new MultiFileDownloader();
                 await downloader.DownloadFiles(new List<DownloadItem>
                 {
                     new ("https://login.mc-user.com:233/index/jar", nidePath)
@@ -187,7 +188,7 @@ public class ArgumentsBuildUtil
             args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
         else
         {
-            var downloader = new DownloadsUtil();
+            var downloader = new MultiFileDownloader();
             await downloader.DownloadFiles(new List<DownloadItem>
             {
                 new ("http://cdn.hjdczy.top/starlight.core/launch_wrapper.jar", wrapperPath)

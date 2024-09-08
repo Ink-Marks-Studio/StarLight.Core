@@ -2,19 +2,17 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using StarLight_Core.Models.Downloader;
 using StarLight_Core.Models.Utilities;
+using StarLight_Core.Utilities;
 
-namespace StarLight_Core.Utilities 
+namespace StarLight_Core.Downloader
 {
-    public class DownloadsUtil 
+    public class MultiFileDownloader : DownloaderBase
     {
         private readonly HttpClient _httpClient = new();
-        private int _maxThreads = DownloaderConfig.MaxThreads; 
-            
-        public Action<double>? OnSpeedChanged;
         public Action<int, int>? ProgressChanged;
         public Action<DownloadItem>? DownloadFailed;
         
-        public DownloadsUtil(Action<double>? onSpeedChanged = null, Action<int, int>? progressChanged = null, Action<DownloadItem>? downloadFailed = null)
+        public MultiFileDownloader(Action<double>? onSpeedChanged = null, Action<int, int>? progressChanged = null, Action<DownloadItem>? downloadFailed = null)
         {
             _httpClient.Timeout = TimeSpan.FromMinutes(10);
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(DownloaderConfig.UserAgent);
@@ -26,7 +24,7 @@ namespace StarLight_Core.Utilities
 
         public async Task DownloadFiles(IEnumerable<DownloadItem> downloadItems, CancellationToken cancellationToken = default)
         {
-            var semaphore = new SemaphoreSlim(_maxThreads);
+            var semaphore = new SemaphoreSlim(MaxThreads);
             var threadDownloadSpeeds = new ConcurrentDictionary<int, long>();
             var tasks = new ConcurrentBag<Task>();
             var cts = new CancellationTokenSource();
@@ -102,23 +100,6 @@ namespace StarLight_Core.Utilities
             await Task.WhenAll(tasks);
             cts.Cancel();
             await reportingTask;
-        }
-        
-        // 获取下载文件大小
-        public async Task<long> GetFileSizeAsync(string url)
-        {
-            try
-            {
-                var response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
-                response.EnsureSuccessStatusCode();
-                
-                var fileSize = response.Content.Headers.ContentLength;
-                return fileSize.HasValue ? fileSize.Value : 0;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"[SL]获取文件大小失败：{ex.Message}");
-            }
         }
         
         public void Dispose()

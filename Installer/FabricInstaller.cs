@@ -1,4 +1,5 @@
 using System.Text.Json;
+using StarLight_Core.Downloader;
 using StarLight_Core.Enum;
 using StarLight_Core.Models.Installer;
 using StarLight_Core.Models.Utilities;
@@ -6,21 +7,15 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Installer
 {
-    public class FabricInstaller
+    public class FabricInstaller : InstallerBase
     {
-        private string Root { get; set; }
-        
         private string GameVersion { get; set; }
         
         private string FabricVersion { get; set; }
 
         private CancellationToken CancellationToken { get; set; }
         
-        public Action<string,int>? OnProgressChanged { get; set; }
-        
-        public Action<string>? OnSpeedChanged { get; set; }
-        
-        public FabricInstaller(string gameVersion, string fabricVersion, string root = ".minecraft", CancellationToken cancellationToken = default, Action<string>? onSpeedChanged = null, Action<string,int>? onProgressChanged = null)
+        public FabricInstaller(string gameVersion, string fabricVersion, string root = ".minecraft", Action<string>? onSpeedChanged = null, Action<string,int>? onProgressChanged = null, CancellationToken cancellationToken = default)
         {
             GameVersion = gameVersion;
             FabricVersion = fabricVersion;
@@ -89,7 +84,7 @@ namespace StarLight_Core.Installer
                 if (CancellationToken != default)
                     CancellationToken.ThrowIfCancellationRequested();
 
-                var librariesDownloader = new DownloadsUtil();
+                var librariesDownloader = new MultiFileDownloader();
                 var downloadList = new List<DownloadItem>();
                 var failedList = new List<DownloadItem>();
 
@@ -118,6 +113,24 @@ namespace StarLight_Core.Installer
                     };
 
                     await librariesDownloader.DownloadFiles(downloadList, CancellationToken);
+                    librariesDownloader.Dispose();
+                    
+                    OnProgressChanged?.Invoke("补全加载器文件", 80);
+                
+                    if (CancellationToken != default)
+                        CancellationToken.ThrowIfCancellationRequested();
+                
+                    var assetsDownloader = new MultiFileDownloader
+                    {
+                        OnSpeedChanged = speed =>
+                            OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed))
+                    };
+
+                    await assetsDownloader.DownloadFiles(failedList, CancellationToken);
+                    assetsDownloader.Dispose();
+                
+                    OnProgressChanged?.Invoke("安装已完成", 100);
+                    return new FabricInstallResult(Status.Succeeded, GameVersion, FabricVersion, customId);
                 }
             }
             catch (OperationCanceledException)
@@ -174,24 +187,6 @@ namespace StarLight_Core.Installer
             {
                 throw new Exception("[SL]获取版本列表时发生未知错误：" + e.Message, e);
             }
-        }
-        
-        static string CalcMemoryMensurableUnit(double bytes)
-        {
-            double kb = bytes / 1024;
-            double mb = kb / 1024;
-            double gb = mb / 1024;
-            double tb = gb / 1024;
-
-            string result =
-                tb > 1 ? $"{tb:0.##}TB" :
-                gb > 1 ? $"{gb:0.##}GB" :
-                mb > 1 ? $"{mb:0.##}MB" :
-                kb > 1 ? $"{kb:0.##}KB" :
-                $"{bytes:0.##}B";
-
-            result = result.Replace("/", ".");
-            return result;
         }
     }
 }

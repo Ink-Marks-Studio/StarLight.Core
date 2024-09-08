@@ -9,19 +9,11 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Installer
 {
-    public class MinecraftInstaller
+    public class MinecraftInstaller : InstallerBase
     {
         private string GameId { get; set; }
         
-        public Action<string,int>? OnProgressChanged { get; set; }
-        
-        public Action<string>? OnSpeedChanged { get; set; }
-        
-        private string Root { get; set; }
-        
         private string GamePath { get; set; }
-        
-        private readonly DownloadService _downloadService;
         
         public MinecraftInstaller(string gameId, string root = ".minecraft", Action<string,int>? onProgressChanged = null, Action<string>? onSpeedChanged = null)
         {
@@ -29,44 +21,35 @@ namespace StarLight_Core.Installer
             GameId = gameId;
             OnProgressChanged = onProgressChanged;
             OnSpeedChanged = onSpeedChanged;
-            _downloadService = CreateDownloadService(DownloadConfig.DownloadOptions);
             GamePath = FileUtil.IsAbsolutePath(Root)
                 ? Path.Combine(Root)
                 : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
         }
-        
-        // 创建下载服务
-        private DownloadService CreateDownloadService(DownloadConfiguration config)
-        {
-            var downloadService = new DownloadService(config);
-            downloadService.DownloadProgressChanged += OnDownloadProgressChanged;
-            return downloadService;
-        }
-        
-        private void OnDownloadProgressChanged(object? sender, DownloadProgressChangedEventArgs e)
-        {
-            OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(e.BytesPerSecondSpeed));
-        }
 
-        public async Task InstallAsync(string? gameCoreName = null, bool mandatory = false, CancellationToken cancellationToken = default)
+        public async Task<InstallResult> InstallAsync(string? gameCoreName = null, bool mandatory = false, CancellationToken cancellationToken = default)
         {
+            var multiThreadedDownloader = new MultiThreadedFileDownloader(x =>
+            {
+                OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(x));
+            }, cancellationToken);
+            
             try
             {
                 OnProgressChanged?.Invoke("开始安装", 0);
                 if (cancellationToken != default)
                     cancellationToken.ThrowIfCancellationRequested();
-                
+
                 gameCoreName ??= GameId;
             }
             catch (OperationCanceledException)
             {
                 OnProgressChanged?.Invoke("已取消安装", 0);
-                return;
+                return new InstallResult(Status.Cancel, GameId, gameCoreName);
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("初始化游戏安装错误: " + e.Message, 0);
-                return;
+                OnProgressChanged?.Invoke("初始化游戏安装错误", 0);
+                return new InstallResult(Status.Failed, GameId, gameCoreName, e);
             }
 
             var varPath = Path.Combine(GamePath, "versions", gameCoreName);
@@ -91,7 +74,7 @@ namespace StarLight_Core.Installer
                     if (!HashUtil.VerifySha1(gameCoreJson, versionsJson.Sha1))   
                     {
                         OnProgressChanged?.Invoke("下载版本索引文件失败", 10);
-                        return;
+                        return new InstallResult(Status.Failed, GameId, gameCoreName, new Exception("下载版本索引文件失败"));
                     }
                     
                     var options = new JsonSerializerOptions
@@ -126,7 +109,7 @@ namespace StarLight_Core.Installer
                             if (!HashUtil.VerifySha1(gameCoreJson, versionsJson.Sha1))   
                             {
                                 OnProgressChanged?.Invoke("下载版本索引文件失败", 10);
-                                return;
+                                return new InstallResult(Status.Failed, GameId, gameCoreName, new Exception("下载版本索引文件失败"));
                             }
                     
                             var options = new JsonSerializerOptions
@@ -145,25 +128,25 @@ namespace StarLight_Core.Installer
                         catch (IOException e)
                         {
                             OnProgressChanged?.Invoke("无法删除文件: " + e.Message, 10);
-                            return;
+                            return new InstallResult(Status.Failed, GameId, gameCoreName, e);
                         }
                     }
                     else
                     {
-                        OnProgressChanged?.Invoke($"版本已存在", 10);
-                        return;
+                        OnProgressChanged?.Invoke("版本已存在", 10);
+                        return new InstallResult(Status.Failed, GameId, gameCoreName, new Exception("版本已存在"));
                     }
                 }
             }
             catch (OperationCanceledException)
             {
                 OnProgressChanged?.Invoke("已取消安装", 0);
-                return;
+                return new InstallResult(Status.Cancel, GameId, gameCoreName);
             }
             catch (Exception e)
             {
                 OnProgressChanged?.Invoke($"下载版本索引文件失败: {e}", 10);
-                return;
+                return new InstallResult(Status.Failed, GameId, gameCoreName, e);
             }
 
             try
@@ -185,7 +168,7 @@ namespace StarLight_Core.Installer
                     if (DownloadAPIs.Current.Source == DownloadSource.Official)
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
 
-                    await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
+                    await multiThreadedDownloader.DownloadFileWithMultiThread(jarDownloadPath, jarFilePath);
                 }
                 else if (!HashUtil.VerifyFileHash(jarFilePath, coreJarSha1, SHA1.Create()))
                 {
@@ -194,34 +177,32 @@ namespace StarLight_Core.Installer
                     if (DownloadAPIs.Current.Source == DownloadSource.Official)
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
                 
-                    await _downloadService.DownloadFileTaskAsync(jarDownloadPath, jarFilePath, cancellationToken);
-                
-                    _downloadService.Dispose();
+                    await multiThreadedDownloader.DownloadFileWithMultiThread(jarDownloadPath, jarFilePath);
                 }
             }
             catch (OperationCanceledException)
             {
                 OnProgressChanged?.Invoke("已取消安装", 0);
-                return;
+                return new InstallResult(Status.Cancel, GameId, gameCoreName);
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏核心错误: " + e.Message, 20);
-                return;
+                OnProgressChanged?.Invoke("下载游戏核心错误", 20);
+                return new InstallResult(Status.Failed, GameId, gameCoreName, e);
             }
 
             var failedList = new List<DownloadItem>();
             
             try
             {
-                OnProgressChanged?.Invoke("下载游戏核心文件", 40);
+                OnProgressChanged?.Invoke("下载游戏核心文件", 30);
                 if (cancellationToken != default)
                     cancellationToken.ThrowIfCancellationRequested();
                 
                 string jsonContent = await File.ReadAllTextAsync(jsonPath, cancellationToken);
                 var versionEntity = JsonSerializer.Deserialize<GameDownloadJsonEntity>(jsonContent);
 
-                var librariesDownloader = new DownloadsUtil();
+                var librariesDownloader = new MultiFileDownloader();
                 var downloadList = new List<DownloadItem>();
                 int i = 0;
                 
@@ -281,7 +262,7 @@ namespace StarLight_Core.Installer
                 
                 librariesDownloader.ProgressChanged = (downloaded, total) =>
                 {
-                    OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 40);
+                    OnProgressChanged?.Invoke($"下载游戏核心文件: {downloaded}/{total}", 30);
                 };
                 
                 librariesDownloader.DownloadFailed = item =>
@@ -290,25 +271,27 @@ namespace StarLight_Core.Installer
                 };
 
                 await librariesDownloader.DownloadFiles(downloadList, cancellationToken);
+                librariesDownloader.Dispose();
             }
             catch (OperationCanceledException)
             {
                 OnProgressChanged?.Invoke("已取消安装", 0);
-                return;
+                return new InstallResult(Status.Cancel, GameId, gameCoreName);
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏核心文件错误: " + e.Message, 40);
+                OnProgressChanged?.Invoke("下载游戏核心文件错误", 30);
+                return new InstallResult(Status.Failed, GameId, gameCoreName, e);
             }
             
             try
             {
-                OnProgressChanged?.Invoke("下载游戏资源索引", 60);
+                OnProgressChanged?.Invoke("下载游戏资源索引", 50);
                 
                 if (cancellationToken != default)
                     cancellationToken.ThrowIfCancellationRequested();
                 
-                string jsonContent = File.ReadAllText(jsonPath);
+                string jsonContent = await File.ReadAllTextAsync(jsonPath, cancellationToken);
                 var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
                 string assetsJsonContent;
                 if (DownloadAPIs.Current.Source == DownloadSource.Official)
@@ -339,9 +322,9 @@ namespace StarLight_Core.Installer
                 
                 var assetsInfo = JsonSerializer.Deserialize<AssetData>(assetsJsonContent);
 
-                OnProgressChanged?.Invoke("下载游戏资源", 80);
+                OnProgressChanged?.Invoke("下载游戏资源", 60);
                 
-                var assetsDownloader = new DownloadsUtil();
+                var assetsDownloader = new MultiFileDownloader();
                 var assetsDownloadList = new List<DownloadItem>();
                 
                 var seenAssets = new HashSet<string>();
@@ -355,21 +338,18 @@ namespace StarLight_Core.Installer
                         string localPath = Path.Combine(GamePath, "assets", "objects", baseAssetsPath.Replace("/", Path.DirectorySeparatorChar.ToString()));
                         
                         // 去重
-                        if (!seenAssets.Contains(downloadUrl))
+                        if (!seenAssets.Add(downloadUrl)) continue;
+                        if (!FileUtil.IsFile(localPath))
+                            assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
+                        else if (DownloaderConfig.VerificationFile)
                         {
-                            seenAssets.Add(downloadUrl);
-                            if (!FileUtil.IsFile(localPath))
-                                assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
-                            else if (DownloaderConfig.VerificationFile)
+                            if (!HashUtil.VerifyFileHash(localPath, kvp.Value.Hash, SHA1.Create()))
                             {
-                                if (!HashUtil.VerifyFileHash(localPath, kvp.Value.Hash, SHA1.Create()))
-                                {
-                                    assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
-                                }
-                            }
-                            else if (FileUtil.GetFileSize(localPath) != kvp.Value.Size)
                                 assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
+                            }
                         }
+                        else if (FileUtil.GetFileSize(localPath) != kvp.Value.Size)
+                            assetsDownloadList.Add(new DownloadItem(downloadUrl, localPath));
                     }
                 }
                 
@@ -377,53 +357,85 @@ namespace StarLight_Core.Installer
                     OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
                 
                 assetsDownloader.ProgressChanged = (downloaded, total) =>
-                    OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 80);
+                    OnProgressChanged?.Invoke($"下载游戏资源文件: {downloaded}/{total}", 60);
                 
                 assetsDownloader.DownloadFailed = item => 
                     failedList.Add(item);
 
                 await assetsDownloader.DownloadFiles(assetsDownloadList, cancellationToken);
+                assetsDownloader.Dispose();
             }
             catch (OperationCanceledException)
             {
                 OnProgressChanged?.Invoke("已取消安装", 0);
-                return;
+                return new InstallResult(Status.Cancel, GameId, gameCoreName);
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("下载游戏资源文件错误: " + e.Message, 80);
+                OnProgressChanged?.Invoke("下载游戏资源文件错误", 60);
+                return new InstallResult(Status.Failed, GameId, gameCoreName, e);
             }
             
             try
             {
-                OnProgressChanged?.Invoke("补全游戏资源", 90);
+                OnProgressChanged?.Invoke("补全游戏资源", 80);
                 
                 if (cancellationToken != default)
                     cancellationToken.ThrowIfCancellationRequested();
                 
-                var assetsDownloader = new DownloadsUtil();
-                
-                assetsDownloader.OnSpeedChanged = speed =>
-                    OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed));
-                
-                assetsDownloader.ProgressChanged = (downloaded, total) =>
-                    OnProgressChanged?.Invoke($"补全游戏资源文件: {downloaded}/{total}", 90);
-                
-                assetsDownloader.DownloadFailed = item => 
-                    Console.WriteLine(item.Url);
+                failedList.Clear();
+                var assetsDownloader = new MultiFileDownloader
+                {
+                    OnSpeedChanged = speed =>
+                        OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed)),
+                    ProgressChanged = (downloaded, total) =>
+                        OnProgressChanged?.Invoke($"补全游戏资源文件: {downloaded}/{total}", 80),
+                    DownloadFailed = item => 
+                        failedList.Add(item)
+                };
 
                 await assetsDownloader.DownloadFiles(failedList, cancellationToken);
-                
-                OnProgressChanged?.Invoke("安装已完成 版本 : " + GameId, 100);
+                assetsDownloader.Dispose();
             }
             catch (OperationCanceledException)
             {
                 OnProgressChanged?.Invoke("已取消安装", 0);
-                return;
+                return new InstallResult(Status.Cancel, GameId, gameCoreName);
             }
             catch (Exception e)
             {
-                OnProgressChanged?.Invoke("补全游戏资源文件错误: " + e.Message, 90);
+                OnProgressChanged?.Invoke("补全游戏资源文件错误", 80);
+                return new InstallResult(Status.Failed, GameId, gameCoreName, e);
+            }
+            
+            try
+            {
+                OnProgressChanged?.Invoke("安装结束前检查", 90);
+                
+                if (cancellationToken != default)
+                    cancellationToken.ThrowIfCancellationRequested();
+                
+                var assetsDownloader = new MultiFileDownloader
+                {
+                    OnSpeedChanged = speed =>
+                        OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(speed))
+                };
+
+                await assetsDownloader.DownloadFiles(failedList, cancellationToken);
+                assetsDownloader.Dispose();
+                
+                OnProgressChanged?.Invoke("安装已完成", 100);
+                return new InstallResult(Status.Succeeded, GameId, gameCoreName);
+            }
+            catch (OperationCanceledException)
+            {
+                OnProgressChanged?.Invoke("已取消安装", 0);
+                return new InstallResult(Status.Cancel, GameId, gameCoreName);
+            }
+            catch (Exception e)
+            {
+                OnProgressChanged?.Invoke("安装结束前检查文件错误", 90);
+                return new InstallResult(Status.Failed, GameId, gameCoreName, e);
             }
         }
         
@@ -460,24 +472,6 @@ namespace StarLight_Core.Installer
                 }
             }
             return !isDisallowForLinux && (isDisallowForOsX || isAllow);
-        }
-        
-        static string CalcMemoryMensurableUnit(double bytes)
-        {
-            double kb = bytes / 1024;
-            double mb = kb / 1024;
-            double gb = mb / 1024;
-            double tb = gb / 1024;
-
-            string result =
-                tb > 1 ? $"{tb:0.##}TB" :
-                gb > 1 ? $"{gb:0.##}GB" :
-                mb > 1 ? $"{mb:0.##}MB" :
-                kb > 1 ? $"{kb:0.##}KB" :
-                $"{bytes:0.##}B";
-
-            result = result.Replace("/", ".");
-            return result;
         }
     }
 }
