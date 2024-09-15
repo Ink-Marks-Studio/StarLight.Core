@@ -6,13 +6,13 @@ using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities
 {
-    public class FileUtil
+    public static class FileUtil
     {
         /// <summary>
         /// 获取文件大小
         /// </summary>
         /// <param name="filePath">文件路径</param>
-        /// <returns></returns>
+        /// <returns>文件大小</returns>
         public static long GetFileSize(string filePath)
         {
             if (!File.Exists(filePath)) return 0;
@@ -24,33 +24,39 @@ namespace StarLight_Core.Utilities
         /// 检测是否为相对路径
         /// </summary>
         /// <param name="path">文件路径</param>
-        /// <returns></returns>
+        /// <returns>是否为相对路径</returns>
         public static bool IsAbsolutePath(string path) => Path.IsPathRooted(path);
 
         /// <summary>
         /// 获取文件的完整路径
         /// </summary>
         /// <param name="relativePath">文件相对路径</param>
-        /// <returns></returns>
+        /// <returns>文件的完整路径</returns>
         public static string GetFullPath(string relativePath) => Path.GetFullPath(relativePath);
         
         /// <summary>
         /// 获取 AppData 路径
         /// </summary>
-        /// <returns></returns>
+        /// <returns>AppData 路径</returns>
         public static string GetAppDataPath() => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         
         /// <summary>
         /// 获取当前运行路径
         /// </summary>
-        /// <returns></returns>
+        /// <returns>当前运行路径</returns>
         public static string GetCurrentExecutingDirectory() => AppDomain.CurrentDomain.BaseDirectory;
+        
+        /// <summary>
+        /// 获取系统临时文件夹路径
+        /// </summary>
+        /// <returns>临时文件夹路径</returns>
+        public static string GetTempDirectory() => Path.GetTempPath();
         
         /// <summary>
         /// 是否为文件
         /// </summary>
         /// <param name="filePath">文件路径</param>
-        /// <returns></returns>
+        /// <returns>是否为文件</returns>
         public static bool IsFile(string filePath) => File.Exists(filePath);
         
         /// <summary>
@@ -58,7 +64,7 @@ namespace StarLight_Core.Utilities
         /// </summary>
         /// <param name="path">文件夹路径</param>
         /// <param name="isCreate">是否创建</param>
-        /// <returns></returns>
+        /// <returns>是否为文件夹</returns>
         public static bool IsDirectory(string path, bool isCreate = false)
         {
             if (isCreate && !Directory.Exists(path))
@@ -71,11 +77,34 @@ namespace StarLight_Core.Utilities
         /// 获取文件所在目录
         /// </summary>
         /// <param name="filePath">文件路径</param>
-        /// <returns></returns>
+        /// <returns>文件所在目录</returns>
         public static string GetFileDirectory(string filePath) => Path.GetDirectoryName(filePath);
         
+                
+        /// <summary>
+        /// 重命名文件
+        /// </summary>
+        /// <param name="oldFileName">文件名</param>
+        /// <param name="newFileName">新文件名</param>
+        public static void RenameFile(string oldFileName, string newFileName)
+        {
+            if (File.Exists(oldFileName))
+                File.Move(oldFileName, newFileName);
+        }
+        
+        /// <summary>
+        /// 重命名文件夹
+        /// </summary>
+        /// <param name="oldDirectoryName">文件夹名</param>
+        /// <param name="newDirectoryName">新文件夹名</param>
+        public static void RenameDirectory(string oldDirectoryName, string newDirectoryName)
+        {
+            if (Directory.Exists(oldDirectoryName))
+                Directory.Move(oldDirectoryName, newDirectoryName);
+        }
+        
         // 修改语言
-        public static void ModifyLangValue(string filePath, string gameId, string root, GameLanguage language = GameLanguage.zh_cn)
+        internal static void ModifyLangValue(string filePath, string gameId, string root, GameLanguage language = GameLanguage.zh_cn)
         {
             try
             {
@@ -103,30 +132,8 @@ namespace StarLight_Core.Utilities
             }
         }
         
-        /// <summary>
-        /// 重命名文件
-        /// </summary>
-        /// <param name="oldFileName">文件名</param>
-        /// <param name="newFileName">新文件名</param>
-        public static void RenameFile(string oldFileName, string newFileName)
-        {
-            if (File.Exists(oldFileName))
-                File.Move(oldFileName, newFileName);
-        }
-        
-        /// <summary>
-        /// 重命名文件夹
-        /// </summary>
-        /// <param name="oldDirectoryName">文件夹名</param>
-        /// <param name="newDirectoryName">新文件夹名</param>
-        public static void RenameDirectory(string oldDirectoryName, string newDirectoryName)
-        {
-            if (Directory.Exists(oldDirectoryName))
-                Directory.Move(oldDirectoryName, newDirectoryName);
-        }
-        
         // 解压 Natives
-        public static async Task DecompressionNatives(GameCoreConfig coreConfig)
+        internal static async Task DecompressionNatives(GameCoreConfig coreConfig)
         {
             try
             {
@@ -155,7 +162,7 @@ namespace StarLight_Core.Utilities
             }
         }
         
-        private static IEnumerable<string> ProcessNativesPath(string filePath, string librariesPath)
+        internal static IEnumerable<string> ProcessNativesPath(string filePath, string librariesPath)
         {
             var jsonData = File.ReadAllText(filePath);
             var argsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(jsonData);
