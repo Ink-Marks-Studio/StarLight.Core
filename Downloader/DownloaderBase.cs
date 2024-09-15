@@ -18,7 +18,7 @@ namespace StarLight_Core.Downloader
         /// </summary>
         /// <param name="httpClient"></param>
         /// <param name="url">文件下载地址</param>
-        /// <returns></returns>
+        /// <returns>下载文件大小</returns>
         protected static async Task<long> GetFileSizeAsync(HttpClient httpClient, string url)
         {
             using var request = new HttpRequestMessage(HttpMethod.Head, url);
