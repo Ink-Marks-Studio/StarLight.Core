@@ -8,7 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Skin/ProfileJsonEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Skin/SkinInfoJsonEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Skin/SkinJsonEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Skin/Textures.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Skin/Fetchers/MicrosoftSkinFetcher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Skin/SkinProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Skin/SkinProcessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -437,6 +444,12 @@
       <workItem from="1725761856025" duration="9534000" />
       <workItem from="1725779268350" duration="805000" />
       <workItem from="1726314208738" duration="1699000" />
+      <workItem from="1726412535700" duration="1534000" />
+      <workItem from="1726414601157" duration="203000" />
+      <workItem from="1726415047638" duration="64000" />
+      <workItem from="1726415556055" duration="215000" />
+      <workItem from="1726474521960" duration="6768000" />
+      <workItem from="1726497893979" duration="364000" />
     </task>
     <servers />
   </component>
