@@ -124,9 +124,7 @@ jobs:
           COMMIT_TITLE=$(git log -1 --pretty=%s | tr -d '\r\n' | sed 's/[[:space:]]*$//')
           echo "COMMIT_TITLE=$COMMIT_TITLE" >> $GITHUB_ENV
           COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | sed ':a;N;$!ba;s/\r\n/\\n/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "COMMIT_DESCRIPTION<<EOF" >> $GITHUB_ENV
-          echo "$COMMIT_DESCRIPTION" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "COMMIT_DESCRIPTION=$COMMIT_DESCRIPTION" >> $GITHUB_ENV
           COMMIT_AUTHOR=$(git log -1 --pretty=%an)
           echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
       
