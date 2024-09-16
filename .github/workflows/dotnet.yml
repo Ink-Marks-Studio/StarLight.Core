@@ -123,17 +123,12 @@ jobs:
         run: |
           COMMIT_TITLE=$(git log -1 --pretty=%s | tr -d '\r\n' | sed 's/[[:space:]]*$//')
           echo "COMMIT_TITLE=$COMMIT_TITLE" >> $GITHUB_ENV
-          COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | tr '\r\n' ' ' | sed 's/[[:space:]]*$//')
-          echo "COMMIT_DESCRIPTION=$COMMIT_DESCRIPTION" >> $GITHUB_ENV
+          COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | sed ':a;N;$!ba;s/\r\n/\\n/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "COMMIT_DESCRIPTION<<EOF" >> $GITHUB_ENV
+          echo "$COMMIT_DESCRIPTION" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           COMMIT_AUTHOR=$(git log -1 --pretty=%an)
           echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
-
-      - name: 获取提交信息并处理换行符
-        id: process_commit_description
-        run: |
-          # 获取提交描述，并将换行符替换为实际换行符
-          COMMIT_DESCRIPTION=$(git log -1 --pretty=%b | sed ':a;N;$!ba;s/\r\n/\n/g' | sed ':a;N;$!ba;s/\n/\n/g')
-          echo "COMMIT_DESCRIPTION=$COMMIT_DESCRIPTION" >> $GITHUB_ENV
       
       - name: 创建 GitHub 发布
         id: create_release
@@ -149,7 +144,7 @@ jobs:
             **类型**: 自动构建 - v${{ env.VERSION }} - ${{ env.COMMIT_TITLE }}
             
             **提交者**: ${{ env.COMMIT_AUTHOR }}
-      
+          
             **描述**: |
               ${{ env.COMMIT_DESCRIPTION }}
       
