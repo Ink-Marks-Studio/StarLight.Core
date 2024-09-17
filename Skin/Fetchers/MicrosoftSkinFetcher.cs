@@ -20,7 +20,8 @@ namespace StarLight_Core.Skin.Fetchers
             var skinJson = await HttpUtil.GetJsonAsync(baseUrl + uuid);
             var skinUrl =
                 Encoding.UTF8.GetString(
-                    Convert.FromBase64String(skinJson.ToJsonEntry<ProfileJsonEntity>().Properties.First().Value));
+                    Convert.FromBase64String(
+                        skinJson.ToJsonEntry<ProfileJsonEntity>().Properties.First().Value)).ToJsonEntry<SkinJsonEntity>().Textures.Skin.Url;
             using var httpClient = new HttpClient();
             return await httpClient.GetByteArrayAsync(skinUrl);
         }
