@@ -6,7 +6,9 @@ using StarLight_Core.Models.Authentication;
 
 namespace StarLight_Core.Authentication
 {
-    // 统一通行证验证类
+    /// <summary>
+    /// 统一通行证验证类
+    /// </summary>
     public class UnifiedPassAuthenticator
     {
         private const string UnifiedPassBaseUrl = "https://auth.mc-user.com:233/";
@@ -27,7 +29,11 @@ namespace StarLight_Core.Authentication
             BaseUrl = baseUrl;
         }
         
-        // 统一通行证异步验证方法
+        /// <summary>
+        /// 统一通行证异步验证方法
+        /// </summary>
+        /// <returns>统一通行证账户信息</returns>
+        /// <exception cref="ApplicationException">身份验证时出错</exception>
         public async Task<UnifiedPassAccount> UnifiedPassAuthAsync()
         {
             Uri authenticateUri = new Uri(new Uri(BaseUrl), ServerId +"/authserver/authenticate");
@@ -68,16 +74,23 @@ namespace StarLight_Core.Authentication
             return result;
         }
 
-        public async Task<UnifiedPassAccount> RefreshUnifiedPassAsync(string clientToken, string refreshToken)
+        /// <summary>
+        /// 刷新统一通行证令牌
+        /// </summary>
+        /// <param name="clientToken">客户端令牌</param>
+        /// <param name="accessToken">资源令牌</param>
+        /// <returns>统一通行证账户信息</returns>
+        /// <exception cref="ApplicationException">刷新令牌时出错</exception>
+        public async Task<UnifiedPassAccount> RefreshUnifiedPassAsync(string clientToken, string accessToken)
         {
             var refreshPostData = new
             {
-                accessToken = refreshToken,
+                accessToken = accessToken,
                 clientToken = clientToken,
                 requestUser = true
             };
             
-            string jsonData = JsonSerializer.Serialize(refreshPostData);
+            var jsonData = JsonSerializer.Serialize(refreshPostData);
             string response;
             try
             {
@@ -99,8 +112,14 @@ namespace StarLight_Core.Authentication
             };
         }
         
-        // 获取玩家皮肤信息。
-        public static async Task<Dictionary<string, string>> RetrieveSkinInfo(string baseUrl, string profileId)
+        /// <summary>
+        /// 获取玩家皮肤信息
+        /// </summary>
+        /// <param name="baseUrl">基础 Url</param>
+        /// <param name="profileId">账户 Uuid</param>
+        /// <returns>无返回</returns>
+        [Obsolete("此方法已弃用,请使用 StarLight_Core.Skin 中的方法进行获取")]
+        public static Dictionary<string, string> RetrieveSkinInfo(string baseUrl, string profileId)
         {
             return new Dictionary<string, string>();
         }
