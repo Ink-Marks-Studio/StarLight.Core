@@ -175,6 +175,44 @@ var la = await launch.LaunchAsync(ReportProgress); // 启动
 在文档 [StarLight_Core 使用文档与使用帮助](https://mohen.wiki/)
 中查看更多组件的使用教程
 
+## 🧱我复制的代码出错了怎么办？
+
+首先，我们不建议您直接复制控制台示例。
+
+其次，请先自查以下是否正确：
+
+- 没有添加异步。
+例：
+```csharp
+void GetMicrosoftAccount()
+{
+    var auth = new MicrosoftAuthentication(clientId);
+    var deviceCodeInfo = await auth.RetrieveDeviceCodeInfo();
+    Console.WriteLine(deviceCodeInfo.UserCode + " " + deviceCodeInfo.VerificationUri);
+    var tokenInfo = await auth.GetTokenResponse(deviceCodeInfo);
+    var userInfo = await auth.MicrosoftAuthAsync(tokenInfo, x =>
+    {
+        Console.WriteLine(x);
+    });
+}
+```
+
+以上代码不能运行，因为并没有在 void 前后添加 async 。
+
+- 我们的文档出错了
+
+这种情况十分罕见，但是这不代表不存在。请请仔细检查拼写，或使用 IDE 快速修复进行修复。
+
+如果以上方法不奏效，请反馈问题。
+
+## 🐛反馈问题
+
+反馈一个问题，请您必须完成以上自查清单。在反馈时，请同时附上报错详情、方法详细内容。
+
+> 没有错误报告无异于闭眼开车
+
+请勿询问过于基础您只需要通过搜索或其他方法便可以解决的问题，无论是开发者亦或是志愿者都没有义务回答您的问题，请查看 [提问的智慧](https://lug.ustc.edu.cn/wiki/doc/smart-questions/)
+
 ## 🌐讨论
 欢迎加入Q群: [971192670](https://qm.qq.com/q/FcmJDYRoDQ)
 
