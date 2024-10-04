@@ -62,8 +62,6 @@ namespace StarLight_Core.Utilities
                         {
                             gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
                         }
-
-                        Console.WriteLine(version + ": " + gameCoreInfo.Assets);
                         
                         gameCoreInfo.Version ??= gameCoreInfo.Assets;
                         gameCoreInfo.Version ??= "0.0.0";
@@ -175,24 +173,20 @@ namespace StarLight_Core.Utilities
             return null!;
         }
 
-        internal static LoaderType GetLoader(string mainClass)
+        private static LoaderType GetLoader(string mainClass)
         {
-            if (mainClass == "net.fabricmc.loader.impl.launch.knot.KnotClient")
-                return LoaderType.Fabric;
-            if (mainClass == "net.minecraft.launchwrapper.Launch")
-                return LoaderType.Forge;
-            else
-                return LoaderType.Vanilla;
+            return mainClass switch
+            {
+                "net.fabricmc.loader.impl.launch.knot.KnotClient" => LoaderType.Fabric,
+                "net.minecraft.launchwrapper.Launch" => LoaderType.Forge,
+                _ => LoaderType.Vanilla
+            };
         }
         
         internal static int GetMajorVersion(string version)
         {
             var parts = version.Split('.');
-            if (parts.Length > 1)
-            {
-                return int.Parse(parts[1]);
-            }
-            return 0;
+            return parts.Length > 1 ? int.Parse(parts[1]) : 0;
         }
     }
 }
