@@ -175,11 +175,14 @@ var la = await launch.LaunchAsync(ReportProgress); // 启动
 在文档 [StarLight_Core 使用文档与使用帮助](https://mohen.wiki/)
 中查看更多组件的使用教程
 
-## 🧱我复制的代码出错了怎么办？
+## 🧱问题解决方案
 
 首先，我们不建议您直接复制控制台示例。
 
-其次，请先自查以下是否正确：
+其次，请先自查以下内容：
+
+- 未更新 StarLight.Core
+请先使用 Nuget 管理器或其他工具，手动更新等方式，更新 StarLight.Core 。
 
 - 没有添加异步。
 例：
