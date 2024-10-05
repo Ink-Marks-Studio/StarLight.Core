@@ -37,7 +37,7 @@ namespace StarLight_Core.Installer
         
         public async Task<FabricInstallResult> InstallAsync(string? customId = null)
         {
-            string versionId = customId ?? $"{GameVersion}-fabric-loader-{FabricVersion}";
+            string versionId = customId ?? $"{GameVersion}-fabric-loader_{FabricVersion}";
             string varPath = Path.Combine(Root, "versions", versionId);
             string jsonPath = Path.Combine(varPath, versionId + ".json");
             FileUtil.IsDirectory(varPath, true);
