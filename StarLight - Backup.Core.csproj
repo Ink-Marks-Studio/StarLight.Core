@@ -13,7 +13,6 @@
     <PackageProjectUrl>https://github.com/Ink-Marks-Studio/StarLight.Core</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>logo.png</PackageIcon>
     <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Minecraft</PackageTags>
@@ -55,10 +54,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\logo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
     <None Update="README.md">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
@@ -73,6 +68,10 @@
       <PackagePath></PackagePath>
       <Link>logo.png</Link>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
 
   <ItemGroup>

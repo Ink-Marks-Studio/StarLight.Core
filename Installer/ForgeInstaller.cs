@@ -1,5 +1,8 @@
 using System.Text.Json;
+using StarLight_Core.Downloader;
+using StarLight_Core.Enum;
 using StarLight_Core.Models.Installer;
+using StarLight_Core.Models.Utilities;
 using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Installer
@@ -24,7 +27,7 @@ namespace StarLight_Core.Installer
         /// <param name="cancellationToken">取消令牌</param>
         /// <param name="onSpeedChanged">速度报告</param>
         /// <param name="onProgressChanged">进度报告</param>
-        public ForgeInstaller(string gameVersion, string forgeVersion, string root = ".minecraft", CancellationToken cancellationToken = default, Action<string>? onSpeedChanged = null, Action<string,int>? onProgressChanged = null)
+        public ForgeInstaller(string gameVersion, string forgeVersion, string root = ".minecraft", Action<string>? onSpeedChanged = null, Action<string,int>? onProgressChanged = null, CancellationToken cancellationToken = default)
         {
             GameVersion = gameVersion;
             ForgeVersion = forgeVersion;
@@ -58,7 +61,65 @@ namespace StarLight_Core.Installer
         /// <exception cref="NotImplementedException"></exception>
         public async Task<ForgeInstallResult> InstallAsync(string? customId = null)
         {
-            throw new NotImplementedException();
+            var multiThreadedDownloader = new MultiThreadedFileDownloader(x =>
+            {
+                OnSpeedChanged?.Invoke(CalcMemoryMensurableUnit(x));
+            }, CancellationToken);
+            
+            string versionId = customId ?? $"{GameVersion}-Forge_{ForgeVersion}";
+            string varPath = Path.Combine(Root, "versions", versionId);
+            string jsonPath = Path.Combine(varPath, versionId + ".json");
+            string forgeJarPath = Path.Combine(FileUtil.GetTempDirectory(), "StarLight.Core", $"forge-{ForgeVersion}");
+            
+            // DEV
+            Console.WriteLine(forgeJarPath);
+            
+            FileUtil.IsDirectory(varPath, true);
+            
+            try
+            {
+                OnProgressChanged?.Invoke("开始安装 Forge 加载器", 0);
+
+                if (FileUtil.IsFile(jsonPath))
+                    return new ForgeInstallResult(Status.Failed, GameVersion, ForgeVersion, versionId,
+                        new Exception("版本已存在"));
+                
+                OnProgressChanged?.Invoke("下载加载器安装文件", 20);
+                if (CancellationToken != default)
+                    CancellationToken.ThrowIfCancellationRequested();
+                
+                FileUtil.IsDirectory(forgeJarPath, true);
+                try
+                {
+                    await multiThreadedDownloader.DownloadFileWithMultiThread(
+                        $"/net/minecraftforge/forge/{GameVersion}-{ForgeVersion}/forge-{GameVersion}-{ForgeVersion}-installer.jar", 
+                        Path.Combine(forgeJarPath, "forge-installer.jar"));
+                }
+                catch (Exception e)
+                {
+                    OnProgressChanged?.Invoke("下载加载器安装文件错误: " + e.Message, 0);
+                    return new ForgeInstallResult(Status.Failed, GameVersion, ForgeVersion, customId, e);
+                }
+                
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    WriteIndented = true
+                };
+            }
+            catch (OperationCanceledException)
+            {
+                OnProgressChanged?.Invoke("已取消安装", 0);
+                return new ForgeInstallResult(Status.Cancel, GameVersion, ForgeVersion, customId);
+            }
+            catch (Exception e)
+            {
+                OnProgressChanged?.Invoke("安装 Forge 加载器错误: " + e.Message, 0);
+                return new ForgeInstallResult(Status.Failed, GameVersion, ForgeVersion, customId, e);
+            }
+            
+            OnProgressChanged?.Invoke("Forge 加载器安装完成", 100);
+            return new ForgeInstallResult(Status.Succeeded, GameVersion, ForgeVersion, customId);
         }
         
         /// <summary>
