@@ -9,12 +9,22 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Installer
 {
+    /// <summary>
+    /// 游戏安装器
+    /// </summary>
     public class MinecraftInstaller : InstallerBase
     {
         private string GameId { get; set; }
         
         private string GamePath { get; set; }
         
+        /// <summary>
+        /// 游戏安装器
+        /// </summary>
+        /// <param name="gameId">游戏版本号</param>
+        /// <param name="root">游戏目录</param>
+        /// <param name="onProgressChanged">进度报告</param>
+        /// <param name="onSpeedChanged">速度报告</param>
         public MinecraftInstaller(string gameId, string root = ".minecraft", Action<string,int>? onProgressChanged = null, Action<string>? onSpeedChanged = null)
         {
             Root = root;
@@ -26,6 +36,13 @@ namespace StarLight_Core.Installer
                 : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
         }
 
+        /// <summary>
+        /// 异步安装方法
+        /// </summary>
+        /// <param name="gameCoreName">游戏名称</param>
+        /// <param name="mandatory">验证安装</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <returns></returns>
         public async Task<InstallResult> InstallAsync(string? gameCoreName = null, bool mandatory = false, CancellationToken cancellationToken = default)
         {
             var multiThreadedDownloader = new MultiThreadedFileDownloader(x =>
