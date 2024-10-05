@@ -37,10 +37,10 @@ namespace StarLight_Core.Installer
         }
 
         /// <summary>
-        /// 异步安装方法
+        /// 游戏异步安装方法
         /// </summary>
         /// <param name="gameCoreName">游戏名称</param>
-        /// <param name="mandatory">验证安装</param>
+        /// <param name="mandatory">非验证安装</param>
         /// <param name="cancellationToken">取消令牌</param>
         /// <returns></returns>
         public async Task<InstallResult> InstallAsync(string? gameCoreName = null, bool mandatory = false, CancellationToken cancellationToken = default)

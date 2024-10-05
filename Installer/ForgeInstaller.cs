@@ -4,24 +4,30 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Installer
 {
-    public class ForgeInstaller
+    /// <summary>
+    /// Forge 安装器
+    /// </summary>
+    public class ForgeInstaller : InstallerBase
     {
-        private string Root { get; set; }
-        
         private string GameVersion { get; set; }
         
-        private string FabricVersion { get; set; }
+        private string ForgeVersion { get; set; }
 
         private CancellationToken CancellationToken { get; set; }
         
-        public Action<string,int>? OnProgressChanged { get; set; }
-        
-        public Action<string>? OnSpeedChanged { get; set; }
-        
-        public ForgeInstaller(string gameVersion, string fabricVersion, string root = ".minecraft", CancellationToken cancellationToken = default, Action<string>? onSpeedChanged = null, Action<string,int>? onProgressChanged = null)
+        /// <summary>
+        /// 带有进度报告的 Forge 安装器
+        /// </summary>
+        /// <param name="gameVersion">游戏版本</param>
+        /// <param name="forgeVersion">加载器版本</param>
+        /// <param name="root">游戏根目录</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <param name="onSpeedChanged">速度报告</param>
+        /// <param name="onProgressChanged">进度报告</param>
+        public ForgeInstaller(string gameVersion, string forgeVersion, string root = ".minecraft", CancellationToken cancellationToken = default, Action<string>? onSpeedChanged = null, Action<string,int>? onProgressChanged = null)
         {
             GameVersion = gameVersion;
-            FabricVersion = fabricVersion;
+            ForgeVersion = forgeVersion;
             OnSpeedChanged = onSpeedChanged;
             OnProgressChanged = onProgressChanged;
             CancellationToken = cancellationToken;
@@ -30,15 +36,27 @@ namespace StarLight_Core.Installer
                 : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root);
         }
         
-        public ForgeInstaller(string gameVersion, string fabricVersion, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Forge 安装器
+        /// </summary>
+        /// <param name="gameVersion">游戏版本</param>
+        /// <param name="forgeVersion">加载器版本</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        public ForgeInstaller(string gameVersion, string forgeVersion, CancellationToken cancellationToken = default)
         {
             GameVersion = gameVersion;
-            FabricVersion = fabricVersion;
+            ForgeVersion = forgeVersion;
             CancellationToken = cancellationToken;
             Root = Path.Combine(FileUtil.GetCurrentExecutingDirectory(), ".minecraft");
         }
 
-        public async Task<FabricInstallResult> InstallAsync(string? customId = null)
+        /// <summary>
+        /// Forge 异步安装方法
+        /// </summary>
+        /// <param name="customId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<ForgeInstallResult> InstallAsync(string? customId = null)
         {
             throw new NotImplementedException();
         }
