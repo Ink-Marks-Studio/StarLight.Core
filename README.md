@@ -1,6 +1,6 @@
 <div align="center">
 
-<img Height="300" Width="300" src="Assets/logo-256.png"/>
+<img Height="300" Width="300" src="Assets/logo.png"/>
 
 # StarLight.Core
 

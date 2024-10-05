@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/Ink-Marks-Studio/StarLight.Core</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>logo-256.png</PackageIcon>
+    <PackageIcon>Assets\logo.png</PackageIcon>
     <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Minecraft</PackageTags>
@@ -64,10 +64,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Assets\logo-256.png">
+    <None Include="Assets\logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
-      <Link>logo-256.png</Link>
+      <Link>logo.png</Link>
     </None>
   </ItemGroup>
 
