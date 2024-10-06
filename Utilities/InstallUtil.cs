@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using StarLight_Core.Models.Installer;
 
@@ -33,6 +34,7 @@ namespace StarLight_Core.Utilities
         /// <returns>版本列表</returns>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="Exception"></exception>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public static async Task<IEnumerable<GameCoreDownloadInfo>> GetGameCoresAsync()
         {
             try
