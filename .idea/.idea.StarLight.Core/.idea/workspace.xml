@@ -10,8 +10,7 @@
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Installer/ForgeInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/ForgeInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/InstallUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/InstallUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -458,6 +457,8 @@
       <workItem from="1728054560779" duration="138000" />
       <workItem from="1728103050329" duration="6326000" />
       <workItem from="1728109410653" duration="110000" />
+      <workItem from="1728109599984" duration="4499000" />
+      <workItem from="1728213220242" duration="314000" />
     </task>
     <servers />
   </component>

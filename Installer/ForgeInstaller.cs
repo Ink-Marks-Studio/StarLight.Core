@@ -19,6 +19,33 @@ namespace StarLight_Core.Installer
         private CancellationToken CancellationToken { get; set; }
         
         /// <summary>
+        /// Forge 安装器
+        /// </summary>
+        /// <param name="gameVersion">游戏版本</param>
+        /// <param name="forgeVersion">加载器版本</param>
+        public ForgeInstaller(string gameVersion, string forgeVersion)
+        {
+            GameVersion = gameVersion;
+            ForgeVersion = forgeVersion;
+            CancellationToken = default;
+            Root = Path.Combine(FileUtil.GetCurrentExecutingDirectory(), ".minecraft");
+        }
+        
+        /// <summary>
+        /// Forge 安装器
+        /// </summary>
+        /// <param name="gameVersion">游戏版本</param>
+        /// <param name="forgeVersion">加载器版本</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        public ForgeInstaller(string gameVersion, string forgeVersion, CancellationToken cancellationToken = default)
+        {
+            GameVersion = gameVersion;
+            ForgeVersion = forgeVersion;
+            CancellationToken = cancellationToken;
+            Root = Path.Combine(FileUtil.GetCurrentExecutingDirectory(), ".minecraft");
+        }
+        
+        /// <summary>
         /// 带有进度报告的 Forge 安装器
         /// </summary>
         /// <param name="gameVersion">游戏版本</param>
@@ -37,20 +64,6 @@ namespace StarLight_Core.Installer
             Root = FileUtil.IsAbsolutePath(root)
                 ? Path.Combine(root)
                 : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root);
-        }
-        
-        /// <summary>
-        /// Forge 安装器
-        /// </summary>
-        /// <param name="gameVersion">游戏版本</param>
-        /// <param name="forgeVersion">加载器版本</param>
-        /// <param name="cancellationToken">取消令牌</param>
-        public ForgeInstaller(string gameVersion, string forgeVersion, CancellationToken cancellationToken = default)
-        {
-            GameVersion = gameVersion;
-            ForgeVersion = forgeVersion;
-            CancellationToken = cancellationToken;
-            Root = Path.Combine(FileUtil.GetCurrentExecutingDirectory(), ".minecraft");
         }
 
         /// <summary>
@@ -89,15 +102,17 @@ namespace StarLight_Core.Installer
                     CancellationToken.ThrowIfCancellationRequested();
                 
                 FileUtil.IsDirectory(forgeJarPath, true);
+                Console.WriteLine($"{DownloadAPIs.Current.ForgeMaven}/net/minecraftforge/forge/{GameVersion}-{ForgeVersion}/forge-{GameVersion}-{ForgeVersion}-installer.jar");
                 try
                 {
                     await multiThreadedDownloader.DownloadFileWithMultiThread(
-                        $"/net/minecraftforge/forge/{GameVersion}-{ForgeVersion}/forge-{GameVersion}-{ForgeVersion}-installer.jar", 
+                        $"{DownloadAPIs.Current.ForgeMaven}/net/minecraftforge/forge/{GameVersion}-{ForgeVersion}/forge-{GameVersion}-{ForgeVersion}-installer.jar", 
                         Path.Combine(forgeJarPath, "forge-installer.jar"));
                 }
                 catch (Exception e)
                 {
                     OnProgressChanged?.Invoke("下载加载器安装文件错误: " + e.Message, 0);
+                    Console.WriteLine(e);
                     return new ForgeInstallResult(Status.Failed, GameVersion, ForgeVersion, customId, e);
                 }
                 

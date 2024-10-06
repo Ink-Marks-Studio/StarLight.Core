@@ -3,9 +3,17 @@ using StarLight_Core.Models.Installer;
 
 namespace StarLight_Core.Utilities
 {
-    public class InstallUtil
+    /// <summary>
+    /// 安装工具
+    /// </summary>
+    public static class InstallUtil
     {
-        // 获取指定版本
+        /// <summary>
+        /// 获取指定版本
+        /// </summary>
+        /// <param name="id">版本 Id</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">版本不存在</exception>
         public static async Task<GameCoreDownloadInfo> GetGameCoreAsync(string id)
         {
             var gameCoresInfo = await GetGameCoresAsync();
@@ -19,7 +27,12 @@ namespace StarLight_Core.Utilities
             return gameCoreInfo;
         }
         
-        // 获取版本列表
+        /// <summary>
+        /// 获取版本列表
+        /// </summary>
+        /// <returns>版本列表</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="Exception"></exception>
         public static async Task<IEnumerable<GameCoreDownloadInfo>> GetGameCoresAsync()
         {
             try
@@ -60,22 +73,24 @@ namespace StarLight_Core.Utilities
             }
         }
         
-        // 获取最新版本
+        /// <summary>
+        /// 获取最新版本
+        /// </summary>
+        /// <returns>最新正式版与快照版</returns>
+        /// <exception cref="InvalidOperationException">无法获取版本</exception>
+        /// <exception cref="Exception"></exception>
         public static async Task<LatestGameCoreDownloadInfo> GetLatestGameCoreAsync()
         {
             try
             {
                 var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.VersionManifest);
                 if (string.IsNullOrWhiteSpace(json))
-                {
                     throw new InvalidOperationException("[SL]版本列表为空");
-                }
 
                 var versionsManifest = JsonSerializer.Deserialize<GameCoreJsonEntity>(json);
                 if (versionsManifest?.Latest == null)
-                {
                     throw new InvalidOperationException("[SL]版本列表为空");
-                }else
+                else
                 {
                     return new LatestGameCoreDownloadInfo
                     {
