@@ -3,7 +3,7 @@ namespace StarLight_Core.Installer
     /// <summary>
     /// 安装器基类
     /// </summary>
-    public class InstallerBase
+    public abstract class InstallerBase
     {
         /// <summary>
         /// 进度报告方法

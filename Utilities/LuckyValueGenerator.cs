@@ -29,7 +29,7 @@ namespace StarLight_Core.Utilities
         {
             var macAddress = NetworkInterface
                 .GetAllNetworkInterfaces()
-                .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up && !nic.IsReceiveOnly)?
+                .FirstOrDefault(nic => nic is { OperationalStatus: OperationalStatus.Up, IsReceiveOnly: false })?
                 .GetPhysicalAddress()
                 .ToString();
 

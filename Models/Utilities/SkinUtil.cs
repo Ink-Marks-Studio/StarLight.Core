@@ -1,8 +1,6 @@
-using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 
+#pragma warning disable CA1416
 namespace StarLight_Core.Models.Utilities
 {
     public static class SkinUtil
@@ -55,3 +53,4 @@ namespace StarLight_Core.Models.Utilities
         }
     }
 }
+#pragma warning restore CA1416
