@@ -8,11 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/InstallerBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/InstallerBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/SkinUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/SkinUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skin/SkinProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Skin/SkinProcessor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/LuckyValueGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/LuckyValueGenerator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Installer/CustomInstaller.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -462,6 +458,7 @@
       <workItem from="1728109599984" duration="4499000" />
       <workItem from="1728213220242" duration="557000" />
       <workItem from="1728728115520" duration="2708000" />
+      <workItem from="1729607284810" duration="332000" />
     </task>
     <servers />
   </component>
