@@ -7,6 +7,9 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Installer
 {
+    /// <summary>
+    /// Fabric 安装器
+    /// </summary>
     public class FabricInstaller : InstallerBase
     {
         private string GameVersion { get; set; }
