@@ -8,7 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Installer/CustomInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/CustomInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/CustomInstaller.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +78,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
     &quot;发布到 IIS.StarLight.Core: FolderProfile.executor&quot;: &quot;Run&quot;
   }
@@ -459,6 +461,10 @@
       <workItem from="1728213220242" duration="557000" />
       <workItem from="1728728115520" duration="2708000" />
       <workItem from="1729607284810" duration="332000" />
+      <workItem from="1729784153700" duration="23000" />
+      <workItem from="1729784733942" duration="156000" />
+      <workItem from="1729922986544" duration="363000" />
+      <workItem from="1730019166558" duration="583000" />
     </task>
     <servers />
   </component>
@@ -479,7 +485,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
