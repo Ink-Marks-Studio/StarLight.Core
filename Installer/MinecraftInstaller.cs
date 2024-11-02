@@ -171,16 +171,14 @@ namespace StarLight_Core.Installer
                 OnProgressChanged?.Invoke("下载游戏核心", 20);
                 
                 if (cancellationToken != default)
-                {
                     cancellationToken.ThrowIfCancellationRequested();
-                }
                 
-                GameCoreVersionsJson gameCoreVersionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
-                string coreJarSha1 = gameCoreVersionsJson.Downloads.Client.Sha1;
-                string jarFilePath = Path.Combine(varPath, gameCoreName + ".jar");
+                var gameCoreVersionsJson = JsonSerializer.Deserialize<GameCoreVersionsJson>(File.ReadAllText(jsonPath));
+                var coreJarSha1 = gameCoreVersionsJson.Downloads.Client.Sha1;
+                var jarFilePath = Path.Combine(varPath, gameCoreName + ".jar");
                 if (!FileUtil.IsFile(jarFilePath))
                 {
-                    string jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
+                    var jarDownloadPath = gameCoreVersionsJson.Downloads.Client.Url;
 
                     if (DownloadAPIs.Current.Source == DownloadSource.Official)
                         jarDownloadPath = $"{DownloadAPIs.Current.Root}/version/{GameId}/client";
