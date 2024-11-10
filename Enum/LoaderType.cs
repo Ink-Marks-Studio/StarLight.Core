@@ -1,12 +1,11 @@
-namespace StarLight_Core.Enum
+namespace StarLight_Core.Enum;
+
+public enum LoaderType
 {
-    public enum LoaderType
-    {
-        Vanilla,
-        Fabric,
-        Forge,
-        Quilt,
-        OptiFine,
-        LiteLoader
-    }
+    Vanilla,
+    Fabric,
+    Forge,
+    Quilt,
+    OptiFine,
+    LiteLoader
 }

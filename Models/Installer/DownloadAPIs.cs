@@ -7,19 +7,6 @@ namespace StarLight_Core.Models.Installer;
 /// </summary>
 public class DownloadAPI
 {
-    public string Root { get; set; }
-    public string VersionManifest { get; set; }
-    public string Assets { get; set; }
-    public string Maven { get; set; }
-    
-    public string FabricRoot { get; set; }
-    public string FabricMaven { get; set; }
-    
-    public string ForgeRoot { get; set; }
-    public string ForgeMaven { get; set; }
-    
-    public DownloadSource Source { get; set; }
-
     /// <summary>
     /// 下载源
     /// </summary>
@@ -32,7 +19,8 @@ public class DownloadAPI
     /// <param name="forgeRoot"></param>
     /// <param name="forgeMaven"></param>
     /// <param name="source"></param>
-    public DownloadAPI(string root, string versionManifest, string assets, string maven, string fabricRoot, string fabricMaven, string forgeRoot, string forgeMaven, DownloadSource source)
+    public DownloadAPI(string root, string versionManifest, string assets, string maven, string fabricRoot,
+        string fabricMaven, string forgeRoot, string forgeMaven, DownloadSource source)
     {
         Root = root;
         VersionManifest = versionManifest;
@@ -44,6 +32,19 @@ public class DownloadAPI
         ForgeMaven = forgeMaven;
         Source = source;
     }
+
+    public string Root { get; set; }
+    public string VersionManifest { get; set; }
+    public string Assets { get; set; }
+    public string Maven { get; set; }
+
+    public string FabricRoot { get; set; }
+    public string FabricMaven { get; set; }
+
+    public string ForgeRoot { get; set; }
+    public string ForgeMaven { get; set; }
+
+    public DownloadSource Source { get; set; }
 }
 
 /// <summary>
@@ -51,19 +52,7 @@ public class DownloadAPI
 /// </summary>
 public static class DownloadAPIs
 {
-    internal static DownloadAPI Current { get; set; } = new DownloadAPI(
-        "https://launcher.mojang.com",
-        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
-        "https://resources.download.minecraft.net",
-        "https://libraries.minecraft.net",
-        "https://meta.fabricmc.net",
-        "https://maven.fabricmc.net",
-        "https://files.minecraftforge.net",
-        "https://files.minecraftforge.net/maven",
-        DownloadSource.Official
-    );
-    
-    internal static readonly DownloadAPI Official = new DownloadAPI(
+    internal static readonly DownloadAPI Official = new(
         "https://launcher.mojang.com",
         "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
         "https://resources.download.minecraft.net",
@@ -75,7 +64,7 @@ public static class DownloadAPIs
         DownloadSource.Official
     );
 
-    private static readonly DownloadAPI BmclApi = new DownloadAPI(
+    private static readonly DownloadAPI BmclApi = new(
         "https://bmclapi2.bangbang93.com",
         "https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json",
         "https://bmclapi2.bangbang93.com/assets",
@@ -87,15 +76,30 @@ public static class DownloadAPIs
         DownloadSource.BmclApi
     );
 
+    internal static DownloadAPI Current { get; set; } = new(
+        "https://launcher.mojang.com",
+        "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
+        "https://resources.download.minecraft.net",
+        "https://libraries.minecraft.net",
+        "https://meta.fabricmc.net",
+        "https://maven.fabricmc.net",
+        "https://files.minecraftforge.net",
+        "https://files.minecraftforge.net/maven",
+        DownloadSource.Official
+    );
+
     /// <summary>
     /// 切换下载源
     /// </summary>
     /// <param name="source"></param>
     /// <exception cref="ArgumentException"></exception>
-    public static void SwitchDownloadSource(DownloadSource source) => Current = source switch
+    public static void SwitchDownloadSource(DownloadSource source)
     {
-        DownloadSource.Official => Official,
-        DownloadSource.BmclApi => BmclApi,
-        _ => throw new ArgumentException("[SL]未找到下载源")
-    };
+        Current = source switch
+        {
+            DownloadSource.Official => Official,
+            DownloadSource.BmclApi => BmclApi,
+            _ => throw new ArgumentException("[SL]未找到下载源")
+        };
+    }
 }

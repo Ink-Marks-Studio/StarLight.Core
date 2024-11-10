@@ -2,191 +2,177 @@
 using StarLight_Core.Enum;
 using StarLight_Core.Models.Utilities;
 
-namespace StarLight_Core.Utilities
+namespace StarLight_Core.Utilities;
+
+public class GameCoreUtil
 {
-    public class GameCoreUtil
+    /// <summary>
+    /// 获取游戏核心信息
+    /// </summary>
+    /// <param name="root"></param>
+    /// <returns>指定路径的游戏列表</returns>
+    /// <exception cref="Exception"></exception>
+    public static IEnumerable<GameCoreInfo> GetGameCores(string root = ".minecraft")
     {
-        /// <summary>
-        /// 获取游戏核心信息
-        /// </summary>
-        /// <param name="root"></param>
-        /// <returns>指定路径的游戏列表</returns>
-        /// <exception cref="Exception"></exception>
-        public static IEnumerable<GameCoreInfo> GetGameCores(string root = ".minecraft")
+        var rootPath = "null";
+
+        FileUtil.IsDirectory(root, true);
+
+        rootPath = FileUtil.IsAbsolutePath(root)
+            ? Path.Combine(root, "versions")
+            : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root, "versions");
+
+        FileUtil.IsDirectory(rootPath, true);
+
+        var versions = Directory.GetDirectories(rootPath);
+        var gameCores = new List<GameCoreInfo>();
+
+        foreach (var version in versions)
         {
-            string rootPath = "null";
-            
-            FileUtil.IsDirectory(root, true);
-            
-            rootPath = FileUtil.IsAbsolutePath(root) ? Path.Combine(root, "versions") : 
-                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root, "versions");
+            var versionFolder = new DirectoryInfo(version);
+            var versionFile = Path.Combine(versionFolder.FullName, versionFolder.Name + ".json");
 
-            FileUtil.IsDirectory(rootPath, true);
-            
-            var versions = Directory.GetDirectories(rootPath);
-            List<GameCoreInfo> gameCores = new List<GameCoreInfo>();
-            
-            foreach (var version in versions)
-            {
-                var versionFolder = new DirectoryInfo(version);
-                var versionFile = Path.Combine(versionFolder.FullName, versionFolder.Name + ".json");
-
-                if (File.Exists(versionFile))
+            if (File.Exists(versionFile))
+                try
                 {
-                    try
+                    var jsonData = File.ReadAllText(versionFile);
+                    var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
+                    var gameCoreInfo = new GameCoreInfo();
+
+                    if (gameCore != null)
+                        gameCoreInfo = new GameCoreInfo
+                        {
+                            Id = gameCore.Id,
+                            Type = gameCore.Type,
+                            JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
+                            MainClass = gameCore.MainClass,
+                            InheritsFrom = gameCore.InheritsFrom,
+                            ReleaseTime = gameCore.ReleaseTime,
+                            IsNewVersion = gameCore.Arguments?.Game != null,
+                            Time = gameCore.Time,
+                            root = rootPath + Path.DirectorySeparatorChar + gameCore.Id,
+                            Version = gameCore.ClientVersion,
+                            Assets = gameCore.Assets,
+                            LoaderType = GetLoader(gameCore.MainClass)
+                        };
+
+                    if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
+                        gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
+
+                    gameCoreInfo.Version ??= gameCoreInfo.Assets;
+                    gameCoreInfo.Version ??= "0.0.0";
+
+                    gameCores.Add(gameCoreInfo);
+                }
+                catch (Exception ex)
+                {
+                    gameCores.Add(new GameCoreInfo { Exception = ex });
+                }
+        }
+
+        return gameCores;
+    }
+
+    // 获取指定版本的游戏核心信息
+    public static GameCoreInfo GetGameCore(string versionId, string root = ".minecraft")
+    {
+        var rootPath = "null";
+
+        FileUtil.IsDirectory(root, true);
+
+        rootPath = FileUtil.IsAbsolutePath(root)
+            ? Path.Combine(root, "versions")
+            : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root, "versions");
+
+        var versions = Directory.GetDirectories(rootPath);
+
+        foreach (var version in versions)
+        {
+            var versionFolder = new DirectoryInfo(version);
+            var versionFile = Path.Combine(versionFolder.FullName, versionFolder.Name + ".json");
+
+            if (File.Exists(versionFile))
+                try
+                {
+                    var jsonData = File.ReadAllText(versionFile);
+                    var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
+
+                    if (gameCore != null && gameCore.Id == versionId)
                     {
-                        var jsonData = File.ReadAllText(versionFile);
-                        var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
-                        GameCoreInfo gameCoreInfo = new GameCoreInfo();
-                        
-                        if (gameCore != null)
+                        var gameCoreInfo = new GameCoreInfo
                         {
-                            gameCoreInfo = new GameCoreInfo {
-                                
-                                Id = gameCore.Id,
-                                Type = gameCore.Type,
-                                JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
-                                MainClass = gameCore.MainClass,
-                                InheritsFrom = gameCore.InheritsFrom,
-                                ReleaseTime = gameCore.ReleaseTime,
-                                IsNewVersion = gameCore.Arguments?.Game != null,
-                                Time = gameCore.Time,
-                                root = rootPath + Path.DirectorySeparatorChar + gameCore.Id,
-                                Version = gameCore.ClientVersion,
-                                Assets = gameCore.Assets,
-                                LoaderType = GetLoader(gameCore.MainClass)
-                            };
+                            Id = gameCore.Id,
+                            Type = gameCore.Type,
+                            JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
+                            MainClass = gameCore.MainClass,
+                            InheritsFrom = gameCore.InheritsFrom,
+                            ReleaseTime = gameCore.ReleaseTime,
+                            Time = gameCore.Time,
+                            IsNewVersion = gameCore.Arguments?.Game != null,
+                            root = rootPath + "\\" + gameCore.Id,
+                            Assets = gameCore.Assets,
+                            MinecraftArguments = gameCore.MinecraftArguments,
+                            Version = gameCore.ClientVersion,
+                            LoaderType = GetLoader(gameCore.MainClass)
+                        };
+
+                        try
+                        {
+                            if (gameCoreInfo.InheritsFrom != null)
+                                gameCoreInfo.Assets = GetGameCore(gameCoreInfo.InheritsFrom, root).Assets;
                         }
-                        
+                        catch (Exception e)
+                        {
+                            _ = e;
+                        }
+
                         if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
-                        {
                             gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
-                        }
-                        
+
                         gameCoreInfo.Version ??= gameCoreInfo.Assets;
                         gameCoreInfo.Version ??= "0.0.0";
-                        
-                        gameCores.Add(gameCoreInfo);
-                    }
-                    catch (Exception ex)
-                    {
-                        gameCores.Add(new GameCoreInfo{Exception = ex});
-                    }
-                }
-            }
-            return gameCores;
-        }
-        
-        // 获取指定版本的游戏核心信息
-        public static GameCoreInfo GetGameCore(string versionId, string root = ".minecraft")
-        {
-            string rootPath = "null";
 
-            FileUtil.IsDirectory(root, true);
-            
-            rootPath = FileUtil.IsAbsolutePath(root) ? Path.Combine(root, "versions") : 
-                Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root, "versions");
-            
-            var versions = Directory.GetDirectories(rootPath);
-
-            foreach (var version in versions)
-            {
-                var versionFolder = new DirectoryInfo(version);
-                var versionFile = Path.Combine(versionFolder.FullName, versionFolder.Name + ".json");
-
-                if (File.Exists(versionFile))
-                {
-                    try
-                    {
-                        var jsonData = File.ReadAllText(versionFile);
-                        var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
-
-                        if (gameCore != null && gameCore.Id == versionId)
+                        try
                         {
-                            GameCoreInfo gameCoreInfo = new GameCoreInfo
-                            {
-                                Id = gameCore.Id,
-                                Type = gameCore.Type,
-                                JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
-                                MainClass = gameCore.MainClass,
-                                InheritsFrom = gameCore.InheritsFrom,
-                                ReleaseTime = gameCore.ReleaseTime,
-                                Time = gameCore.Time,
-                                IsNewVersion = gameCore.Arguments?.Game != null,
-                                root = rootPath + "\\" + gameCore.Id,
-                                Assets = gameCore.Assets,
-                                MinecraftArguments = gameCore.MinecraftArguments,
-                                Version = gameCore.ClientVersion,
-                                LoaderType = GetLoader(gameCore.MainClass)
-                            };
-
-                            try
-                            {
-                                if (gameCoreInfo.InheritsFrom != null)
-                                {
-                                    gameCoreInfo.Assets = GetGameCore(gameCoreInfo.InheritsFrom, root).Assets;
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                _ = e;
-                            }
-
-                            if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
-                            {
-                                gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
-                            }
-                            
-                            gameCoreInfo.Version ??= gameCoreInfo.Assets;
-                            gameCoreInfo.Version ??= "0.0.0";
-                            
-                            try
-                            {
-                                if (gameCore.Arguments != null)
-                                {
-                                    gameCoreInfo.Arguments = gameCore.Arguments;
-                                }
-                                else
-                                {
-                                    gameCoreInfo.MinecraftArguments = gameCore.MinecraftArguments;
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                gameCoreInfo.IsNewVersion = false;
-                            }
-
-                            return gameCoreInfo;
+                            if (gameCore.Arguments != null)
+                                gameCoreInfo.Arguments = gameCore.Arguments;
+                            else
+                                gameCoreInfo.MinecraftArguments = gameCore.MinecraftArguments;
                         }
-                    }
-                    catch (JsonException ex)
-                    {
-                        throw new Exception($"[SL]版本 JSON 解析错误: {ex.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"[SL]发生错误: {ex.Message}");
+                        catch (Exception e)
+                        {
+                            gameCoreInfo.IsNewVersion = false;
+                        }
+
+                        return gameCoreInfo;
                     }
                 }
-            }
-
-            return null!;
+                catch (JsonException ex)
+                {
+                    throw new Exception($"[SL]版本 JSON 解析错误: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"[SL]发生错误: {ex.Message}");
+                }
         }
 
-        private static LoaderType GetLoader(string mainClass)
+        return null!;
+    }
+
+    private static LoaderType GetLoader(string mainClass)
+    {
+        return mainClass switch
         {
-            return mainClass switch
-            {
-                "net.fabricmc.loader.impl.launch.knot.KnotClient" => LoaderType.Fabric,
-                "net.minecraft.launchwrapper.Launch" => LoaderType.Forge,
-                _ => LoaderType.Vanilla
-            };
-        }
-        
-        internal static int GetMajorVersion(string version)
-        {
-            var parts = version.Split('.');
-            return parts.Length > 1 ? int.Parse(parts[1]) : 0;
-        }
+            "net.fabricmc.loader.impl.launch.knot.KnotClient" => LoaderType.Fabric,
+            "net.minecraft.launchwrapper.Launch" => LoaderType.Forge,
+            _ => LoaderType.Vanilla
+        };
+    }
+
+    internal static int GetMajorVersion(string version)
+    {
+        var parts = version.Split('.');
+        return parts.Length > 1 ? int.Parse(parts[1]) : 0;
     }
 }

@@ -1,11 +1,13 @@
-﻿namespace StarLight_Core.Enum
+﻿namespace StarLight_Core.Enum;
+
+/// <summary>
+/// 验证器类型
+/// </summary>
+public enum AuthType
 {
-    public enum AuthType
-    {
-        Offline,
-        Microsoft,
-        Polaris,
-        UnifiedPass,
-        Yggdrasil
-    }
+    Offline,
+    Microsoft,
+    Polaris,
+    UnifiedPass,
+    Yggdrasil
 }

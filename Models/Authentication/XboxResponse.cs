@@ -6,7 +6,7 @@ public class XboxResponse
 {
     [JsonPropertyName("Token")]
     public string AuthToken { get; set; }
-    
+
 
     [JsonPropertyName("DisplayClaims")]
     public DisplayClaims DisplayClaims { get; set; }

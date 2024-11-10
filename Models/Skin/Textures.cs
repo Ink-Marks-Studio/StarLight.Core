@@ -1,10 +1,9 @@
 using System.Text.Json.Serialization;
 
-namespace StarLight_Core.Models.Skin
+namespace StarLight_Core.Models.Skin;
+
+public class Textures
 {
-    public class Textures
-    {
-        [JsonPropertyName("SKIN")]
-        public SkinInfoJsonEntity Skin { get; set; }
-    }
+    [JsonPropertyName("SKIN")]
+    public SkinInfoJsonEntity Skin { get; set; }
 }

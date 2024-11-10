@@ -1,10 +1,12 @@
 # Git Commit Message Conventions
 
-To ensure consistency and clarity in commit messages, we follow the commit message conventions outlined below. Please use the following format for writing commit messages.
+To ensure consistency and clarity in commit messages, we follow the commit message conventions outlined below. Please
+use the following format for writing commit messages.
 
 ## Commit Message Format
 
-A commit message should include three parts: title (required), body (optional), and footer (optional). Please refer to the following template:
+A commit message should include three parts: title (required), body (optional), and footer (optional). Please refer to
+the following template:
 
 ```
 <type>: <subject>
@@ -19,6 +21,7 @@ A commit message should include three parts: title (required), body (optional), 
 The title briefly describes the content of the commit and should not exceed 50 characters.
 
 Format:
+
 ```
 <type>: <subject>
 ```
@@ -38,6 +41,7 @@ Format:
 - **subject**: A concise description of the commit
 
 Examples:
+
 ```
 Feat: Add user login functionality
 Fix: Correct calculation error in invoice module
@@ -46,14 +50,17 @@ Docs: Update installation instructions in README
 
 ### 2. Body
 
-The body section provides a detailed description of the commit’s content, purpose, and impact. There is no length limit, and it should be written in paragraphs.
+The body section provides a detailed description of the commit’s content, purpose, and impact. There is no length limit,
+and it should be written in paragraphs.
 
 The body should include:
+
 - **Why**: Explain why this change is being made and the motivation behind it
 - **How**: Describe how the change was implemented
 - **What**: Specify what was changed or added
 
 Examples:
+
 ```
 Feat: Add user login functionality
 
@@ -71,6 +78,7 @@ The footer section is used for additional information, such as related tasks or 
 - **Breaking Changes**: Describe any breaking changes (e.g., migrations, upgrades)
 
 Examples:
+
 ```
 Closes #123
 BREAKING CHANGE: The user model schema has been updated; please run migrations

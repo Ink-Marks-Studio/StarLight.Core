@@ -23,16 +23,21 @@
 <br></br>
 
 ## ✨ Features
-- 🚀 **Full-Featured**: Beyond launching, it supports various login methods, installation of vanilla and other loaders, modpack parsing, and many encapsulated tools.
 
-- 📦 **Modular**: The core is modular with components for launching, installation, verification, and tools, making it easier to use.
+- 🚀 **Full-Featured**: Beyond launching, it supports various login methods, installation of vanilla and other loaders,
+  modpack parsing, and many encapsulated tools.
 
-- 📖 **Fully Open Source**: You can view the completely open source code on GitHub, and it's licensed under the MIT license, allowing for reference and learning.
+- 📦 **Modular**: The core is modular with components for launching, installation, verification, and tools, making it
+  easier to use.
+
+- 📖 **Fully Open Source**: You can view the completely open source code on GitHub, and it's licensed under the MIT
+  license, allowing for reference and learning.
 
 ## 📜 Supported Features
 
 > [!TIP]
-> StarLight.Core is still under active development. However, due to the developers' academic commitments, we welcome contributions to the project.
+> StarLight.Core is still under active development. However, due to the developers' academic commitments, we welcome
+> contributions to the project.
 
 ✅: Supported features
 
@@ -42,27 +47,27 @@
 
 🧱: Not listed features, either not planned or will not be supported
 
-| Feature            | Status |
-|--------------------|--------|
-| Launch Game        | ✅     |
-| Game Finder        | ✅     |
-| Java Finder        | ✅     |
-| Offline Authenticator | ✅  |
-| Microsoft Authenticator | ✅ |
-| External Authenticator | ✅ |
-| Unified Pass      | ✅     |
-| Vanilla Game Installer | ✅  |
-| Fabric Installer   | ✅     |
-| Forge Installer    | ☑️     |
-| NeoForge Installer | ❌     |
-| Optifine Installer | ❌     |
-| Multi-threaded Downloader | ✅ |
-| Skin Processor     | ✅     |
-| Mod Processor      | ☑️     |
-| Modpack Processor  | ❌     |
-| CurseForge Downloader | ❌  |
-| Modrinth Downloader | ❌    |
-| Error Analyzer     | ❌     |
+| Feature                   | Status |
+|---------------------------|--------|
+| Launch Game               | ✅      |
+| Game Finder               | ✅      |
+| Java Finder               | ✅      |
+| Offline Authenticator     | ✅      |
+| Microsoft Authenticator   | ✅      |
+| External Authenticator    | ✅      |
+| Unified Pass              | ✅      |
+| Vanilla Game Installer    | ✅      |
+| Fabric Installer          | ✅      |
+| Forge Installer           | ☑️     |
+| NeoForge Installer        | ❌      |
+| Optifine Installer        | ❌      |
+| Multi-threaded Downloader | ✅      |
+| Skin Processor            | ✅      |
+| Mod Processor             | ☑️     |
+| Modpack Processor         | ❌      |
+| CurseForge Downloader     | ❌      |
+| Modrinth Downloader       | ❌      |
+| Error Analyzer            | ❌      |
 
 ## 📘 Documentation and Usage Guide
 
@@ -71,15 +76,20 @@ Documentation: [StarLight_Core Documentation and Help](https://mohen.wiki/)
 > [!TIP]
 > This also serves as a reference guide for documentation contributors.
 
-- **Namespaces**: Each section of the documentation includes namespaces in the section titles. If you cannot find the corresponding methods, try manually adding the namespace.
+- **Namespaces**: Each section of the documentation includes namespaces in the section titles. If you cannot find the
+  corresponding methods, try manually adding the namespace.
 
-- **Constructors**: For methods requiring instantiation, we provide complete constructor references. Choose the constructor that suits your needs if there are multiple.
+- **Constructors**: For methods requiring instantiation, we provide complete constructor references. Choose the
+  constructor that suits your needs if there are multiple.
 
-- **Method Reference**: Provides the purpose of methods, along with parameters and return values. The code provided is not a direct usage example, so avoid copying it directly.
+- **Method Reference**: Provides the purpose of methods, along with parameters and return values. The code provided is
+  not a direct usage example, so avoid copying it directly.
 
-- **Parameter Details**: For complex custom structures, refer to the parameter details in the table of parameters or return values.
+- **Parameter Details**: For complex custom structures, refer to the parameter details in the table of parameters or
+  return values.
 
-- **Console Reference**: Offers a complete usage flow and method, which helps in understanding the usage of methods. Direct copying is not recommended.
+- **Console Reference**: Offers a complete usage flow and method, which helps in understanding the usage of methods.
+  Direct copying is not recommended.
 
 ## 🗒️ Quick Start
 
@@ -96,19 +106,23 @@ Documentation: [StarLight_Core Documentation and Help](https://mohen.wiki/)
 2. Your project targets development on Windows; cross-platform support will be added in the future.
 
 ### 2. Download
+
 a. Install via any package manager by searching for `StarLight_Core`.
 
 b. Install via the command line:
+
 ```shell
 dotnet add package StarLight_Core
 ```
 
 ### 2-2. Manual Download
+
 a. Download from [Nuget](https://www.nuget.org/packages/StarLight_Core).
 
 b. Download from [Github Packages](https://github.com/orgs/Ink-Marks-Studio/packages?repo_name=StarLight.Core).
 
 ### 3. Add Required References
+
 ```csharp
 using StarLight_Core.Utilities;
 using StarLight_Core.Authentication;
@@ -120,18 +134,22 @@ using StarLight_Core.Models.Launch;
 > Some IDEs support automatic addition of references.
 
 ### 4. Get Installed Games
+
 ```csharp
 var gameCore = GameCoreUtil.GetGameCores();
 ```
 
 ### 5. Add an Account
+
 ```csharp
 var account = new OfflineAuthentication("Steve").OfflineAuth();
 ```
+
 > [!NOTE]
 > For more authenticators, refer to the [Documentation](https://mohen.wiki/) - Authenticators section.
 
 ### 6. Launch Game
+
 ```csharp
 LaunchConfig args = new() // Configure launch parameters
 {
@@ -153,17 +171,22 @@ LaunchConfig args = new() // Configure launch parameters
 var launch = new MinecraftLauncher(args); // Instantiate launcher
 var la = await launch.LaunchAsync(ReportProgress); // Launch
 ```
+
 > [!NOTE]
-> For more launch configurations and error handling, refer to the [Documentation](https://mohen.wiki/) - Launcher section.
+> For more launch configurations and error handling, refer to the [Documentation](https://mohen.wiki/) - Launcher
+> section.
 
 ### 7. More Components
+
 Refer to the [StarLight_Core Documentation and Help](https://mohen.wiki/) for tutorials on using other components.
 
 ## 🌐 Discussion
+
 Join the QQ Group: [971192670](https://qm.qq.com/q/FcmJDYRoDQ)
 
 [StarLight Launcher Development Group](https://qm.qq.com/q/FcmJDYRoDQ)
 
-For questions or feature suggestions, please submit an [Issue](https://github.com/Ink-Marks-Studio/StarLight.Core/issues).
+For questions or feature suggestions, please submit
+an [Issue](https://github.com/Ink-Marks-Studio/StarLight.Core/issues).
 
 For other needs, join the QQ group or email [StarLight@InkMarks.Studio](mailto:starlight@inkmarks.studio).

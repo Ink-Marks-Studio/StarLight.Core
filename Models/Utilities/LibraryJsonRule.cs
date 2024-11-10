@@ -6,7 +6,7 @@ public class LibraryJsonRule
 {
     [JsonPropertyName("action")]
     public string Action { get; set; }
-    
+
     [JsonPropertyName("os")]
     public Os Os { get; set; }
 }

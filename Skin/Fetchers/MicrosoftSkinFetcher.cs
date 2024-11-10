@@ -2,28 +2,29 @@ using System.Text;
 using StarLight_Core.Models.Skin;
 using StarLight_Core.Utilities;
 
-namespace StarLight_Core.Skin.Fetchers
+namespace StarLight_Core.Skin.Fetchers;
+
+/// <summary>
+/// 微软皮肤获取器
+/// </summary>
+public class MicrosoftSkinFetcher
 {
     /// <summary>
-    ///微软皮肤获取器
+    /// 获取微软皮肤
     /// </summary>
-    public class MicrosoftSkinFetcher
+    /// <param name="uuid">微软账户 Uuid</param>
+    /// <returns>皮肤图片字节信息</returns>
+    public static async Task<byte[]> GetMicrosoftSkinAsync(string uuid)
     {
-        /// <summary>
-        /// 获取微软皮肤
-        /// </summary>
-        /// <param name="uuid">微软账户 Uuid</param>
-        /// <returns>皮肤图片字节信息</returns>
-        public static async Task<byte[]> GetMicrosoftSkinAsync(string uuid)
-        {
-            const string baseUrl = "https://sessionserver.mojang.com/session/minecraft/profile/";
-            var skinJson = await HttpUtil.GetJsonAsync(baseUrl + uuid);
-            var skinUrl =
-                Encoding.UTF8.GetString(
+        const string baseUrl = "https://sessionserver.mojang.com/session/minecraft/profile/";
+        var skinJson = await HttpUtil.GetJsonAsync(baseUrl + uuid);
+        var skinUrl =
+            Encoding.UTF8.GetString(
                     Convert.FromBase64String(
-                        skinJson.ToJsonEntry<ProfileJsonEntity>().Properties.First().Value)).ToJsonEntry<SkinJsonEntity>().Textures.Skin.Url;
-            using var httpClient = new HttpClient();
-            return await httpClient.GetByteArrayAsync(skinUrl);
-        }
+                        skinJson.ToJsonEntry<ProfileJsonEntity>().Properties.First().Value))
+                .ToJsonEntry<SkinJsonEntity>()
+                .Textures.Skin.Url;
+        using var httpClient = new HttpClient();
+        return await httpClient.GetByteArrayAsync(skinUrl);
     }
 }

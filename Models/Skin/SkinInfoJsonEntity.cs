@@ -1,10 +1,9 @@
 using System.Text.Json.Serialization;
 
-namespace StarLight_Core.Models.Skin
+namespace StarLight_Core.Models.Skin;
+
+public class SkinInfoJsonEntity
 {
-    public class SkinInfoJsonEntity
-    {
-        [JsonPropertyName("url")]
-        public string Url { get; set; }
-    }
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 }

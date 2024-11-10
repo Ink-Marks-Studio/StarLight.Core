@@ -8,7 +8,6 @@
 
 #### 一个高效, 模块化, 全能的我的世界启动器核心
 
-
 ![Star](https://img.shields.io/github/stars/Ink-Marks-Studio/StarLight.Core?logo=github&label=Star&style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/Ink-Marks-Studio/StarLight.Core?logo=github&label=Forks&style=for-the-badge)
 ![NugetVersion](https://img.shields.io/nuget/v/StarLight_Core?logo=nuget&label=Nuget包版本&style=for-the-badge)
@@ -17,7 +16,6 @@
 ![PR](https://img.shields.io/github/issues-pr-closed/Ink-Marks-Studio/StarLight.Core?logo=github&label=Pull%20requests&style=for-the-badge)
 ![License](https://img.shields.io/github/license/Ink-Marks-Studio/StarLight.Core?logo=github&label=开源协议&style=for-the-badge&color=ff7a35)
 
-
 ![Alt](https://repobeats.axiom.co/api/embed/ba6e9977d1c23baebac22caa8629dc6f2ae14dd9.svg "Repobeats analytics image")
 
 </div>
@@ -25,6 +23,7 @@
 <br></br>
 
 ## ✨特点
+
 - 🚀全功能:
   除了启动外, 还支持多种登录方式, 原版与其他加载器的安装, 整合包解析还有很多封装好的小工具
 
@@ -111,19 +110,23 @@
 2.你的项目是在 Windows 平台为目标进行开发, 跨平台将在日后支持
 
 ### 2.下载
+
 a. 通过任意包管理器搜索 `StarLight_Core` 进行安装
 
 b. 通过命令行进行安装
+
 ```shell
 dotnet add package StarLight_Core
 ```
 
 ### 2-2.手动下载
+
 a. 在 [Nuget](https://www.nuget.org/packages/StarLight_Core) 中下载
 
 b. 在 [Github Packages](https://github.com/orgs/Ink-Marks-Studio/packages?repo_name=StarLight.Core) 中下载
 
 ### 3.添加需要的引用
+
 ```csharp
 using StarLight_Core.Utilities;
 using StarLight_Core.Authentication;
@@ -135,18 +138,22 @@ using StarLight_Core.Models.Launch;
 > 部分的 IDE 支持引用的自动添加
 
 ### 4.获取已安装的游戏
+
 ```csharp
 var gameCore = GameCoreUtil.GetGameCores();
 ```
 
 ### 5.添加账户
+
 ```csharp
 var account = new OfflineAuthentication("Steve").OfflineAuth();
 ```
+
 > [!NOTE]
 > 更多验证器请查看 [文档](https://mohen.wiki/)-验证器 部分
 
 ### 6.启动游戏
+
 ```csharp
 LaunchConfig args = new() // 配置启动参数
 {
@@ -168,10 +175,12 @@ LaunchConfig args = new() // 配置启动参数
 var launch = new MinecraftLauncher(args); // 实例化启动器
 var la = await launch.LaunchAsync(ReportProgress); // 启动
 ```
+
 > [!NOTE]
 > 更多启动配置以及错误处理请查看 [文档](https://mohen.wiki/)-启动器 部分
 
 ### 7.更多组件
+
 在文档 [StarLight_Core 使用文档与使用帮助](https://mohen.wiki/)
 中查看更多组件的使用教程
 
@@ -182,10 +191,11 @@ var la = await launch.LaunchAsync(ReportProgress); // 启动
 其次，请先自查以下内容：
 
 - 未更新 StarLight.Core
-请先使用 Nuget 管理器或其他工具，手动更新等方式，更新 StarLight.Core 。
+  请先使用 Nuget 管理器或其他工具，手动更新等方式，更新 StarLight.Core 。
 
 - 没有添加异步。
-例：
+  例：
+
 ```csharp
 void GetMicrosoftAccount()
 {
@@ -217,6 +227,7 @@ void GetMicrosoftAccount()
 请勿询问过于基础您只需要通过搜索或其他方法便可以解决的问题，无论是开发者亦或是志愿者都没有义务回答您的问题，请查看 [提问的智慧](https://lug.ustc.edu.cn/wiki/doc/smart-questions/)
 
 ## 🌐讨论
+
 欢迎加入Q群: [971192670](https://qm.qq.com/q/FcmJDYRoDQ)
 
 [StarLight-启动器开发交流群](https://qm.qq.com/q/FcmJDYRoDQ)

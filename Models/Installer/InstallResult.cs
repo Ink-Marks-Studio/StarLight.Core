@@ -4,20 +4,12 @@ namespace StarLight_Core.Models.Installer;
 
 public class InstallResult
 {
-    public Status Status { get; set; }
-        
-    public string Version { get; set; }
-    
-    public string CustomId { get; set; }
-    
-    public Exception? Exception { get; set; }
-        
     public InstallResult(Status status, string version, string? customId)
     {
         Status = status;
         Version = version;
         CustomId = customId ?? version;
-        
+
         if (Status == Status.Cancel)
             Exception = new Exception("已取消安装");
     }
@@ -29,4 +21,12 @@ public class InstallResult
         CustomId = customId ?? version;
         Exception = exception;
     }
+
+    public Status Status { get; set; }
+
+    public string Version { get; set; }
+
+    public string CustomId { get; set; }
+
+    public Exception? Exception { get; set; }
 }

@@ -1,127 +1,133 @@
-﻿using System.Text;
-using System.Text.Json;
-using StarLight_Core.Utilities;
+﻿using System.Text.Json;
 using StarLight_Core.Models;
 using StarLight_Core.Models.Authentication;
+using StarLight_Core.Utilities;
 
-namespace StarLight_Core.Authentication
+namespace StarLight_Core.Authentication;
+
+/// <summary>
+/// 统一通行证验证类
+/// </summary>
+public class UnifiedPassAuthenticator
 {
+    private const string UnifiedPassBaseUrl = "https://auth.mc-user.com:233/";
+
     /// <summary>
-    /// 统一通行证验证类
+    /// 统一通行证验证器
     /// </summary>
-    public class UnifiedPassAuthenticator
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <param name="serverId"></param>
+    /// <param name="baseUrl"></param>
+    public UnifiedPassAuthenticator(string username, string password, string serverId,
+        string baseUrl = UnifiedPassBaseUrl)
     {
-        private const string UnifiedPassBaseUrl = "https://auth.mc-user.com:233/";
+        Username = username;
+        Password = password;
+        ServerId = serverId;
+        BaseUrl = baseUrl;
+    }
 
-        private string Username { get; set; }
-        
-        private string Password { get; set; }
-        
-        private string ServerId { get; set; }
-        
-        private string BaseUrl { get; set; }
-        
-        public UnifiedPassAuthenticator(string username, string password, string serverId, string baseUrl = UnifiedPassBaseUrl)
+    private string Username { get; }
+
+    private string Password { get; }
+
+    private string ServerId { get; }
+
+    private string BaseUrl { get; }
+
+    /// <summary>
+    /// 统一通行证异步验证方法
+    /// </summary>
+    /// <returns>统一通行证账户信息</returns>
+    /// <exception cref="ApplicationException">身份验证时出错</exception>
+    public async Task<UnifiedPassAccount> UnifiedPassAuthAsync()
+    {
+        var authenticateUri = new Uri(new Uri(BaseUrl), ServerId + "/authserver/authenticate");
+
+        var requestData = new
         {
-            Username = username;
-            Password = password;
-            ServerId = serverId;
-            BaseUrl = baseUrl;
+            agent = new { name = "StarLight.Core", version = StarLightInfo.Version },
+            username = Username,
+            password = Password,
+            clientToken = null as string,
+            requestUser = true
+        };
+
+        var jsonData = JsonSerializer.Serialize(requestData);
+
+        string response;
+        try
+        {
+            response = await HttpUtil.SendHttpPostRequest(authenticateUri.ToString(), jsonData, "application/json");
         }
-        
-        /// <summary>
-        /// 统一通行证异步验证方法
-        /// </summary>
-        /// <returns>统一通行证账户信息</returns>
-        /// <exception cref="ApplicationException">身份验证时出错</exception>
-        public async Task<UnifiedPassAccount> UnifiedPassAuthAsync()
+        catch (Exception ex)
         {
-            Uri authenticateUri = new Uri(new Uri(BaseUrl), ServerId +"/authserver/authenticate");
-
-            var requestData = new
-            {
-                agent = new { name = "StarLight.Core", version = StarLightInfo.Version },
-                username = Username,
-                password = Password,
-                clientToken = null as string,
-                requestUser = true
-            };  
-
-            string jsonData = JsonSerializer.Serialize(requestData);
-            
-            string response;
-            try
-            {
-                response = await HttpUtil.SendHttpPostRequest(authenticateUri.ToString(), jsonData,"application/json");
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("[SL]身份验证时出错: ", ex);
-            }
-
-            var authResponse = JsonSerializer.Deserialize<UnifiedPassResponse>(response);
-
-            // 创建字典对象并返回
-            UnifiedPassAccount result = new UnifiedPassAccount
-            {
-                Name = authResponse.SelectedProfile.Name,
-                Uuid = authResponse.SelectedProfile.Uuid,
-                AccessToken = authResponse.AccessToken,
-                ClientToken = authResponse.ClientToken,
-                ServerId = ServerId
-            };
-
-            return result;
+            throw new ApplicationException("[SL]身份验证时出错: ", ex);
         }
 
-        /// <summary>
-        /// 刷新统一通行证令牌
-        /// </summary>
-        /// <param name="clientToken">客户端令牌</param>
-        /// <param name="accessToken">资源令牌</param>
-        /// <returns>统一通行证账户信息</returns>
-        /// <exception cref="ApplicationException">刷新令牌时出错</exception>
-        public async Task<UnifiedPassAccount> RefreshUnifiedPassAsync(string clientToken, string accessToken)
+        var authResponse = JsonSerializer.Deserialize<UnifiedPassResponse>(response);
+
+        // 创建字典对象并返回
+        var result = new UnifiedPassAccount
         {
-            var refreshPostData = new
-            {
-                accessToken = accessToken,
-                clientToken = clientToken,
-                requestUser = true
-            };
-            
-            var jsonData = JsonSerializer.Serialize(refreshPostData);
-            string response;
-            try
-            {
-                response = await HttpUtil.SendHttpPostRequest(BaseUrl + "authserver/refresh", jsonData,"application/json");
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("[SL]刷新令牌时出错: ", ex);
-            }
-            
-            var authResponse = JsonSerializer.Deserialize<UnifiedPassRefreshResponse>(response);
-            return new UnifiedPassAccount
-            {
-                Name = authResponse.SelectedProfile.Name,
-                Uuid = authResponse.SelectedProfile.Uuid,
-                AccessToken = authResponse.AccessToken,
-                ClientToken = authResponse.ClientToken,
-                ServerId = ServerId
-            };
-        }
-        
-        /// <summary>
-        /// 获取玩家皮肤信息
-        /// </summary>
-        /// <param name="baseUrl">基础 Url</param>
-        /// <param name="profileId">账户 Uuid</param>
-        /// <returns>无返回</returns>
-        [Obsolete("此方法已弃用,请使用 StarLight_Core.Skin 中的方法进行获取")]
-        public static Dictionary<string, string> RetrieveSkinInfo(string baseUrl, string profileId)
+            Name = authResponse.SelectedProfile.Name,
+            Uuid = authResponse.SelectedProfile.Uuid,
+            AccessToken = authResponse.AccessToken,
+            ClientToken = authResponse.ClientToken,
+            ServerId = ServerId
+        };
+
+        return result;
+    }
+
+    /// <summary>
+    /// 刷新统一通行证令牌
+    /// </summary>
+    /// <param name="clientToken">客户端令牌</param>
+    /// <param name="accessToken">资源令牌</param>
+    /// <returns>统一通行证账户信息</returns>
+    /// <exception cref="ApplicationException">刷新令牌时出错</exception>
+    public async Task<UnifiedPassAccount> RefreshUnifiedPassAsync(string clientToken, string accessToken)
+    {
+        var refreshPostData = new
         {
-            return new Dictionary<string, string>();
+            accessToken,
+            clientToken,
+            requestUser = true
+        };
+
+        var jsonData = JsonSerializer.Serialize(refreshPostData);
+        string response;
+        try
+        {
+            response = await HttpUtil.SendHttpPostRequest(BaseUrl + "authserver/refresh", jsonData, "application/json");
         }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("[SL]刷新令牌时出错: ", ex);
+        }
+
+        var authResponse = JsonSerializer.Deserialize<UnifiedPassRefreshResponse>(response);
+        return new UnifiedPassAccount
+        {
+            Name = authResponse.SelectedProfile.Name,
+            Uuid = authResponse.SelectedProfile.Uuid,
+            AccessToken = authResponse.AccessToken,
+            ClientToken = authResponse.ClientToken,
+            ServerId = ServerId
+        };
+    }
+
+    /// <summary>
+    /// 获取玩家皮肤信息
+    /// </summary>
+    /// <param name="baseUrl">基础 Url</param>
+    /// <param name="profileId">账户 Uuid</param>
+    /// <returns></returns>
+    [Obsolete("此方法已弃用,请使用 StarLight_Core.Skin 中的方法进行获取")]
+    public static Dictionary<string, string> RetrieveSkinInfo(string baseUrl, string profileId)
+    {
+        return new Dictionary<string, string>();
     }
 }

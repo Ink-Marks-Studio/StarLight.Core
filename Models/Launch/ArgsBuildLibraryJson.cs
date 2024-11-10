@@ -12,16 +12,16 @@ public class Library
 {
     [JsonPropertyName("name")]
     public string Name { get; set; }
-    
+
     [JsonPropertyName("downloads")]
     public Download Downloads { get; set; }
-    
+
     [JsonPropertyName("rules")]
     public LibraryJsonRule[] Rule { get; set; }
-    
+
     [JsonPropertyName("natives")]
     public Dictionary<string, string> Natives { get; set; }
-}   
+}
 
 public class Os
 {
@@ -31,10 +31,10 @@ public class Os
 
 public class Download
 {
-    [JsonPropertyName("artifact")] 
+    [JsonPropertyName("artifact")]
     public Artifact Artifact { get; set; }
 
-    [JsonPropertyName("classifiers")] 
+    [JsonPropertyName("classifiers")]
     public Dictionary<string, Native> Classifiers { get; set; }
 }
 

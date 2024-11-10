@@ -9,12 +9,12 @@ public class YggdrasilResponse
 
     [JsonPropertyName("clientToken")]
     public string ClientToken { get; init; }
-    
+
     [JsonPropertyName("availableProfiles")]
     public List<AvailableProfiles> UserAccounts { get; init; }
 }
 
-public class AvailableProfiles 
+public class AvailableProfiles
 {
     [JsonPropertyName("id")]
     public string Uuid { get; init; }

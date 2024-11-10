@@ -1,9 +1,8 @@
-namespace StarLight_Core.Models.Launch
+namespace StarLight_Core.Models.Launch;
+
+public class ProgressReport
 {
-    public class ProgressReport
-    {
-        public string Description { get; set; }
-        
-        public int Percentage { get; set; }
-    }
+    public string Description { get; set; }
+
+    public int Percentage { get; set; }
 }

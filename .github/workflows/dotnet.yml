@@ -10,82 +10,82 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: 安装 .NET 8.0 环境
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '8.0.x'
-    - name: 文件检查
-      run: ls -R
-    - name: 还原依赖库
-      run: dotnet restore
-    - name: 构建
-      run: dotnet build --no-restore -c Release
-    - name: 测试
-      run: dotnet test --no-build -c Release
-    - name: 构建 NuGet 包
-      run: dotnet pack --no-build -c Release -o nupkg
-    - name: 列出 NuGet 包文件
-      run: dir nupkg
-    - name: 获取 NuGet 包版本
-      id: get_version
-      shell: pwsh
-      run: |
-        $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
-        Write-Host "Found .nupkg files:"
-        $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
-        
-        $file = $nupkgFiles[0]
-        Write-Host "Processing file: $($file.Name)"
-        $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
-        Write-Host "Extracted version from $($file.Name): $version"
-        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-    - name: 检查版本
-      run: echo "VERSION=${{ env.VERSION }}"
-    - name: 上传构建工件
-      uses: actions/upload-artifact@v3
-      with:
-        name: nupkg
-
-        path: nupkg/*.nupkg
+      - uses: actions/checkout@v3
+      - name: 安装 .NET 8.0 环境
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '8.0.x'
+      - name: 文件检查
+        run: ls -R
+      - name: 还原依赖库
+        run: dotnet restore
+      - name: 构建
+        run: dotnet build --no-restore -c Release
+      - name: 测试
+        run: dotnet test --no-build -c Release
+      - name: 构建 NuGet 包
+        run: dotnet pack --no-build -c Release -o nupkg
+      - name: 列出 NuGet 包文件
+        run: dir nupkg
+      - name: 获取 NuGet 包版本
+        id: get_version
+        shell: pwsh
+        run: |
+          $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
+          Write-Host "Found .nupkg files:"
+          $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
+          
+          $file = $nupkgFiles[0]
+          Write-Host "Processing file: $($file.Name)"
+          $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+          Write-Host "Extracted version from $($file.Name): $version"
+          echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: 检查版本
+        run: echo "VERSION=${{ env.VERSION }}"
+      - name: 上传构建工件
+        uses: actions/upload-artifact@v3
+        with:
+          name: nupkg
+          
+          path: nupkg/*.nupkg
 
   publish:
     needs: build
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: 安装 .NET 8.0 环境
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '8.0.x'
-    - name: 下载构建工件
-      uses: actions/download-artifact@v3
-      with:
-        name: nupkg
-        path: nupkg
-    - name: 列出 NuGet 包文件
-      run: dir nupkg
-    - name: 获取 NuGet 包版本
-      id: get_version
-      shell: pwsh
-      run: |
-        $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
-        Write-Host "Found .nupkg files:"
-        $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
-        
-        $file = $nupkgFiles[0]
-        Write-Host "Processing file: $($file.Name)"
-        $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
-        Write-Host "Extracted version from $($file.Name): $version"
-        echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-    - name: 检查版本
-      run: echo "VERSION=${{ env.VERSION }}"
-    - name: 推送至 Github NuGet
-      run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: 推送至 NuGet.org
-      run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      - uses: actions/checkout@v3
+      - name: 安装 .NET 8.0 环境
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '8.0.x'
+      - name: 下载构建工件
+        uses: actions/download-artifact@v3
+        with:
+          name: nupkg
+          path: nupkg
+      - name: 列出 NuGet 包文件
+        run: dir nupkg
+      - name: 获取 NuGet 包版本
+        id: get_version
+        shell: pwsh
+        run: |
+          $nupkgFiles = Get-ChildItem -Path D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg
+          Write-Host "Found .nupkg files:"
+          $nupkgFiles | ForEach-Object { Write-Host $_.FullName }
+          
+          $file = $nupkgFiles[0]
+          Write-Host "Processing file: $($file.Name)"
+          $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
+          Write-Host "Extracted version from $($file.Name): $version"
+          echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: 检查版本
+        run: echo "VERSION=${{ env.VERSION }}"
+      - name: 推送至 Github NuGet
+        run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 推送至 NuGet.org
+        run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
 
   release:
     needs: publish
@@ -93,16 +93,16 @@ jobs:
     steps:
       - name: 检出代码库
         uses: actions/checkout@v3
-    
+
       - name: 下载构建工件
         uses: actions/download-artifact@v3
         with:
           name: nupkg
           path: nupkg
-  
+
       - name: 列出 NuGet 包文件
         run: ls nupkg
-  
+
       - name: 获取 NuGet 包版本
         id: get_version
         shell: pwsh
@@ -116,10 +116,10 @@ jobs:
           $version = ($file.Name | Select-String -Pattern "\d+\.\d+\.\d+(-\w+)?").Matches.Value
           Write-Host "Extracted version from $($file.Name): $version"
           echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-  
+
       - name: 检查版本
         run: echo "VERSION=${{ env.VERSION }}"
-  
+
       - name: 获取提交信息
         id: get_commit_info
         run: |
@@ -129,7 +129,7 @@ jobs:
           echo "COMMIT_DESCRIPTION=$COMMIT_DESCRIPTION" >> $GITHUB_ENV
           COMMIT_AUTHOR=$(git log -1 --pretty=%an)
           echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
-      
+
       - name: 创建 GitHub 发布
         id: create_release
         uses: actions/create-release@v1
@@ -144,10 +144,10 @@ jobs:
             **类型**: 自动构建 - v${{ env.VERSION }} - ${{ env.COMMIT_TITLE }}
             
             **提交者**: ${{ env.COMMIT_AUTHOR }}
-          
+            
             **描述**: |
               ${{ env.COMMIT_DESCRIPTION }}
-      
+
       - name: 上传 NuGet 包到 GitHub 发布
         uses: actions/upload-release-asset@v1
         env:

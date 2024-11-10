@@ -1,8 +1,7 @@
-namespace StarLight_Core.Enum
+namespace StarLight_Core.Enum;
+
+public enum DownloadSource
 {
-    public enum DownloadSource
-    {
-        Official,
-        BmclApi
-    }
+    Official,
+    BmclApi
 }

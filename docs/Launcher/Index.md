@@ -47,6 +47,7 @@ public class LaunchConfig
 <br>
 
 ``GameWindowConfig`` 游戏窗口配置
+
 ```csharp
 public class GameWindowConfig
 {
@@ -61,6 +62,7 @@ public class GameWindowConfig
 <br>
 
 ``GameCoreConfig`` 游戏核心配置
+
 ```csharp
 public class GameCoreConfig
 {
@@ -85,6 +87,7 @@ public class GameCoreConfig
 <br>
 
 ``JavaConfig`` Java 配置
+
 ```csharp
 public class JavaConfig
 {

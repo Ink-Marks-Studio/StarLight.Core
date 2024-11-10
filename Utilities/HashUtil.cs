@@ -1,74 +1,71 @@
-using System;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace StarLight_Core.Utilities
+namespace StarLight_Core.Utilities;
+
+// 哈希工具
+public static class HashUtil
 {
-    // 哈希工具
-    public static class HashUtil
+    public static string CalculateSha512(string input)
     {
-        public static string CalculateSha512(string input)
+        using (var sha512 = SHA512.Create())
         {
-            using (SHA512 sha512 = SHA512.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(input);
-                byte[] hashBytes = sha512.ComputeHash(bytes);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
+            var bytes = Encoding.UTF8.GetBytes(input);
+            var hashBytes = sha512.ComputeHash(bytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
+    }
 
-        public static string CalculateSha1(string input)
+    public static string CalculateSha1(string input)
+    {
+        using (var sha1 = SHA1.Create())
         {
-            using (SHA1 sha1 = SHA1.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(input);
-                byte[] hashBytes = sha1.ComputeHash(bytes);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
+            var bytes = Encoding.UTF8.GetBytes(input);
+            var hashBytes = sha1.ComputeHash(bytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
+    }
 
-        public static string CalculateMd5(string input)
+    public static string CalculateMd5(string input)
+    {
+        using (var md5 = MD5.Create())
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(bytes);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
+            var bytes = Encoding.UTF8.GetBytes(input);
+            var hashBytes = md5.ComputeHash(bytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
-        
-        public static string CalculateFileHash(string filePath, HashAlgorithm algorithm)
-        {
-            using (FileStream stream = File.OpenRead(filePath))
-            {
-                byte[] hashBytes = algorithm.ComputeHash(stream);
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
-        }
+    }
 
-        public static bool VerifyFileHash(string filePath, string hash, HashAlgorithm algorithm)
+    public static string CalculateFileHash(string filePath, HashAlgorithm algorithm)
+    {
+        using (var stream = File.OpenRead(filePath))
         {
-            string newHash = CalculateFileHash(filePath, algorithm);
-            return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
+            var hashBytes = algorithm.ComputeHash(stream);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
+    }
 
-        public static bool VerifySha512(string input, string hash)
-        {
-            string newHash = CalculateSha512(input);
-            return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
-        }
+    public static bool VerifyFileHash(string filePath, string hash, HashAlgorithm algorithm)
+    {
+        var newHash = CalculateFileHash(filePath, algorithm);
+        return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
+    }
 
-        public static bool VerifySha1(string input, string hash)
-        {
-            string newHash = CalculateSha1(input);
-            return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
-        }
+    public static bool VerifySha512(string input, string hash)
+    {
+        var newHash = CalculateSha512(input);
+        return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
+    }
 
-        public static bool VerifyMd5(string input, string hash)
-        {
-            string newHash = CalculateMd5(input);
-            return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
-        }
+    public static bool VerifySha1(string input, string hash)
+    {
+        var newHash = CalculateSha1(input);
+        return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public static bool VerifyMd5(string input, string hash)
+    {
+        var newHash = CalculateMd5(input);
+        return newHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
     }
 }

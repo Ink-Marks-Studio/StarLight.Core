@@ -21,9 +21,6 @@ public class ModJsonEntity
         [JsonPropertyName("displayName")]
         public string DisplayName { get; set; }
 
-        public string Author
-        {
-            get => Authors != null ? string.Join(", ", Authors) : null;
-        }
+        public string Author => Authors != null ? string.Join(", ", Authors) : null;
     }
 }
