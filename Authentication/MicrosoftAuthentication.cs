@@ -1,12 +1,25 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using StarLight_Core.Models.Authentication;
 using StarLight_Core.Utilities;
 
+#pragma warning disable CA1822
 namespace StarLight_Core.Authentication;
 
+/// <summary>
+/// 微软验证类
+/// </summary>
+/// <a href="https://mohen.wiki/Authentication/Microsoft.html">查看文档</a>
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
 public class MicrosoftAuthentication
 {
+    /// <summary>
+    /// 微软验证器
+    /// </summary>
+    /// <param name="clientId">客户端令牌</param>
+    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#构造函数">查看文档</a>
     public MicrosoftAuthentication(string clientId)
     {
         ClientId = clientId;
@@ -14,16 +27,25 @@ public class MicrosoftAuthentication
 
     private static string[] Scopes => new[] { "XboxLive.signin", "offline_access", "openid", "profile", "email" };
 
-    public string ClientId { get; set; }
+    /// <summary>
+    /// 客户端令牌
+    /// </summary>
+    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#构造函数">查看文档</a>
+    public string ClientId { get; init; }
 
-    // 获取用户代码
+    /// <summary>
+    /// 获取用户代码
+    /// </summary>
+    /// <returns>设备代码信息</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#retrievedevicecodeinfo-获取设备代码">查看文档</a>
     public async ValueTask<RetrieveDeviceCode> RetrieveDeviceCodeInfo()
     {
         if (string.IsNullOrEmpty(ClientId))
             throw new ArgumentNullException(nameof(ClientId), "ClientId为空");
 
         var postData = $"client_id={ClientId}&scope={string.Join(" ", Scopes)}";
-        var deviceCodeUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
+        const string deviceCodeUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
         var responseJson = await HttpUtil.SendHttpPostRequest(deviceCodeUrl, postData);
 
         var responseDict = JsonSerializer.Deserialize<RetrieveDeviceCode>(responseJson);
@@ -40,49 +62,62 @@ public class MicrosoftAuthentication
         return resultDict;
     }
 
-    // 轮询获取 Token
+    /// <summary>
+    /// 轮询获取 Token
+    /// </summary>
+    /// <returns>令牌信息</returns>
+    /// <param name="deviceCodeInfo"></param>
+    /// <exception cref="TimeoutException"></exception>
+    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#gettokenresponse-轮询获取-token">查看文档</a>
     public async ValueTask<GetTokenResponse> GetTokenResponse(RetrieveDeviceCode deviceCodeInfo)
     {
-        using (var client = new HttpClient())
+        using var client = new HttpClient();
+        const string tenant = "/consumers";
+        var pollingInterval = TimeSpan.FromSeconds(5);
+        var codeExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15);
+
+        while (DateTimeOffset.UtcNow < codeExpiresOn)
         {
-            var tenant = "/consumers";
-            var pollingInterval = TimeSpan.FromSeconds(5);
-            var codeExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15);
-
-            while (DateTimeOffset.UtcNow < codeExpiresOn)
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                var content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    ["grant_type"] = "urn:ietf:params:oauth:grant-type:device_code",
-                    ["device_code"] = deviceCodeInfo.DeviceCode,
-                    ["client_id"] = deviceCodeInfo.ClientId,
-                    ["tenant"] = tenant
-                });
+                ["grant_type"] = "urn:ietf:params:oauth:grant-type:device_code",
+                ["device_code"] = deviceCodeInfo.DeviceCode,
+                ["client_id"] = deviceCodeInfo.ClientId,
+                ["tenant"] = tenant
+            });
 
-                var tokenRes = await client.PostAsync("https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
-                    content);
-                var tokenJson = await tokenRes.Content.ReadAsStringAsync();
+            var tokenRes = await client.PostAsync("https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
+                content);
+            var tokenJson = await tokenRes.Content.ReadAsStringAsync();
 
-                if (tokenRes.IsSuccessStatusCode)
-                {
-                    var tokenData = JsonSerializer.Deserialize<GetTokenResponse>(tokenJson);
-                    if (!string.IsNullOrEmpty(tokenData.AccessToken))
-                        return new GetTokenResponse
-                        {
-                            ExpiresIn = tokenData.ExpiresIn,
-                            RefreshToken = tokenData.RefreshToken,
-                            AccessToken = tokenData.AccessToken,
-                            ClientId = deviceCodeInfo.ClientId
-                        };
-                }
-
-                await Task.Delay(pollingInterval);
+            if (tokenRes.IsSuccessStatusCode)
+            {
+                var tokenData = JsonSerializer.Deserialize<GetTokenResponse>(tokenJson);
+                if (!string.IsNullOrEmpty(tokenData.AccessToken))
+                    return new GetTokenResponse
+                    {
+                        ExpiresIn = tokenData.ExpiresIn,
+                        RefreshToken = tokenData.RefreshToken,
+                        AccessToken = tokenData.AccessToken,
+                        ClientId = deviceCodeInfo.ClientId
+                    };
             }
 
-            throw new TimeoutException("登录已超时,请重试");
+            await Task.Delay(pollingInterval);
         }
+
+        throw new TimeoutException("登录已超时,请重试");
     }
 
+    /// <summary>
+    /// 异步验证方法
+    /// </summary>
+    /// <returns>微软账户信息</returns> 
+    /// <param name="tokenInfo"></param>
+    /// <param name="action"></param>
+    /// <param name="refreshToken"></param>
+    /// <exception cref="Exception"></exception>
+    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#microsoftauthasync-异步验证方法">查看文档</a>
     public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action,
         string? refreshToken = null)
     {
@@ -114,6 +149,15 @@ public class MicrosoftAuthentication
         return await GetMicrosoftAuthInfo(tokenInfo, action);
     }
 
+    /// <summary>
+    /// 获取账户信息
+    /// </summary>
+    /// <param name="tokenInfo"></param>
+    /// <param name="action"></param>
+    /// <param name="isNewXbl"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public async ValueTask<MicrosoftAccount> GetMicrosoftAuthInfo(GetTokenResponse tokenInfo, Action<string> action,
         bool isNewXbl = true)
     {
@@ -137,8 +181,7 @@ public class MicrosoftAuthentication
 
         var xblLoginContentString = JsonSerializer.Serialize(xboxLoginContent);
 
-        var xblAuthToken = "null";
-        var xboxResponseString = "null";
+        string xboxResponseString;
 
         try
         {
@@ -151,12 +194,12 @@ public class MicrosoftAuthentication
         }
 
         var xboxResponseData = JsonSerializer.Deserialize<XboxResponse>(xboxResponseString);
-        xblAuthToken = xboxResponseData.AuthToken;
+        var xblAuthToken = xboxResponseData.AuthToken;
         var userHash = xboxResponseData.DisplayClaims.Xui[0].UserHash;
 
         // 获取XSTS令牌
         action("正在获取 XSTS 令牌");
-        var getXSTSJsonData = new
+        var getXstsJsonData = new
         {
             Properties = new
             {
@@ -167,14 +210,13 @@ public class MicrosoftAuthentication
             TokenType = "JWT"
         };
 
-        var xstspostData = JsonSerializer.Serialize(getXSTSJsonData);
+        var xstsPostData = JsonSerializer.Serialize(getXstsJsonData);
 
         var xstsResponse = await HttpUtil.SendHttpPostRequest("https://xsts.auth.xboxlive.com/xsts/authorize",
-            xstspostData, "application/json");
+            xstsPostData, "application/json");
 
         var xstsResponseData = JsonSerializer.Deserialize<XboxResponse>(xstsResponse);
         var xstsToken = xstsResponseData.AuthToken;
-        var xstsDisplayClaimsuhs = xstsResponseData.DisplayClaims.Xui[0].UserHash;
 
         // Minecraft 身份验证
         action("正在获取 Minecraft 账户信息");
@@ -212,41 +254,38 @@ public class MicrosoftAuthentication
             throw new Exception("请求失败: " + response.StatusCode);
         }
 
-        if (ownTheGame)
+        if (!ownTheGame) throw new Exception("未购买 Minecraft!");
+        action("开始获取玩家档案");
+        var profileContent = "null";
+        var profileHttpClient = new HttpClient();
+        profileHttpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", accessToken);
+
+        var profileResponse = await httpClient.GetAsync("https://api.minecraftservices.com/minecraft/profile");
+
+        if (profileResponse.IsSuccessStatusCode) profileContent = await profileResponse.Content.ReadAsStringAsync();
+
+        var jsonObject = JsonDocument.Parse(profileContent);
+
+        var minecraftProfile = JsonSerializer.Deserialize<MinecraftProfile>(profileContent);
+        var uuid = minecraftProfile.Uuid;
+        var name = minecraftProfile.Name;
+        var skinUrl = minecraftProfile.Skins[0].Url;
+
+        action("微软登录完成");
+
+        return new MicrosoftAccount
         {
-            action("开始获取玩家档案");
-            var profileContent = "null";
-            var profileHttpClient = new HttpClient();
-            profileHttpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            Uuid = uuid,
+            Name = name,
+            ClientToken = Guid.NewGuid().ToString("N"),
+            AccessToken = accessToken,
+            RefreshToken = tokenInfo.RefreshToken,
+            SkinUrl = skinUrl,
+            DateTime = DateTime.Now
+        };
 
-            var profileresponse = await httpClient.GetAsync("https://api.minecraftservices.com/minecraft/profile");
-
-            if (profileresponse.IsSuccessStatusCode) profileContent = await profileresponse.Content.ReadAsStringAsync();
-
-            var jsonObject = JsonDocument.Parse(profileContent);
-
-            var minecraftProfile = JsonSerializer.Deserialize<MinecraftProfile>(profileContent);
-            var uuid = minecraftProfile.Uuid;
-            var name = minecraftProfile.Name;
-            var skinUrl = minecraftProfile.Skins[0].Url;
-
-            action("微软登录完成");
-
-            return new MicrosoftAccount
-            {
-                Uuid = uuid,
-                Name = name,
-                ClientToken = Guid.NewGuid().ToString("N"),
-                AccessToken = accessToken,
-                RefreshToken = tokenInfo.RefreshToken,
-                SkinUrl = skinUrl,
-                DateTime = DateTime.Now
-            };
-        }
-
-        throw new Exception("未购买 Minecraft!");
-
-        throw new Exception("验证失败！");
+        throw new Exception("验证失败");
     }
 }
+#pragma warning restore CA1822

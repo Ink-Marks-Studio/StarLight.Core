@@ -7,7 +7,7 @@ using StarLight_Core.Utilities;
 namespace StarLight_Core.Installer;
 
 /// <summary>
-/// Forge 安装器
+/// Forge 安装类
 /// </summary>
 public class ForgeInstaller : InstallerBase
 {

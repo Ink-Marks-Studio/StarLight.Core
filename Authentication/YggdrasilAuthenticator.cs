@@ -4,8 +4,20 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Authentication;
 
+/// <summary>
+/// 外置验证类
+/// </summary>
+/// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
 public class YggdrasilAuthenticator : BaseAuthentication
 {
+    /// <summary>
+    /// 外置验证器
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <param name="clientToken"></param>
+    /// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
     public YggdrasilAuthenticator(string url, string email, string password, string clientToken = "")
     {
         Url = Url == "LittleSkin" ? "https://littleskin.cn/api/yggdrasil" : url;
@@ -14,6 +26,13 @@ public class YggdrasilAuthenticator : BaseAuthentication
         ClientToken = clientToken;
     }
 
+    /// <summary>
+    /// 外置验证器
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <param name="clientToken"></param>
+    /// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
     public YggdrasilAuthenticator(string email, string password, string clientToken = "")
     {
         Url = "https://littleskin.cn/api/yggdrasil";
@@ -28,6 +47,11 @@ public class YggdrasilAuthenticator : BaseAuthentication
 
     private string Password { get; }
 
+    /// <summary>
+    /// 异步验证方法
+    /// </summary>
+    /// <returns></returns>
+    /// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
     public async ValueTask<IEnumerable<YggdrasilAccount>> YggdrasilAuthAsync()
     {
         var requestJson = new
@@ -51,9 +75,7 @@ public class YggdrasilAuthenticator : BaseAuthentication
 
         var accountMessage = JsonSerializer.Deserialize<YggdrasilResponse>(postResponseContent);
 
-        List<YggdrasilAccount> accounts = new();
-        foreach (var userAccount in accountMessage.UserAccounts)
-            accounts.Add(new YggdrasilAccount
+        return accountMessage.UserAccounts.Select(userAccount => new YggdrasilAccount
             {
                 AccessToken = accountMessage.AccessToken,
                 ClientToken = accountMessage.ClientToken,
@@ -62,8 +84,7 @@ public class YggdrasilAuthenticator : BaseAuthentication
                 ServerUrl = Url ?? string.Empty,
                 Email = Email ?? string.Empty,
                 Password = Password ?? string.Empty
-            });
-
-        return accounts;
+            })
+            .ToList();
     }
 }

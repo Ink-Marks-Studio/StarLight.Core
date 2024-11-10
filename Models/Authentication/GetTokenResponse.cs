@@ -2,21 +2,33 @@
 
 namespace StarLight_Core.Models.Authentication;
 
+/// <summary>
+/// 令牌信息
+/// </summary>
+/// <a href="https://mohen.wiki/Authentication/Microsoft.html#详细-gettokenresponse-定义">查看文档</a>
 public class GetTokenResponse
 {
-    // 验证令牌
+    /// <summary>
+    /// 验证令牌
+    /// </summary>
     [JsonPropertyName("access_token")]
     public string AccessToken { get; set; }
 
-    // 刷新令牌
+    /// <summary>
+    /// 刷新令牌
+    /// </summary>
     [JsonPropertyName("refresh_token")]
     public string RefreshToken { get; set; }
 
-    // 客户端Id
+    /// <summary>
+    /// 客户端 Id
+    /// </summary>
     [JsonIgnore]
     public string ClientId { get; set; }
 
-    // 过期时间
+    /// <summary>
+    /// 过期时间
+    /// </summary>
     [JsonPropertyName("expires_in")]
     public int ExpiresIn { get; set; }
 }

@@ -10,7 +10,7 @@ using StarLight_Core.Utilities;
 namespace StarLight_Core.Installer;
 
 /// <summary>
-/// 游戏安装器
+/// 游戏安装类
 /// </summary>
 public class MinecraftInstaller : InstallerBase
 {
