@@ -7,17 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/BaseAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/BaseAuthentication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/ForgeInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/ForgeInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/GetTokenResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Authentication/RetrieveDeviceCode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Authentication/RetrieveDeviceCode.cs" afterDir="false" />
-    </list>
+    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -485,7 +475,7 @@
       <workItem from="1730626007006" duration="12000" />
       <workItem from="1730626057031" duration="8000" />
       <workItem from="1731208841069" duration="2358000" />
-      <workItem from="1731216836638" duration="1752000" />
+      <workItem from="1731216836638" duration="1998000" />
     </task>
     <servers />
   </component>
