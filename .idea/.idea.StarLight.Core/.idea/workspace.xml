@@ -7,7 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="" />
+    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/Authentication/BaseAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/BaseAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Authentication/OfflineAuthentication.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,22 +68,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;发布到 IIS.StarLight.Core: FolderProfile.executor&quot;: &quot;Run&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true",
+    "发布到 IIS.StarLight.Core: FolderProfile.executor": "Run"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="StarLight.Core: FolderProfile" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish publish_profile="FolderProfile.pubxml" pubxml_path="$PROJECT_DIR$/Properties/PublishProfiles/FolderProfile.pubxml" uuid_high="3566934773274922682" uuid_low="-8798903248815400877" />
@@ -476,6 +480,7 @@
       <workItem from="1730626057031" duration="8000" />
       <workItem from="1731208841069" duration="2358000" />
       <workItem from="1731216836638" duration="1998000" />
+      <workItem from="1733020822647" duration="736000" />
     </task>
     <servers />
   </component>

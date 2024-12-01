@@ -1,4 +1,6 @@
-﻿using StarLight_Core.Models.Authentication;
+﻿using System.Security.Cryptography;
+using System.Text;
+using StarLight_Core.Models.Authentication;
 
 namespace StarLight_Core.Authentication;
 
@@ -18,11 +20,12 @@ public class OfflineAuthentication : BaseAuthentication
         AccessToken = Guid.NewGuid().ToString("N");
         ClientToken = Guid.NewGuid().ToString("N");
         Name = username;
-        Uuid = Guid.NewGuid().ToString();
+        Uuid = GenerateNameUuid(username);
     }
 
     /// <summary>
     /// 离线验证器
+    /// 推荐使用用户名生成 Uuid 构造函数
     /// </summary>
     /// <param name="username">用户名</param>
     /// <param name="uuid">用户 UUID</param>
@@ -37,6 +40,22 @@ public class OfflineAuthentication : BaseAuthentication
 
     /// <summary>
     /// 离线验证器
+    /// </summary>
+    /// <param name="username">用户名</param>
+    /// <param name="accessToken">访问令牌</param>
+    /// <param name="clientToken">客户端令牌</param>
+    /// <a href="https://mohen.wiki/Authentication/Offline.html#构造函数">查看文档</a>
+    public OfflineAuthentication(string username, string accessToken, string clientToken)
+    {
+        AccessToken = accessToken;
+        ClientToken = clientToken;
+        Name = username;
+        Uuid = GenerateNameUuid(username);
+    }
+    
+    /// <summary>
+    /// 离线验证器
+    /// 推荐使用用户名生成 Uuid 构造函数
     /// </summary>
     /// <param name="username">用户名</param>
     /// <param name="uuid">用户 UUID</param>
