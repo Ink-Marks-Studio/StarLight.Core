@@ -235,4 +235,4 @@ void GetMicrosoftAccount()
 如有问题或新功能建议, 请提交 [Issue](https://github.com/Ink-Marks-Studio/StarLight.Core/issues)
 
 有其他需要可以加入Q群或发送邮箱至
-[StarLight@InkMarks.Studio](mailto:starlight@inkmarks.studio)
+[StarLight@InkMarks.Studio](mailto:starlight@inkmarks.studio) (此渠道暂时处于弃用状态)
