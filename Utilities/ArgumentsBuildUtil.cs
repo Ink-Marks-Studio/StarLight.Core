@@ -434,7 +434,14 @@ public class ArgumentsBuildUtil
         return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-{windowsNative}.jar");
     }
 
-    public static string BuildNewNativesName(string name, string root)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="root"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static string? BuildNewNativesName(string name, string root)
     {
         var parts = name.Split(':');
 
@@ -444,13 +451,9 @@ public class ArgumentsBuildUtil
 
         var path = Path.Combine(root, groupIdPath, artifactId, version);
 
-        if (parts.Length > 3 && parts[3].StartsWith("natives-"))
-        {
-            var classifier = parts[3];
-            return Path.Combine(path, $"{artifactId}-{version}-{classifier}.jar");
-        }
-
-        throw new ArgumentException("[SL]名称格式无效,获取错误");
+        if (parts.Length <= 3 || !parts[3].StartsWith("natives-")) return null;
+        var classifier = parts[3];
+        return Path.Combine(path, $"{artifactId}-{version}-{classifier}.jar");
     }
 
     // 完整路径

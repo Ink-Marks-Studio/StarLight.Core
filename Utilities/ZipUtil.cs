@@ -45,11 +45,9 @@ public class ZipUtil
                     if (fileExtension.Contains(".dll"))
                     {
                         var completeFileName = Path.Combine(targetDirectory, entry.Name);
-                        using (var fileStream = new FileStream(completeFileName, FileMode.Create, FileAccess.Write,
-                                   FileShare.None, 4096, true))
-                        {
-                            await entry.Open().CopyToAsync(fileStream);
-                        }
+                        await using var fileStream = new FileStream(completeFileName, FileMode.Create, FileAccess.Write,
+                            FileShare.None, 4096, true);
+                        await entry.Open().CopyToAsync(fileStream);
                     }
                 }
                 catch (UnauthorizedAccessException)

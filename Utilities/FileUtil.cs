@@ -200,6 +200,7 @@ public static class FileUtil
                         var parts = lib.Name.Split(':');
                         if (parts.Length <= 3) continue;
                         var path = ArgumentsBuildUtil.BuildNewNativesName(lib.Name, librariesPath);
+                        if (string.IsNullOrEmpty(path)) continue;
                         yield return path;
                     }
                 }
