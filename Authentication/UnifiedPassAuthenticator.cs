@@ -63,7 +63,7 @@ public class UnifiedPassAuthenticator
         }
         catch (Exception ex)
         {
-            throw new ApplicationException("[SL]身份验证时出错: ", ex);
+            throw new ApplicationException("身份验证时出错: ", ex);
         }
 
         var authResponse = JsonSerializer.Deserialize<UnifiedPassResponse>(response);
@@ -105,7 +105,7 @@ public class UnifiedPassAuthenticator
         }
         catch (Exception ex)
         {
-            throw new ApplicationException("[SL]刷新令牌时出错: ", ex);
+            throw new ApplicationException("刷新令牌时出错: ", ex);
         }
 
         var authResponse = JsonSerializer.Deserialize<UnifiedPassRefreshResponse>(response);

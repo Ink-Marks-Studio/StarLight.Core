@@ -99,7 +99,7 @@ public static class DownloadAPIs
         {
             DownloadSource.Official => Official,
             DownloadSource.BmclApi => BmclApi,
-            _ => throw new ArgumentException("[SL]未找到下载源")
+            _ => throw new ArgumentException("未找到下载源")
         };
     }
 }

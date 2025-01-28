@@ -151,21 +151,21 @@ public class ForgeInstaller : InstallerBase
         {
             var json = await HttpUtil.GetJsonAsync($"https://bmclapi2.bangbang93.com/forge/minecraft/{version}");
             if (string.IsNullOrWhiteSpace(json))
-                throw new InvalidOperationException("[SL]版本列表为空");
+                throw new InvalidOperationException("版本列表为空");
 
             return json.ToJsonEntry<IEnumerable<ForgeVersionEntity>>();
         }
         catch (JsonException je)
         {
-            throw new Exception("[SL]版本列表解析失败：" + je.Message, je);
+            throw new Exception("版本列表解析失败：" + je.Message, je);
         }
         catch (HttpRequestException hre)
         {
-            throw new Exception("[SL]下载版本列表失败：" + hre.Message, hre);
+            throw new Exception("下载版本列表失败：" + hre.Message, hre);
         }
         catch (Exception e)
         {
-            throw new Exception("[SL]获取版本列表时发生未知错误：" + e.Message, e);
+            throw new Exception("获取版本列表时发生未知错误：" + e.Message, e);
         }
     }
 }

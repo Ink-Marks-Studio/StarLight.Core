@@ -149,11 +149,11 @@ public class GameCoreUtil
                 }
                 catch (JsonException ex)
                 {
-                    throw new Exception($"[SL]版本 JSON 解析错误: {ex.Message}");
+                    throw new Exception($"版本 JSON 解析错误: {ex.Message}");
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"[SL]发生错误: {ex.Message}");
+                    throw new Exception($"发生错误: {ex.Message}");
                 }
         }
 

@@ -300,7 +300,7 @@ public class ArgumentsBuildUtil
         }
         catch (Exception ex)
         {
-            throw new Exception($"[SL]构建Library参数错误: + {ex}");
+            throw new Exception($"构建Library参数错误: + {ex}");
         }
     }
 
@@ -421,7 +421,7 @@ public class ArgumentsBuildUtil
     public static string BuildNativesName(Library library, string root)
     {
         var parts = library.Name.Split(':');
-        if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
+        if (parts.Length != 3) throw new ArgumentException("名称格式无效,获取错误");
 
         var groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
         var artifactId = parts[1];

@@ -20,7 +20,7 @@ public static class InstallUtil
         var gameCoresInfo = await GetGameCoresAsync();
         var gameCoreInfo = gameCoresInfo.FirstOrDefault(x => x.Id == id);
 
-        if (gameCoreInfo == null) throw new InvalidOperationException("[SL]版本不存在");
+        if (gameCoreInfo == null) throw new InvalidOperationException("版本不存在");
 
         return gameCoreInfo;
     }
@@ -37,10 +37,10 @@ public static class InstallUtil
         try
         {
             var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.VersionManifest);
-            if (string.IsNullOrWhiteSpace(json)) throw new InvalidOperationException("[SL]版本列表为空");
+            if (string.IsNullOrWhiteSpace(json)) throw new InvalidOperationException("版本列表为空");
 
             var versionsManifest = JsonSerializer.Deserialize<GameCoreJsonEntity>(json);
-            if (versionsManifest?.Version == null) throw new InvalidOperationException("[SL]版本列表为空");
+            if (versionsManifest?.Version == null) throw new InvalidOperationException("版本列表为空");
 
             return versionsManifest.Version.Select(x => new GameCoreDownloadInfo
             {
@@ -54,15 +54,15 @@ public static class InstallUtil
         }
         catch (JsonException je)
         {
-            throw new Exception("[SL]版本列表解析失败：" + je.Message, je);
+            throw new Exception("版本列表解析失败：" + je.Message, je);
         }
         catch (HttpRequestException hre)
         {
-            throw new Exception("[SL]下载版本列表失败：" + hre.Message, hre);
+            throw new Exception("下载版本列表失败：" + hre.Message, hre);
         }
         catch (Exception e)
         {
-            throw new Exception("[SL]获取版本列表时发生未知错误：" + e.Message, e);
+            throw new Exception("获取版本列表时发生未知错误：" + e.Message, e);
         }
     }
 
@@ -78,11 +78,11 @@ public static class InstallUtil
         {
             var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.VersionManifest);
             if (string.IsNullOrWhiteSpace(json))
-                throw new InvalidOperationException("[SL]版本列表为空");
+                throw new InvalidOperationException("版本列表为空");
 
             var versionsManifest = JsonSerializer.Deserialize<GameCoreJsonEntity>(json);
             if (versionsManifest?.Latest == null)
-                throw new InvalidOperationException("[SL]版本列表为空");
+                throw new InvalidOperationException("版本列表为空");
             return new LatestGameCoreDownloadInfo
             {
                 Release = versionsManifest.Latest.Release,
@@ -91,15 +91,15 @@ public static class InstallUtil
         }
         catch (JsonException je)
         {
-            throw new Exception("[SL]版本列表解析失败：" + je.Message, je);
+            throw new Exception("版本列表解析失败：" + je.Message, je);
         }
         catch (HttpRequestException hre)
         {
-            throw new Exception("[SL]下载版本列表失败：" + hre.Message, hre);
+            throw new Exception("下载版本列表失败：" + hre.Message, hre);
         }
         catch (Exception e)
         {
-            throw new Exception("[SL]获取版本列表时发生未知错误：" + e.Message, e);
+            throw new Exception("获取版本列表时发生未知错误：" + e.Message, e);
         }
     }
 }

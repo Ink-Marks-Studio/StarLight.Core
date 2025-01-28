@@ -5,7 +5,7 @@ public class MinecraftInstallerModel
     public static string BuildFromName(string name, string root)
     {
         var parts = name.Split(':');
-        if (parts.Length < 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
+        if (parts.Length < 3) throw new ArgumentException("名称格式无效,获取错误");
 
         var groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
         var artifactId = parts[1];
@@ -21,13 +21,13 @@ public class MinecraftInstallerModel
             return Path.Combine(path, $"{artifactId}-{version}-{classifier}.jar");
         }
 
-        throw new ArgumentException("[SL]名称格式无效,获取错误");
+        throw new ArgumentException("名称格式无效,获取错误");
     }
 
     public static string BuildNativesName(string name, string root)
     {
         var parts = name.Split(':');
-        if (parts.Length != 3) throw new ArgumentException("[SL]名称格式无效,获取错误");
+        if (parts.Length != 3) throw new ArgumentException("名称格式无效,获取错误");
 
         var groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
         var artifactId = parts[1];
