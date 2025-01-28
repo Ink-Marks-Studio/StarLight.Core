@@ -9,9 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader/DownloaderBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Downloader/DownloaderBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Launch/MinecraftLauncher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/StarLightInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/StarLightInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/FileUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/FileUtil.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ZipUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ZipUtil.cs" afterDir="false" />
     </list>
@@ -488,6 +489,7 @@
       <workItem from="1737812350828" duration="525000" />
       <workItem from="1737863717436" duration="1284000" />
       <workItem from="1737872568561" duration="3107000" />
+      <workItem from="1738058856821" duration="652000" />
     </task>
     <servers />
   </component>

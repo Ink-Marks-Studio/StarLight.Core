@@ -5,6 +5,9 @@ using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities;
 
+/// <summary>
+/// 文件工具类
+/// </summary>
 public static class FileUtil
 {
     /// <summary>
@@ -95,10 +98,7 @@ public static class FileUtil
     /// </summary>
     /// <param name="filePath">文件路径</param>
     /// <returns>文件所在目录</returns>
-    public static string GetFileDirectory(string filePath)
-    {
-        return Path.GetDirectoryName(filePath);
-    }
+    public static string? GetFileDirectory(string filePath) => Path.GetDirectoryName(filePath);
 
 
     /// <summary>
@@ -134,8 +134,7 @@ public static class FileUtil
 
             var langCode = language.ToString().ToLower();
             if (versionMember <= 10 && versionMember != 0)
-                langCode = langCode.Substring(0, langCode.Length - 2) +
-                           langCode.Substring(langCode.Length - 2).ToUpper();
+                langCode = string.Concat(langCode.AsSpan(0, langCode.Length - 2), langCode[^2..].ToUpper());
 
             if (File.Exists(filePath))
             {
@@ -177,11 +176,11 @@ public static class FileUtil
         }
         catch (Exception ex)
         {
-            throw new Exception($"[SL]处理 Natives 文件错误: + {ex}");
+            throw new Exception($"处理 Natives 文件错误: + {ex}");
         }
     }
 
-    internal static IEnumerable<string> ProcessNativesPath(string filePath, string librariesPath)
+    private static IEnumerable<string> ProcessNativesPath(string filePath, string librariesPath)
     {
         var jsonData = File.ReadAllText(filePath);
         var argsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(jsonData);

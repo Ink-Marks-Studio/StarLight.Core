@@ -36,8 +36,10 @@ public class MinecraftLauncher
 
         if (GameCoreConfig == null)
             return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置游戏核心信息"));
-        if (JavaConfig == null) return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置Java"));
-        if (BaseAccount == null) return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置账户信息"));
+        if (JavaConfig == null) 
+            return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置Java"));
+        if (BaseAccount == null) 
+            return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("未配置账户信息"));
         if (GameCoreUtil.GetGameCore(GameCoreConfig.Version, GameCoreConfig.Root) == null)
             return new LaunchResponse(Status.Failed, stopwatch, process, new Exception("游戏核心不存在或游戏核心已损坏"));
         if (JavaUtil.GetJavaInfo(JavaConfig.JavaPath) == null)
