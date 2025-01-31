@@ -122,6 +122,13 @@ public class ForgeInstaller : InstallerBase
                 PropertyNameCaseInsensitive = true,
                 WriteIndented = true
             };
+
+            await ZipUtil.ExtractSpecificFileFromZipAsync(Path.Combine(forgeJarPath, "forge-installer.jar"),
+                "install_profile.json",
+                Path.Combine(forgeJarPath, "install_profile.json"));
+            
+            var installProfileJson = await File.ReadAllTextAsync(Path.Combine(forgeJarPath, "install_profile.json"), CancellationToken);
+            
         }
         catch (OperationCanceledException)
         {

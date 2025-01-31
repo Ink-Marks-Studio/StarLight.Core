@@ -100,12 +100,13 @@ public class MinecraftInstaller : InstallerBase
                     PropertyNameCaseInsensitive = true,
                     WriteIndented = true
                 };
-                var gameCoreData = JsonSerializer.Deserialize<Dictionary<string, object>>(gameCoreJson, options);
 
-                if (gameCoreData != null && gameCoreData.ContainsKey("id"))
-                    gameCoreData["id"] = gameCoreName;
+                var gameCoreNode = gameCoreJson.ToJsonNode();
 
-                var modifiedJson = JsonSerializer.Serialize(gameCoreData, options);
+                if (gameCoreNode["id"] != null)
+                    gameCoreNode["id"] = gameCoreName;
+
+                var modifiedJson = gameCoreNode.ToJsonString(options);
                 await File.WriteAllTextAsync(jsonPath, modifiedJson, cancellationToken);
             }
             else

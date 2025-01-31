@@ -4,10 +4,18 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Downloader;
 
+/// <summary>
+/// 多线程文件下载器类
+/// </summary>
 public class MultiThreadedFileDownloader : DownloaderBase
 {
     private readonly CancellationToken _cancellationToken;
 
+    /// <summary>
+    /// 多线程文件下载器构造函数
+    /// </summary>
+    /// <param name="onSpeedChanged"></param>
+    /// <param name="cancellationToken"></param>
     public MultiThreadedFileDownloader(Action<double> onSpeedChanged, CancellationToken cancellationToken = default)
     {
         OnSpeedChanged = onSpeedChanged;

@@ -4,6 +4,9 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace StarLight_Core.Utilities;
 
+/// <summary>
+/// 
+/// </summary>
 public static class JsonUtil
 {
     private static readonly JsonSerializerOptions Options = new()
@@ -12,23 +15,50 @@ public static class JsonUtil
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public static T Deserialize<T>(this string json, JsonTypeInfo<T> jsonType)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="json"></param>
+    /// <param name="jsonType"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T Deserialize<T>(this string json, JsonTypeInfo<T> jsonType) => JsonSerializer.Deserialize(json, jsonType);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="json"></param>
+    /// <param name="options"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
+    public static T ToJsonEntry<T>(this string json, JsonSerializerOptions? options = null)
     {
-        return JsonSerializer.Deserialize(json, jsonType);
+        if (json == null) 
+            throw new ArgumentNullException(nameof(json));
+        var finalOptions = options ?? Options;
+        try
+        {
+            return JsonSerializer.Deserialize<T>(json, finalOptions);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException("JSON 反序列化失败", ex);
+        }
     }
 
-    public static T ToJsonEntry<T>(this string json)
-    {
-        return JsonSerializer.Deserialize<T>(json, Options);
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public static string Serialize(this object obj) => JsonSerializer.Serialize(obj, Options);
 
-    public static string Serialize(this object obj)
-    {
-        return JsonSerializer.Serialize(obj, Options);
-    }
-
-    public static JsonNode ToJsonNode(this string json)
-    {
-        return JsonNode.Parse(json);
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="json"></param>
+    /// <returns></returns>
+    public static JsonNode ToJsonNode(this string json) => JsonNode.Parse(json);
 }

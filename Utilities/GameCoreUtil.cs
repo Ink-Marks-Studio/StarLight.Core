@@ -32,42 +32,42 @@ public class GameCoreUtil
             var versionFolder = new DirectoryInfo(version);
             var versionFile = Path.Combine(versionFolder.FullName, versionFolder.Name + ".json");
 
-            if (File.Exists(versionFile))
-                try
-                {
-                    var jsonData = File.ReadAllText(versionFile);
-                    var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
-                    var gameCoreInfo = new GameCoreInfo();
+            if (!File.Exists(versionFile)) continue;
+            try
+            {
+                var jsonData = File.ReadAllText(versionFile);
+                var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
+                var gameCoreInfo = new GameCoreInfo();
 
-                    if (gameCore != null)
-                        gameCoreInfo = new GameCoreInfo
-                        {
-                            Id = gameCore.Id,
-                            Type = gameCore.Type,
-                            JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
-                            MainClass = gameCore.MainClass,
-                            InheritsFrom = gameCore.InheritsFrom,
-                            ReleaseTime = gameCore.ReleaseTime,
-                            IsNewVersion = gameCore.Arguments?.Game != null,
-                            Time = gameCore.Time,
-                            root = rootPath + Path.DirectorySeparatorChar + gameCore.Id,
-                            Version = gameCore.ClientVersion,
-                            Assets = gameCore.Assets,
-                            LoaderType = GetLoader(gameCore.MainClass)
-                        };
+                if (gameCore != null)
+                    gameCoreInfo = new GameCoreInfo
+                    {
+                        Id = gameCore.Id,
+                        Type = gameCore.Type,
+                        JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
+                        MainClass = gameCore.MainClass,
+                        InheritsFrom = gameCore.InheritsFrom,
+                        ReleaseTime = gameCore.ReleaseTime,
+                        IsNewVersion = gameCore.Arguments?.Game != null,
+                        Time = gameCore.Time,
+                        root = rootPath + Path.DirectorySeparatorChar + gameCore.Id,
+                        Version = gameCore.ClientVersion,
+                        Assets = gameCore.Assets,
+                        LoaderType = GetLoader(gameCore.MainClass)
+                    };
 
-                    if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
-                        gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
+                if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
+                    gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
 
-                    gameCoreInfo.Version ??= gameCoreInfo.Assets;
-                    gameCoreInfo.Version ??= "0.0.0";
+                gameCoreInfo.Version ??= gameCoreInfo.Assets;
+                gameCoreInfo.Version ??= "0.0.0";
 
-                    gameCores.Add(gameCoreInfo);
-                }
-                catch (Exception ex)
-                {
-                    gameCores.Add(new GameCoreInfo { Exception = ex });
-                }
+                gameCores.Add(gameCoreInfo);
+            }
+            catch (Exception ex)
+            {
+                gameCores.Add(new GameCoreInfo { Exception = ex });
+            }
         }
 
         return gameCores;
@@ -91,70 +91,68 @@ public class GameCoreUtil
             var versionFolder = new DirectoryInfo(version);
             var versionFile = Path.Combine(versionFolder.FullName, versionFolder.Name + ".json");
 
-            if (File.Exists(versionFile))
+            if (!File.Exists(versionFile)) continue;
+            try
+            {
+                var jsonData = File.ReadAllText(versionFile);
+                var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
+
+                if (gameCore == null || gameCore.Id != versionId) continue;
+                var gameCoreInfo = new GameCoreInfo
+                {
+                    Id = gameCore.Id,
+                    Type = gameCore.Type,
+                    JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
+                    MainClass = gameCore.MainClass,
+                    InheritsFrom = gameCore.InheritsFrom,
+                    ReleaseTime = gameCore.ReleaseTime,
+                    Time = gameCore.Time,
+                    IsNewVersion = gameCore.Arguments?.Game != null,
+                    root = rootPath + "\\" + gameCore.Id,
+                    Assets = gameCore.Assets,
+                    MinecraftArguments = gameCore.MinecraftArguments,
+                    Version = gameCore.ClientVersion,
+                    LoaderType = GetLoader(gameCore.MainClass)
+                };
+
                 try
                 {
-                    var jsonData = File.ReadAllText(versionFile);
-                    var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
-
-                    if (gameCore != null && gameCore.Id == versionId)
-                    {
-                        var gameCoreInfo = new GameCoreInfo
-                        {
-                            Id = gameCore.Id,
-                            Type = gameCore.Type,
-                            JavaVersion = gameCore.JavaVersion?.MajorVersion ?? 0,
-                            MainClass = gameCore.MainClass,
-                            InheritsFrom = gameCore.InheritsFrom,
-                            ReleaseTime = gameCore.ReleaseTime,
-                            Time = gameCore.Time,
-                            IsNewVersion = gameCore.Arguments?.Game != null,
-                            root = rootPath + "\\" + gameCore.Id,
-                            Assets = gameCore.Assets,
-                            MinecraftArguments = gameCore.MinecraftArguments,
-                            Version = gameCore.ClientVersion,
-                            LoaderType = GetLoader(gameCore.MainClass)
-                        };
-
-                        try
-                        {
-                            if (gameCoreInfo.InheritsFrom != null)
-                                gameCoreInfo.Assets = GetGameCore(gameCoreInfo.InheritsFrom, root).Assets;
-                        }
-                        catch (Exception e)
-                        {
-                            _ = e;
-                        }
-
-                        if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
-                            gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
-
-                        gameCoreInfo.Version ??= gameCoreInfo.Assets;
-                        gameCoreInfo.Version ??= "0.0.0";
-
-                        try
-                        {
-                            if (gameCore.Arguments != null)
-                                gameCoreInfo.Arguments = gameCore.Arguments;
-                            else
-                                gameCoreInfo.MinecraftArguments = gameCore.MinecraftArguments;
-                        }
-                        catch (Exception e)
-                        {
-                            gameCoreInfo.IsNewVersion = false;
-                        }
-
-                        return gameCoreInfo;
-                    }
+                    if (gameCoreInfo.InheritsFrom != null)
+                        gameCoreInfo.Assets = GetGameCore(gameCoreInfo.InheritsFrom, root).Assets;
                 }
-                catch (JsonException ex)
+                catch (Exception e)
                 {
-                    throw new Exception($"版本 JSON 解析错误: {ex.Message}");
+                    _ = e;
                 }
-                catch (Exception ex)
+
+                if (gameCoreInfo.InheritsFrom != null && gameCoreInfo.InheritsFrom != "null")
+                    gameCoreInfo.Version = gameCoreInfo.InheritsFrom;
+
+                gameCoreInfo.Version ??= gameCoreInfo.Assets;
+                gameCoreInfo.Version ??= "0.0.0";
+
+                try
                 {
-                    throw new Exception($"发生错误: {ex.Message}");
+                    if (gameCore.Arguments != null)
+                        gameCoreInfo.Arguments = gameCore.Arguments;
+                    else
+                        gameCoreInfo.MinecraftArguments = gameCore.MinecraftArguments;
                 }
+                catch (Exception e)
+                {
+                    gameCoreInfo.IsNewVersion = false;
+                }
+
+                return gameCoreInfo;
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception($"版本 JSON 解析错误: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"发生错误: {ex.Message}");
+            }
         }
 
         return null!;
