@@ -8,13 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Modrinth/ModrinthItems.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Modrinth/GetMods.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Downloader/MultiThreadedFileDownloader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Downloader/MultiThreadedFileDownloader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/ForgeInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/ForgeInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/MinecraftInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/GameCoreUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/JsonUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/JsonUtil.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/ZipUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ZipUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,14 +29,11 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Ink-Marks-Studio/StarLight.Core.git&quot;,
-    &quot;accountId&quot;: &quot;dce51735-8f49-4c68-996d-0f727297b372&quot;
+    &quot;url&quot;: &quot;https://github.com/CNwenwen/Starlight.Downloader.git&quot;,
+    &quot;accountId&quot;: &quot;0f7e1b4d-ff1a-4bec-a677-7580e21c205e&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/184e127dbb1e5272335e283fd852048615fd45aa7af235ff33675254b2b7c6/ObsoleteAttribute.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/18683722e1c2b2ebec2d4d34a28350723bb9ebee96f317a7fe83d44d6d3f9a/GeneratedRegexAttribute.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/de7cca8bbad440a84863dc9a66814897f9b51cd9916dcdce4857992d5d492c/HashSet.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Downloader/MultiFileDownloader.cs" root0="FORCE_HIGHLIGHTING" />
@@ -49,6 +42,7 @@
     <setting file="file://$PROJECT_DIR$/Models/Downloader/DownloaderConfig.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/AssetData.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/DownloadAPIs.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Models/Installer/DownloadsJsonEntity.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/GameCoreDownloadInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/MinecraftInstallerModel.cs" root0="FORCE_HIGHLIGHTING" />
@@ -494,6 +488,8 @@
       <workItem from="1738145457167" duration="5483000" />
       <workItem from="1738307540865" duration="2145000" />
       <workItem from="1738323750901" duration="362000" />
+      <workItem from="1739241852590" duration="3283000" />
+      <workItem from="1739246407973" duration="342000" />
     </task>
     <servers />
   </component>
