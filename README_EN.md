@@ -66,7 +66,7 @@
 | Mod Processor             | ☑️     |
 | Modpack Processor         | ❌      |
 | CurseForge Downloader     | ❌      |
-| Modrinth Downloader       | ❌      |
+| Modrinth Downloader       | ☑️      |
 | Error Analyzer            | ❌      |
 
 ## 📘 Documentation and Usage Guide
