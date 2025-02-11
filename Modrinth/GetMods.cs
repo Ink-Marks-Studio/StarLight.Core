@@ -1,4 +1,5 @@
 using System.Text.Json;
+using StarLight_Core.Models.Mod;
 using StarLight_Core.Models.Modrinth;
 using StarLight_Core.Utilities;
 
@@ -16,7 +17,16 @@ public static class GetMods
         {
             Dictionary<string,string> headers = new();
             headers.Add("count",count.ToString());
-            var json = await HttpUtil.SendHttpGetRequestWithHeaders("https://api.modrinth.com/v2/projects_random",headers);
+            string? json = null;
+            switch (ModSourceConfig.ModSource)
+            {
+                case 0:
+                    json = await HttpUtil.SendHttpGetRequestWithHeaders("https://api.modrinth.com/v2/projects_random",headers);
+                    break;
+                case 1:
+                    json = await HttpUtil.SendHttpGetRequestWithHeaders("https://api.modrinth.com/v2/projects_random",headers);
+                    break;
+            }
             var result = json.ToJsonEntry<IEnumerable<ModrinthItems.ModrinthItem>>().Select(manifest =>
                 new ModrinthItems.ModrinthItem
                 {

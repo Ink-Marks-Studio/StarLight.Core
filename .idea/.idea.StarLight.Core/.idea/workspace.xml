@@ -7,10 +7,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Modrinth/ModrinthItems.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Modrinth/GetMods.cs" afterDir="false" />
+    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="feat:增加从Modrinth获取一个或随机多个Mod">
+      <change afterPath="$PROJECT_DIR$/Enum/ModDownloadSource.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Mod/ModSourceConfig.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Modrinth/SearchMods.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modrinth/GetMods.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Modrinth/GetMods.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +20,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
@@ -56,7 +64,7 @@
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -489,8 +497,18 @@
       <workItem from="1738307540865" duration="2145000" />
       <workItem from="1738323750901" duration="362000" />
       <workItem from="1739241852590" duration="3283000" />
-      <workItem from="1739246407973" duration="342000" />
+      <workItem from="1739246407973" duration="3739000" />
+      <workItem from="1739252765036" duration="1430000" />
     </task>
+    <task id="LOCAL-00001" summary="feat:增加从Modrinth获取一个或随机多个Mod">
+      <option name="closed" value="true" />
+      <created>1739246904542</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1739246904542</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -511,6 +529,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="feat:增加从Modrinth获取一个或随机多个Mod" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat:增加从Modrinth获取一个或随机多个Mod" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
