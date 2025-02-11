@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: 安装 .NET 8.0 环境
         uses: actions/setup-dotnet@v2
         with:
@@ -43,7 +43,7 @@ jobs:
       - name: 检查版本
         run: echo "VERSION=${{ env.VERSION }}"
       - name: 上传构建工件
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: nupkg
           
@@ -59,7 +59,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: 下载构建工件
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: nupkg
           path: nupkg
@@ -95,7 +95,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 下载构建工件
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: nupkg
           path: nupkg
