@@ -8,9 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Modrinth/ModrinthItems.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Modrinth/GetMods.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Enum/ClientSideType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Enum/ServerSideType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Utilities/ModrinthInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Utilities/ModrinthUtil.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enum/ModDownloadSource.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Mod/ModSourceConfig.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Modrinth/ModrinthItems.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Modrinth/ModrinthVersionItems.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modrinth/GetModFiles.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modrinth/GetMods.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modrinth/SearchMods.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +27,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
@@ -34,6 +49,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/42a29352fb1b4a8181a3990c431b5c1f16ad20/5d/7654977e/JsonNamingPolicy.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/MicrosoftAuthentication.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Downloader/MultiFileDownloader.cs" root0="FORCE_HIGHLIGHTING" />
@@ -489,8 +505,53 @@
       <workItem from="1738307540865" duration="2145000" />
       <workItem from="1738323750901" duration="362000" />
       <workItem from="1739241852590" duration="3283000" />
-      <workItem from="1739246407973" duration="342000" />
+      <workItem from="1739246407973" duration="3739000" />
+      <workItem from="1739252765036" duration="4139000" />
+      <workItem from="1739260905678" duration="2017000" />
+      <workItem from="1739323455665" duration="994000" />
+      <workItem from="1739324631504" duration="1671000" />
     </task>
+    <task id="LOCAL-00001" summary="feat:增加从Modrinth获取一个或随机多个Mod">
+      <option name="closed" value="true" />
+      <created>1739246904542</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1739246904542</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat:MCIM源、搜索Mod">
+      <option name="closed" value="true" />
+      <created>1739255817791</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1739255817791</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix:修复README.MD">
+      <option name="closed" value="true" />
+      <created>1739256352158</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1739256352158</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat:未写完的Mod搜索功能">
+      <option name="closed" value="true" />
+      <created>1739261794588</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1739261794588</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix:修改README.MD">
+      <option name="closed" value="true" />
+      <created>1739262343175</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1739262343175</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -511,6 +572,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="feat:增加从Modrinth获取一个或随机多个Mod" />
+    <MESSAGE value="feat:MCIM源、搜索Mod" />
+    <MESSAGE value="fix:修复README.MD" />
+    <MESSAGE value="feat:未写完的Mod搜索功能" />
+    <MESSAGE value="fix:修改README.MD" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix:修改README.MD" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
