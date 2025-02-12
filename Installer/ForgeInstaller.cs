@@ -152,7 +152,7 @@ public class ForgeInstaller : InstallerBase
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
     /// <exception cref="Exception"></exception>
-    public static async Task<IEnumerable<ForgeVersionEntity>> FetchForgeVersionsAsync(string version)
+    public static async Task<IEnumerable<ForgeVersionEntity>?> FetchForgeVersionsAsync(string version)
     {
         try
         {

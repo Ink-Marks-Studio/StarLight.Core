@@ -9,7 +9,7 @@ namespace StarLight_Core.Utilities;
 /// </summary>
 public static class JsonUtil
 {
-    private static readonly JsonSerializerOptions Options = new()
+    private static readonly JsonSerializerOptions? Options = new()
     {
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -22,7 +22,7 @@ public static class JsonUtil
     /// <param name="jsonType"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static T Deserialize<T>(this string json, JsonTypeInfo<T> jsonType) => JsonSerializer.Deserialize(json, jsonType);
+    public static T? Deserialize<T>(this string json, JsonTypeInfo<T?> jsonType) => JsonSerializer.Deserialize(json, jsonType);
 
     /// <summary>
     /// 
@@ -33,7 +33,7 @@ public static class JsonUtil
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="InvalidOperationException"></exception>
-    public static T ToJsonEntry<T>(this string json, JsonSerializerOptions? options = null)
+    public static T? ToJsonEntry<T>(this string json, JsonSerializerOptions? options = null)
     {
         if (json == null) 
             throw new ArgumentNullException(nameof(json));
@@ -60,5 +60,5 @@ public static class JsonUtil
     /// </summary>
     /// <param name="json"></param>
     /// <returns></returns>
-    public static JsonNode ToJsonNode(this string json) => JsonNode.Parse(json);
+    public static JsonNode? ToJsonNode(this string json) => JsonNode.Parse(json);
 }
