@@ -77,7 +77,7 @@ public class ArgumentsBuildUtil
 
         var appDataPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "jar");
         var tempPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "temp");
-
+        
         if (BaseAccount is UnifiedPassAccount)
         {
             FileUtil.IsDirectory(appDataPath, true);
@@ -92,6 +92,33 @@ public class ArgumentsBuildUtil
                     new("https://login.mc-user.com:233/index/jar", nidePath)
                 });
                 args.Add("-javaagent:\"" + nidePath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+                downloader.Dispose();
+            }
+            else
+            {
+                var authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath)
+                    ? Path.Combine(GameCoreConfig.Nide8authPath)
+                    : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
+                args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+            }
+        }
+        else if (BaseAccount is YggdrasilAccount)
+        {
+            FileUtil.IsDirectory(appDataPath, true);
+            FileUtil.IsDirectory(tempPath, true);
+
+            if (!FileUtil.IsFile(GameCoreConfig.AuthlibPath))
+            {
+                var assetsJson = await HttpUtil.GetStringAsync("https://authlib-injector.yushi.moe/artifact/latest.json");
+                var assetsEntity = assetsJson.ToJsonEntry<AuthlibLatestJsonEntity>();
+                var authlibPath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "authlib-injector.jar");
+                var downloader = new MultiFileDownloader();
+                await downloader.DownloadFiles(new List<DownloadItem>
+                {
+                    new(assetsEntity?.DownloadUrl, authlibPath)
+                });
+                args.Add("-javaagent:\"" + authlibPath + "\"=" + GameCoreConfig.AuthlibServerUrl);
+                downloader.Dispose();
             }
             else
             {
@@ -141,25 +168,19 @@ public class ArgumentsBuildUtil
             BuildArgsData.JvmArgumentsTemplate.Clear();
 
             if (coreInfo.InheritsFrom != null)
-                foreach (var element in inheritsFromInfo.Arguments.Jvm)
-                    if (!ElementContainsRules(element))
-                        BuildArgsData.JvmArgumentsTemplate.Add(element.ToString());
-
-            foreach (var element in coreInfo.Arguments.Jvm)
-                if (!ElementContainsRules(element))
+                foreach (var element in inheritsFromInfo.Arguments.Jvm.Where(element => !ElementContainsRules(element)))
                     BuildArgsData.JvmArgumentsTemplate.Add(element.ToString());
 
-            var updatedJvmArguments = new List<string>();
-            foreach (var argument in BuildArgsData.JvmArgumentsTemplate)
-                updatedJvmArguments.Add(argument.Replace(" ", ""));
+            foreach (var element in coreInfo.Arguments.Jvm.Where(element => !ElementContainsRules(element)))
+                BuildArgsData.JvmArgumentsTemplate.Add(element.ToString());
+
+            var updatedJvmArguments = BuildArgsData.JvmArgumentsTemplate.Select(argument => argument.Replace(" ", ""))
+                .ToList();
 
             BuildArgsData.JvmArgumentsTemplate = updatedJvmArguments;
-            jvmArgumentTemplate = string.Join(" ", BuildArgsData.JvmArgumentsTemplate);
         }
-        else
-        {
-            jvmArgumentTemplate = string.Join(" ", BuildArgsData.JvmArgumentsTemplate);
-        }
+
+        jvmArgumentTemplate = string.Join(" ", BuildArgsData.JvmArgumentsTemplate);
 
         args.Add(ReplacePlaceholders(jvmArgumentTemplate, jvmPlaceholders));
 
@@ -197,11 +218,9 @@ public class ArgumentsBuildUtil
     {
         var args = new List<string>();
 
-        if (SystemUtil.IsOperatingSystemGreaterThanWin10())
-        {
-            args.Add("-Dos.name=\"Windows 10\"");
-            args.Add("-Dos.version=10.0");
-        }
+        if (!SystemUtil.IsOperatingSystemGreaterThanWin10()) return string.Join(" ", args);
+        args.Add("-Dos.name=\"Windows 10\"");
+        args.Add("-Dos.version=10.0");
 
         return string.Join(" ", args);
     }
@@ -307,10 +326,12 @@ public class ArgumentsBuildUtil
     // 窗口参数
     private string BuildWindowArgs()
     {
-        var args = new List<string>();
+        var args = new List<string>
+        {
+            "--width " + GameWindowConfig.Width,
+            "--height " + GameWindowConfig.Height
+        };
 
-        args.Add("--width " + GameWindowConfig.Width);
-        args.Add("--height " + GameWindowConfig.Height);
         if (GameWindowConfig.IsFullScreen)
             args.Add("--fullscreen");
 
@@ -338,16 +359,16 @@ public class ArgumentsBuildUtil
                 continue;
             }
 
-            if (lib.Downloads.Classifiers == null || lib.Downloads.Classifiers.Count == 0)
-                if (ShouldIncludeLibrary(lib.Rule))
-                {
-                    var path = BuildFromName(lib.Name, librariesPath);
-                    if (path != null)
-                        if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
-                            optifinePaths.Add(path);
-                        else
-                            normalPaths.Add(path);
-                }
+            if (lib.Downloads.Classifiers != null && lib.Downloads.Classifiers.Count != 0) continue;
+            {
+                if (!ShouldIncludeLibrary(lib.Rule)) continue;
+                var path = BuildFromName(lib.Name, librariesPath);
+                if (path == null) continue;
+                if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
+                    optifinePaths.Add(path);
+                else
+                    normalPaths.Add(path);
+            }
         }
 
         foreach (var path in normalPaths)
@@ -366,58 +387,65 @@ public class ArgumentsBuildUtil
         var isDisallowForLinux = false;
 
         foreach (var rule in rules)
-            if (rule.Action == "allow")
+            switch (rule.Action)
             {
-                if (rule.Os == null || (rule.Os.Name.ToLower() != "linux" && rule.Os.Name.ToLower() != "osx"))
-                    isAllow = true;
-            }
-            else if (rule.Action == "disallow")
-            {
-                if (rule.Os != null && rule.Os.Name.ToLower() == "linux") isDisallowForLinux = true;
-                if (rule.Os != null && rule.Os.Name.ToLower() == "osx") isDisallowForOsX = true;
+                case "allow":
+                {
+                    if (rule.Os == null || (rule.Os.Name.ToLower() != "linux" && rule.Os.Name.ToLower() != "osx"))
+                        isAllow = true;
+                    break;
+                }
+                case "disallow":
+                {
+                    if (rule.Os != null && rule.Os.Name.ToLower() == "linux") isDisallowForLinux = true;
+                    if (rule.Os != null && rule.Os.Name.ToLower() == "osx") isDisallowForOsX = true;
+                    break;
+                }
             }
 
         return !isDisallowForLinux && (isDisallowForOsX || isAllow);
     }
 
-    private bool ElementContainsRules(JsonElement element)
-    {
-        if (element.ValueKind == JsonValueKind.Object) return element.TryGetProperty("rules", out _);
-        return false;
-    }
+    private static bool ElementContainsRules(JsonElement element)
+        => element.ValueKind == JsonValueKind.Object && element.TryGetProperty("rules", out _);
 
-    private string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
-    {
-        foreach (var placeholder in placeholders) template = template.Replace(placeholder.Key, placeholder.Value);
+    private static string ReplacePlaceholders(string template, Dictionary<string, string> placeholders)
+        => placeholders.Aggregate(template,
+            (current, placeholder) => current.Replace(placeholder.Key, placeholder.Value));
 
-        return template;
-    }
-
-    private string BuildFromName(string name, string root)
+    private static string BuildFromName(string name, string root)
     {
         var parts = name.Split(':');
-        if (parts.Length == 3)
+        switch (parts.Length)
         {
-            var groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
-            var artifactId = parts[1];
-            var version = parts[2];
+            case 3:
+            {
+                var groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
+                var artifactId = parts[1];
+                var version = parts[2];
 
-            return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}.jar");
+                return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}.jar");
+            }
+            case 4:
+            {
+                var groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
+                var artifactId = parts[1];
+                var version = parts[2];
+                var natives = parts[3];
+
+                return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-{natives}.jar");
+            }
+            default:
+                return null;
         }
-
-        if (parts.Length == 4)
-        {
-            var groupIdPath = parts[0].Replace('.', Path.DirectorySeparatorChar);
-            var artifactId = parts[1];
-            var version = parts[2];
-            var natives = parts[3];
-
-            return Path.Combine(root, groupIdPath, artifactId, version, $"{artifactId}-{version}-{natives}.jar");
-        }
-
-        return null;
     }
 
+    /// <summary>
+    /// </summary>
+    /// <param name="library"></param>
+    /// <param name="root"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public static string BuildNativesName(Library library, string root)
     {
         var parts = library.Name.Split(':');
@@ -435,7 +463,6 @@ public class ArgumentsBuildUtil
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="name"></param>
     /// <param name="root"></param>
@@ -457,21 +484,12 @@ public class ArgumentsBuildUtil
     }
 
     // 完整路径
-    private string CurrentExecutingDirectory(string path)
-    {
-        return FileUtil.IsAbsolutePath(Root)
-            ? Path.Combine(Root)
-            : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
-    }
+    private string CurrentExecutingDirectory(string path) => FileUtil.IsAbsolutePath(Root)
+        ? Path.Combine(Root)
+        : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
 
     // 判断账户
-    private void ProcessAccount()
-    {
-        if (BaseAccount is MicrosoftAccount)
-            userType = "msa";
-        else
-            userType = "Mojang";
-    }
+    private void ProcessAccount() => userType = BaseAccount is MicrosoftAccount ? "msa" : "Mojang";
 
     // 获取版本 Jar 实际路径
     private string GetVersionJarPath()

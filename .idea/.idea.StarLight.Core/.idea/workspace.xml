@@ -7,9 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="Docs: 添加注释">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/shelf/_2025_2_12_19_58____1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/shelf/在进行更新之前于_2025_2_12_19_58_取消提交了更改_[更改]1/shelved.patch" beforeDir="false" />
+    <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="Refactor: 优化代码,更新方法签名">
+      <change afterPath="$PROJECT_DIR$/Models/Utilities/AuthlibLatestJsonEntity.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
@@ -45,6 +44,10 @@
     <setting file="file://$PROJECT_DIR$/Authentication/YggdrasilAuthenticator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Downloader/MultiFileDownloader.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enum/DownloadSource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Installer/CustomInstaller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Installer/FabricInstaller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Installer/ForgeInstaller.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Installer/MinecraftInstaller.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Installer/MinecraftInstaller.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Downloader/DownloaderConfig.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/Installer/AssetData.cs" root0="FORCE_HIGHLIGHTING" />
@@ -56,9 +59,14 @@
     <setting file="file://$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://D:/StarLight.Core/StarLight.Core/Models/Launch/GameCoreConfig.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Models/StarLightInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Skin/Fetchers/MicrosoftSkinFetcher.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Utilities/ArgumentsBuildUtil.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/StarLight.Core/StarLight.Core/Utilities/ArgumentsBuildUtil.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Utilities/ArgumentsBuildUtil.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Utilities/FileUtil.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Utilities/HttpUtil.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/StarLight.Core/StarLight.Core/Utilities/InstallUtil.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -510,7 +518,7 @@
       <workItem from="1740930827295" duration="115000" />
       <workItem from="1741358187459" duration="2709000" />
       <workItem from="1741409801847" duration="1808000" />
-      <workItem from="1741427999350" duration="1341000" />
+      <workItem from="1741427999350" duration="2090000" />
     </task>
     <task id="LOCAL-00001" summary="feat:增加从Modrinth获取一个或随机多个Mod">
       <option name="closed" value="true" />
@@ -560,7 +568,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741428456942</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Refactor: 优化代码,更新方法签名">
+      <option name="closed" value="true" />
+      <created>1741429647337</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1741429647337</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -588,7 +604,8 @@
     <MESSAGE value="fix:修改README.MD" />
     <MESSAGE value="Docs: 更新项目说明&#10;&#10;Docs: 更新项目说明" />
     <MESSAGE value="Docs: 添加注释" />
-    <option name="LAST_COMMIT_MESSAGE" value="Docs: 添加注释" />
+    <MESSAGE value="Refactor: 优化代码,更新方法签名" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor: 优化代码,更新方法签名" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
