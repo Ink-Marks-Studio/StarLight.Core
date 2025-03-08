@@ -17,7 +17,7 @@ public class MicrosoftSkinFetcher
     public static async Task<byte[]> GetMicrosoftSkinAsync(string uuid)
     {
         const string baseUrl = "https://sessionserver.mojang.com/session/minecraft/profile/";
-        var skinJson = await HttpUtil.GetJsonAsync(baseUrl + uuid);
+        var skinJson = await HttpUtil.GetStringAsync(baseUrl + uuid);
         var skinUrl =
             Encoding.UTF8.GetString(
                     Convert.FromBase64String(

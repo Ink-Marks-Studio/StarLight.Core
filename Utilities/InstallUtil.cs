@@ -36,7 +36,7 @@ public static class InstallUtil
     {
         try
         {
-            var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.VersionManifest);
+            var json = await HttpUtil.GetStringAsync(DownloadAPIs.Current.VersionManifest);
             if (string.IsNullOrWhiteSpace(json)) throw new InvalidOperationException("版本列表为空");
 
             var versionsManifest = JsonSerializer.Deserialize<GameCoreJsonEntity>(json);
@@ -76,7 +76,7 @@ public static class InstallUtil
     {
         try
         {
-            var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.VersionManifest);
+            var json = await HttpUtil.GetStringAsync(DownloadAPIs.Current.VersionManifest);
             if (string.IsNullOrWhiteSpace(json))
                 throw new InvalidOperationException("版本列表为空");
 
