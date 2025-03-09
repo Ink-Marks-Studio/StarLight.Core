@@ -1,5 +1,7 @@
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using StarLight_Core.Enum;
 using StarLight_Core.Models.Launch;
 using StarLight_Core.Models.Utilities;
 
@@ -20,6 +22,91 @@ public static class FileUtil
         if (!File.Exists(filePath)) return 0;
         var fileInfo = new FileInfo(filePath);
         return fileInfo.Length;
+    }
+
+    /// <summary>
+    /// 对称加密写入文件
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    /// <param name="fileMode">文件类型</param>
+    /// <param name="key">密钥</param>
+    /// <param name="content">内容</param>
+    /// <exception cref="Exception"></exception>
+    public static Status CryptoWriteFile(string filePath, FileMode fileMode,byte[] key,string content)
+    {
+        try
+        {
+            using (FileStream fileStream = new("TestData.txt", fileMode))
+            {
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Key = key;
+                    byte[] iv = aes.IV;
+                    fileStream.Write(iv, 0, iv.Length);
+                    using (CryptoStream cryptoStream = new(
+                               fileStream,
+                               aes.CreateEncryptor(),
+                               CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter encryptWriter = new(cryptoStream))
+                        {
+                            encryptWriter.WriteLine(content);
+                        }
+                    }
+                }
+            }
+
+            return Status.Succeeded;
+        }
+        catch (Exception ex)
+        {
+            throw ex.InnerException ?? ex;
+        }
+    }
+    
+    /// <summary>
+    /// 对称加密读取文件
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    /// <param name="key">密钥</param>
+    /// <exception cref="Exception"></exception>
+    public async static Task<string> CryptoeReadFile(string filePath,byte[] key)
+    {
+        try
+        {
+            using (FileStream fileStream = new(filePath, FileMode.Open))
+            {
+                using (Aes aes = Aes.Create())
+                {
+                    byte[] iv = new byte[aes.IV.Length];
+                    int numBytesToRead = aes.IV.Length;
+                    int numBytesRead = 0;
+                    while (numBytesToRead > 0)
+                    {
+                        int n = fileStream.Read(iv, numBytesRead, numBytesToRead);
+                        if (n == 0) break;
+
+                        numBytesRead += n;
+                        numBytesToRead -= n;
+                    }
+
+                    using (CryptoStream cryptoStream = new(
+                               fileStream,
+                               aes.CreateDecryptor(key, iv),
+                               CryptoStreamMode.Read))
+                    {
+                        using (StreamReader decryptReader = new(cryptoStream))
+                        {
+                            return await decryptReader.ReadToEndAsync();
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex.InnerException ?? ex;
+        }
     }
 
     /// <summary>
