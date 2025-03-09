@@ -59,9 +59,9 @@ public class CustomInstaller : InstallerBase
 
             string gameCoreJson;
             if (DownloadAPIs.Current.Source == DownloadSource.Official)
-                gameCoreJson = await HttpUtil.GetJsonAsync(versionsJson.Url);
+                gameCoreJson = await HttpUtil.GetStringAsync(versionsJson.Url);
             else
-                gameCoreJson = await HttpUtil.GetJsonAsync($"{DownloadAPIs.Current.Root}/version/{GameVersion}/json");
+                gameCoreJson = await HttpUtil.GetStringAsync($"{DownloadAPIs.Current.Root}/version/{GameVersion}/json");
 
             OnProgressChanged?.Invoke("下载游戏核心", 70);
             if (CancellationToken != default)

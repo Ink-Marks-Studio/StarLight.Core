@@ -86,7 +86,7 @@ public class FabricInstaller : InstallerBase
             string fabricLoaderJson;
             try
             {
-                fabricLoaderJson = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.FabricRoot +
+                fabricLoaderJson = await HttpUtil.GetStringAsync(DownloadAPIs.Current.FabricRoot +
                                                                $"/v2/versions/loader/{GameVersion}/{FabricVersion}/profile/json");
             }
             catch (Exception e)
@@ -187,7 +187,7 @@ public class FabricInstaller : InstallerBase
     {
         try
         {
-            var json = await HttpUtil.GetJsonAsync(DownloadAPIs.Current.FabricRoot + $"/v2/versions/loader/{version}");
+            var json = await HttpUtil.GetStringAsync(DownloadAPIs.Current.FabricRoot + $"/v2/versions/loader/{version}");
             if (string.IsNullOrWhiteSpace(json))
                 throw new InvalidOperationException("版本列表为空");
 

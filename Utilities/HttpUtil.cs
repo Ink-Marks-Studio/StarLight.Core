@@ -95,22 +95,20 @@ public static class HttpUtil
 
         try
         {
-            using (var client = new HttpClient())
-            {
-                client.Timeout = TimeSpan.FromSeconds(30);
+            using var client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(30);
 
-                if (customHeaders != null)
-                    foreach (var header in customHeaders)
-                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
+            if (customHeaders != null)
+                foreach (var header in customHeaders)
+                    client.DefaultRequestHeaders.Add(header.Key, header.Value);
 
-                var content = new StringContent(postData, Encoding.UTF8, contentType);
+            var content = new StringContent(postData, Encoding.UTF8, contentType);
 
-                var res = await client.PostAsync(url, content);
+            var res = await client.PostAsync(url, content);
 
-                if (res.IsSuccessStatusCode)
-                    return await res.Content.ReadAsStringAsync();
-                throw new HttpRequestException($"HTTP POST 请求失败，状态代码 {res.StatusCode}");
-            }
+            if (res.IsSuccessStatusCode)
+                return await res.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"HTTP POST 请求失败，状态代码 {res.StatusCode}");
         }
         catch (Exception ex)
         {
@@ -118,19 +116,19 @@ public static class HttpUtil
         }
     }
 
-    // Json 请求下载
-    public static async Task<string> GetJsonAsync(string url)
+    /// <summary>
+    /// 异步获取字符数据
+    /// </summary>
+    /// <param name="url">请求地址</param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException">请求异常</exception>
+    public static async Task<string> GetStringAsync(string url)
     {
-        using (var client = new HttpClient())
-        {
-            var res = await client.GetAsync(url);
-            if (res.IsSuccessStatusCode)
-            {
-                var json = await res.Content.ReadAsStringAsync();
-                return json; // 返回下载的 JSON 数据
-            }
+        using var client = new HttpClient();
+        var res = await client.GetAsync(url);
+        if (res.IsSuccessStatusCode)
+            return await res.Content.ReadAsStringAsync();
 
-            throw new HttpRequestException($"Json 下载失败，错误代码 {res.StatusCode}");
-        }
+        throw new HttpRequestException($"请求失败: {res.StatusCode}");
     }
 }

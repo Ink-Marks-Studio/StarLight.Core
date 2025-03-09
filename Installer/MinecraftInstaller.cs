@@ -84,9 +84,9 @@ public class MinecraftInstaller : InstallerBase
                 string gameCoreJson;
 
                 if (DownloadAPIs.Current.Source == DownloadSource.Official)
-                    gameCoreJson = await HttpUtil.GetJsonAsync(versionsJson.Url);
+                    gameCoreJson = await HttpUtil.GetStringAsync(versionsJson.Url);
                 else
-                    gameCoreJson = await HttpUtil.GetJsonAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
+                    gameCoreJson = await HttpUtil.GetStringAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
 
                 await File.WriteAllTextAsync(jsonPath, gameCoreJson, cancellationToken);
 
@@ -120,10 +120,10 @@ public class MinecraftInstaller : InstallerBase
                         string gameCoreJson;
 
                         if (DownloadAPIs.Current.Source == DownloadSource.Official)
-                            gameCoreJson = await HttpUtil.GetJsonAsync(versionsJson.Url);
+                            gameCoreJson = await HttpUtil.GetStringAsync(versionsJson.Url);
                         else
                             gameCoreJson =
-                                await HttpUtil.GetJsonAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
+                                await HttpUtil.GetStringAsync($"{DownloadAPIs.Current.Root}/version/{GameId}/json");
 
                         await File.WriteAllTextAsync(jsonPath, gameCoreJson, cancellationToken);
 
@@ -317,9 +317,9 @@ public class MinecraftInstaller : InstallerBase
             var assetsEntity = JsonSerializer.Deserialize<AssetsJsonEntity>(jsonContent);
             string assetsJsonContent;
             if (DownloadAPIs.Current.Source == DownloadSource.Official)
-                assetsJsonContent = await HttpUtil.GetJsonAsync(assetsEntity.AssetIndex.Url);
+                assetsJsonContent = await HttpUtil.GetStringAsync(assetsEntity.AssetIndex.Url);
             else
-                assetsJsonContent = await HttpUtil.GetJsonAsync(
+                assetsJsonContent = await HttpUtil.GetStringAsync(
                     assetsEntity.AssetIndex.Url.Replace(DownloadAPIs.Official.Assets, DownloadAPIs.Current.Assets));
 
             var assetsPath = Path.Combine(GamePath, "assets");

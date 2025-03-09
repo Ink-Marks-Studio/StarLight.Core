@@ -156,7 +156,7 @@ public class ForgeInstaller : InstallerBase
     {
         try
         {
-            var json = await HttpUtil.GetJsonAsync($"https://bmclapi2.bangbang93.com/forge/minecraft/{version}");
+            var json = await HttpUtil.GetStringAsync($"https://bmclapi2.bangbang93.com/forge/minecraft/{version}");
             if (string.IsNullOrWhiteSpace(json))
                 throw new InvalidOperationException("版本列表为空");
 
