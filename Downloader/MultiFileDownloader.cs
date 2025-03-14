@@ -6,12 +6,32 @@ using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Downloader;
 
+/// <summary>
+/// 多文件下载器
+/// </summary>
 public class MultiFileDownloader : DownloaderBase
 {
     private readonly HttpClient _httpClient = new();
+    
+    /// <summary>
+    /// 下载失败时触发的事件
+    /// </summary>
     public Action<DownloadItem>? DownloadFailed;
+    
+    /// <summary>
+    /// 下载进度变化时触发的事件
+    /// </summary>
+    /// <remarks>
+    /// 第一个参数为已下载文件数，第二个参数为总文件数
+    /// </remarks>
     public Action<int, int>? ProgressChanged;
 
+    /// <summary>
+    /// 多文件下载器构造函数
+    /// </summary>
+    /// <param name="onSpeedChanged">下载速度变化时的回调函数，参数为当前速度（字节/秒）</param>
+    /// <param name="progressChanged">下载进度变化时的回调函数，第一个参数为已下载文件数，第二个参数为总文件数</param>
+    /// <param name="downloadFailed">下载失败时的回调函数，参数为下载失败的文件项</param>
     public MultiFileDownloader(Action<double>? onSpeedChanged = null, Action<int, int>? progressChanged = null,
         Action<DownloadItem>? downloadFailed = null)
     {
@@ -23,6 +43,12 @@ public class MultiFileDownloader : DownloaderBase
         DownloadFailed = downloadFailed;
     }
 
+    /// <summary>
+    /// 下载多个文件
+    /// </summary>
+    /// <param name="downloadItems">要下载的文件项集合</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>表示异步下载操作的任务</returns>
     public async Task DownloadFiles(IEnumerable<DownloadItem> downloadItems,
         CancellationToken cancellationToken = default)
     {
@@ -66,7 +92,9 @@ public class MultiFileDownloader : DownloaderBase
                         HttpCompletionOption.ResponseHeadersRead, cancellationToken);
                     response.EnsureSuccessStatusCode();
 
-                    FileUtil.IsDirectory(Path.GetDirectoryName(downloadItem.SaveAsPath), true);
+                    var dirPath = Path.GetDirectoryName(downloadItem.SaveAsPath);
+                    if (!string.IsNullOrEmpty(dirPath))
+                        FileUtil.IsDirectory(dirPath, true);
 
                     await using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
                     await using (var fileStream = new FileStream(downloadItem.SaveAsPath, FileMode.Create,
@@ -74,10 +102,9 @@ public class MultiFileDownloader : DownloaderBase
                     {
                         var buffer = new byte[8192];
                         int bytesRead;
-                        while ((bytesRead =
-                                   await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                        while ((bytesRead = await contentStream.ReadAsync(new Memory<byte>(buffer), cancellationToken)) > 0)
                         {
-                            await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+                            await fileStream.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationToken);
                             Interlocked.Add(ref totalDownloadedBytes, bytesRead);
                         }
                     }
@@ -85,11 +112,11 @@ public class MultiFileDownloader : DownloaderBase
                     Interlocked.Increment(ref filesDownloaded);
                     ProgressChanged?.Invoke(filesDownloaded, totalFiles);
                 }
-                catch (OperationCanceledException e)
+                catch (OperationCanceledException)
                 {
                     throw;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Interlocked.Increment(ref filesDownloaded);
                     ProgressChanged?.Invoke(filesDownloaded, totalFiles);

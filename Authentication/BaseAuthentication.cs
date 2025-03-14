@@ -12,7 +12,7 @@ public abstract class BaseAuthentication
     /// <summary>
     /// 客户端令牌
     /// </summary>
-    protected string ClientToken { get; set; }
+    public string ClientToken { get; set; } = string.Empty;
 
     /// <summary>
     /// 验证 Uuid 是否合法

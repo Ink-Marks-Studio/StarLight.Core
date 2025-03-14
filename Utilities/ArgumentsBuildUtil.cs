@@ -78,54 +78,61 @@ public class ArgumentsBuildUtil
         var appDataPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "jar");
         var tempPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "temp");
         
-        if (BaseAccount is UnifiedPassAccount)
+        switch (BaseAccount)
         {
-            FileUtil.IsDirectory(appDataPath, true);
-            FileUtil.IsDirectory(tempPath, true);
+            case UnifiedPassAccount:
+            {
+                FileUtil.IsDirectory(appDataPath, true);
+                FileUtil.IsDirectory(tempPath, true);
 
-            if (!FileUtil.IsFile(GameCoreConfig.Nide8authPath))
-            {
-                var nidePath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "nide8auth.jar");
-                var downloader = new MultiFileDownloader();
-                await downloader.DownloadFiles(new List<DownloadItem>
+                if (!FileUtil.IsFile(GameCoreConfig.Nide8authPath))
                 {
-                    new("https://login.mc-user.com:233/index/jar", nidePath)
-                });
-                args.Add("-javaagent:\"" + nidePath + "\"=" + GameCoreConfig.UnifiedPassServerId);
-                downloader.Dispose();
-            }
-            else
-            {
-                var authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath)
-                    ? Path.Combine(GameCoreConfig.Nide8authPath)
-                    : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
-                args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
-            }
-        }
-        else if (BaseAccount is YggdrasilAccount)
-        {
-            FileUtil.IsDirectory(appDataPath, true);
-            FileUtil.IsDirectory(tempPath, true);
+                    var nidePath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "nide8auth.jar");
+                    var downloader = new MultiFileDownloader();
+                    await downloader.DownloadFiles(new List<DownloadItem>
+                    {
+                        new("https://login.mc-user.com:233/index/jar", nidePath)
+                    });
+                    args.Add("-javaagent:\"" + nidePath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+                    downloader.Dispose();
+                }
+                else
+                {
+                    var authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath)
+                        ? Path.Combine(GameCoreConfig.Nide8authPath)
+                        : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
+                    args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+                }
 
-            if (!FileUtil.IsFile(GameCoreConfig.AuthlibPath))
-            {
-                var assetsJson = await HttpUtil.GetStringAsync("https://authlib-injector.yushi.moe/artifact/latest.json");
-                var assetsEntity = assetsJson.ToJsonEntry<AuthlibLatestJsonEntity>();
-                var authlibPath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "authlib-injector.jar");
-                var downloader = new MultiFileDownloader();
-                await downloader.DownloadFiles(new List<DownloadItem>
-                {
-                    new(assetsEntity?.DownloadUrl, authlibPath)
-                });
-                args.Add("-javaagent:\"" + authlibPath + "\"=" + GameCoreConfig.AuthlibServerUrl);
-                downloader.Dispose();
+                break;
             }
-            else
+            case YggdrasilAccount:
             {
-                var authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath)
-                    ? Path.Combine(GameCoreConfig.Nide8authPath)
-                    : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
-                args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+                FileUtil.IsDirectory(appDataPath, true);
+                FileUtil.IsDirectory(tempPath, true);
+
+                if (!FileUtil.IsFile(GameCoreConfig.AuthlibPath))
+                {
+                    var assetsJson = await HttpUtil.GetStringAsync("https://authlib-injector.yushi.moe/artifact/latest.json");
+                    var assetsEntity = assetsJson.ToJsonEntry<AuthlibLatestJsonEntity>();
+                    var authlibPath = Path.Combine(appDataPath + Path.DirectorySeparatorChar + "authlib-injector.jar");
+                    var downloader = new MultiFileDownloader();
+                    await downloader.DownloadFiles(new List<DownloadItem>
+                    {
+                        new(assetsEntity?.DownloadUrl, authlibPath)
+                    });
+                    args.Add("-javaagent:\"" + authlibPath + "\"=" + GameCoreConfig.AuthlibServerUrl);
+                    downloader.Dispose();
+                }
+                else
+                {
+                    var authPath = FileUtil.IsAbsolutePath(GameCoreConfig.Nide8authPath)
+                        ? Path.Combine(GameCoreConfig.Nide8authPath)
+                        : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), GameCoreConfig.Nide8authPath);
+                    args.Add("-javaagent:\"" + authPath + "\"=" + GameCoreConfig.UnifiedPassServerId);
+                }
+
+                break;
             }
         }
 
