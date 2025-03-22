@@ -196,7 +196,6 @@ public class FabricInstaller : InstallerBase
                 {
                     Intermediary = manifest.Intermediary,
                     Loader = manifest.Loader,
-                    LauncherMeta = manifest.LauncherMeta,
                     GameVersion = manifest.Intermediary.Version,
                     Version = manifest.Loader.Version
                 }).ToList();

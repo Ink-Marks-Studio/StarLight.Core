@@ -3,8 +3,8 @@ using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Models.Installer;
 
-public class GameDownloadJsonEntity : GameCoreVersionsJson
+internal abstract class GameDownloadJsonEntity : GameCoreVersionsJson
 {
     [JsonPropertyName("libraries")]
-    public List<Library> Libraries { get; set; }
+    internal abstract List<Library> Libraries { get; set; }
 }

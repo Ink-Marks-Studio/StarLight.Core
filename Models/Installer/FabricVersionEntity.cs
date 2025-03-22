@@ -8,7 +8,7 @@ public class FabricVersionEntity
 
     public FabricMavenItem Loader { get; set; }
 
-    public FabricLauncherMeta LauncherMeta { get; set; }
+    //TODO: public FabricLauncherMeta LauncherMetaEntity { get; set; }
 
     public string GameVersion { get; set; }
 

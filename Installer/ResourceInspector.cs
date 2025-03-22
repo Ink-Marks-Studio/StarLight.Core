@@ -33,7 +33,7 @@ public class ResourceInspector
     private CancellationToken CancellationToken { get; set; }
 
     public Action<string>? OnSpeedChanged { get; set; }
-
+    
     public async Task<CheckResult> Check()
     {
         return new CheckResult(Status.Succeeded);

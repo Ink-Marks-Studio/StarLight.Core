@@ -2,11 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace StarLight_Core.Models.Utilities;
 
-public class LibraryJsonRule
+internal abstract class LibraryJsonRule
 {
     [JsonPropertyName("action")]
-    public string Action { get; set; }
+    internal abstract string Action { get; set; }
 
     [JsonPropertyName("os")]
-    public Os Os { get; set; }
+    internal abstract Os Os { get; set; }
 }

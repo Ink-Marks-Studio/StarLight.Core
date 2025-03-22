@@ -4,11 +4,9 @@ using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Models.Installer;
 
-public class FabricLauncherMeta
+public abstract class FabricLauncherMeta
 {
-    [JsonPropertyName("mainClass")]
-    public JsonNode MainClass { get; set; }
-
-    [JsonPropertyName("libraries")]
-    public Dictionary<string, List<Library>> Libraries { get; set; }
+    public abstract JsonNode MainClass { get; set; }
+    
+    //TODO: public abstract Dictionary<string, List<Library>> Libraries { get; set; }
 }

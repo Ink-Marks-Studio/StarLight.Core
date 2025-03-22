@@ -8,7 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Models/Installer/FabricLauncherMetaEntity.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/FabricInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/FabricInstaller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Installer/ResourceInspector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/ResourceInspector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Installer/FabricLauncherMeta.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/FabricLauncherMeta.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Installer/FabricVersionEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/FabricVersionEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Installer/FabricVersionJsonEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/FabricVersionJsonEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/ArgsBuildLibraryJson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Utilities/LibraryJsonRule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/LibraryJsonRule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -520,6 +530,10 @@
       <workItem from="1741427999350" duration="2536000" />
       <workItem from="1741433006264" duration="1873000" />
       <workItem from="1741437147878" duration="4836000" />
+      <workItem from="1742033178877" duration="2044000" />
+      <workItem from="1742219898464" duration="12000" />
+      <workItem from="1742626892625" duration="125000" />
+      <workItem from="1742651241841" duration="1407000" />
     </task>
     <task id="LOCAL-00001" summary="feat:增加从Modrinth获取一个或随机多个Mod">
       <option name="closed" value="true" />

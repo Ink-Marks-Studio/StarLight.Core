@@ -2,13 +2,13 @@ using System.Text.Json.Serialization;
 
 namespace StarLight_Core.Models.Utilities;
 
-public class ArgsBuildLibraryJson
+internal class ArgsBuildLibraryJson
 {
     [JsonPropertyName("libraries")]
     public List<Library> Libraries { get; set; }
 }
 
-public class Library
+internal abstract class Library
 {
     [JsonPropertyName("name")]
     public string Name { get; set; }
@@ -23,13 +23,13 @@ public class Library
     public Dictionary<string, string> Natives { get; set; }
 }
 
-public class Os
+internal abstract class Os
 {
     [JsonPropertyName("name")]
     public string Name { get; set; }
 }
 
-public class Download
+internal abstract class Download
 {
     [JsonPropertyName("artifact")]
     public Artifact Artifact { get; set; }
@@ -38,7 +38,7 @@ public class Download
     public Dictionary<string, Native> Classifiers { get; set; }
 }
 
-public class Native
+internal abstract class Native
 {
     [JsonPropertyName("path")]
     public string Path { get; set; }
@@ -53,7 +53,7 @@ public class Native
     public string Url { get; set; }
 }
 
-public class Artifact
+internal abstract class Artifact
 {
     [JsonPropertyName("path")]
     public string Path { get; set; }

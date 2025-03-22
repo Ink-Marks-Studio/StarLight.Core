@@ -453,7 +453,7 @@ public class ArgumentsBuildUtil
     /// <param name="root"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static string BuildNativesName(Library library, string root)
+    internal static string BuildNativesName(Library library, string root)
     {
         var parts = library.Name.Split(':');
         if (parts.Length != 3) throw new ArgumentException("名称格式无效,获取错误");
