@@ -94,6 +94,7 @@ public interface IMinecraftMod
     /// <returns></returns>
     static  Task<IMinecraftMod> GetModInfo(string filePath)
     {
+        
         try
         {
             return FabricModInfo.BuildAsync(filePath);
