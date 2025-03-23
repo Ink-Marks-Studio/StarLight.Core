@@ -17,7 +17,7 @@ public interface IMinecraftMod
     /// 模组的模组加载器类型
     /// </summary>
     ModLoaderEnum LoaderType { get; }
-    
+
     /// <summary>
     /// 模组内置描述
     /// </summary>
@@ -79,7 +79,7 @@ public interface IMinecraftMod
     static async IAsyncEnumerable<IMinecraftMod> GetModsInfoFromDirectory(string directoryPath)
     {
         var taskList = Directory.GetFiles(directoryPath).Select(jarFile => GetModInfo(jarFile)).ToList();
-        while (taskList.Count>0)
+        while (taskList.Count > 0)
         {
             var task = await Task.WhenAny(taskList);
             taskList.Remove(task);
@@ -92,11 +92,21 @@ public interface IMinecraftMod
     /// </summary>
     /// <param name="filePath"></param>
     /// <returns></returns>
-    static async Task<IMinecraftMod> GetModInfo(string filePath)
+    static  Task<IMinecraftMod> GetModInfo(string filePath)
     {
         try
         {
-            return await FabricModInfo.BuildAsync(filePath);
+            return FabricModInfo.BuildAsync(filePath);
+        }
+        catch (Exception e)
+        {
+            // TODO 识别错误
+        }
+        
+        
+        try
+        {
+            return ForgeModInfoLegacy.BuildAsync(filePath);
         }
         catch (Exception e)
         {
@@ -105,16 +115,7 @@ public interface IMinecraftMod
 
         try
         {
-            return await ForgeModInfoLegacy.BuildAsync(filePath);
-        }
-        catch (Exception e)
-        {
-            // TODO 识别错误
-        }
-
-        try
-        {
-            return await ForgeModInfoModern.BuildAsync(filePath);
+            return ForgeModInfoModern.BuildAsync(filePath);
         }
         catch (Exception e)
         {
@@ -132,12 +133,13 @@ public interface IMinecraftMod
 
             try
             {
-                foreach (var entryINeed in zipArchive.Entries.Where(ent => ent.FullName.Contains(nestedDirectories)&&ent.Name.Contains(".jar")))
+                foreach (var entryINeed in zipArchive.Entries.Where(ent =>
+                             ent.FullName.Contains(nestedDirectories) && ent.Name.Contains(".jar")))
                 {
                     try
                     {
-                        var archive = new ZipArchive(entryINeed.Open(),ZipArchiveMode.Read);
-                        return new ForgeModInfoModern(archive, filePath);
+                        var archive = new ZipArchive(entryINeed.Open(), ZipArchiveMode.Read);
+                        return Task.FromResult((IMinecraftMod)new ForgeModInfoModern(archive, filePath));
                     }
                     catch (Exception exception)
                     {
