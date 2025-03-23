@@ -3,7 +3,7 @@ namespace StarLight_Core.Models.Launch;
 /// <summary>
 /// 核心配置信息类
 /// </summary>
-public abstract class GameCoreConfig
+public class GameCoreConfig
 {
     /// <summary>
     /// 游戏根目录路径

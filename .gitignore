@@ -365,3 +365,6 @@ FodyWeavers.xsd
 /Demo/Program.cs
 /nuget.exe
 /StarLight.Core.nuspec
+
+.idea/
+.vscode/

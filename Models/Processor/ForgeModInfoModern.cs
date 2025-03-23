@@ -1,8 +1,7 @@
 ﻿using System.IO.Compression;
-using StarLight_Core.Models.MinecraftMod.Enum;
-using StarLight_Core.Models.MinecraftMod.Forge.Utils;
+using StarLight_Core.Enum;
 
-namespace StarLight_Core.Models.MinecraftMod.Forge;
+namespace StarLight_Core.Models.Processor;
 
 /// <summary>
 /// 高版本forge使用的toml
@@ -10,7 +9,7 @@ namespace StarLight_Core.Models.MinecraftMod.Forge;
 
 internal class ForgeModInfoModern: IMinecraftMod
 {
-    public ModLoaderEnum LoaderType { get; }
+    public LoaderType LoaderType { get; }
     public string Description { get; }
     public string ModPath { get; }
     public string ModId { get; }
@@ -47,7 +46,7 @@ internal class ForgeModInfoModern: IMinecraftMod
             // TODO 以后加图标用用
         }
 
-        LoaderType = ModLoaderEnum.ForgeModern;
+        LoaderType = LoaderType.Forge;
         //释放资源 
         zip.Dispose();
         textStream.Dispose();

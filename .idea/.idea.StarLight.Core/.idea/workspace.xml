@@ -8,18 +8,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="953c2dc4-782d-4d37-8c28-a8096fa29e38" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/Installer/FabricLauncherMetaEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Processor/FabricModJson.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models/Processor/IMinecraftMod.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Processor/ModProcessor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StarLight.Core/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/FabricInstaller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/FabricInstaller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Installer/ResourceInspector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Installer/ResourceInspector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/FabricLauncherMeta.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/FabricLauncherMeta.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/FabricVersionEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/FabricVersionEntity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/FabricVersionJsonEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/FabricVersionJsonEntity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Installer/GameDownloadJsonEntity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Launch/ArgsBuildLibraryJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/ArgsBuildLibraryJson.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilities/LibraryJsonRule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilities/LibraryJsonRule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enum/LoaderType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enum/LoaderType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Launch/GameCoreConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Launch/GameCoreConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/Enum/ModLoaderEnum.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/Fabric/FabricModInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Processor/FabricModInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/Fabric/Utils/FabricModJson.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/Forge/ForgeModInfoLegacy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Processor/ForgeModInfoLegacy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/Forge/ForgeModInfoModern.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Processor/ForgeModInfoModern.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/Forge/Utils/ForgeModLegacyJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Processor/ForgeModLegacyJson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/Forge/Utils/ForgeModernToml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Processor/ForgeModernToml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/MinecraftMod/IMinecraftMod.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README_EN.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_EN.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StarLight.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Utilities/ArgumentsBuildUtil.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StarLight.Core.sln" beforeDir="false" afterPath="$PROJECT_DIR$/StarLight.Core.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utilities/ModUtil.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/About/Introduction.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/About/QuickStart.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Authentication/UnifiedPassAuthenticator.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Launcher/Index.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/README.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,23 +106,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.配色方案字体&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;发布到 IIS.StarLight.Core: FolderProfile.executor&quot;: &quot;Run&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true",
+    "发布到 IIS.StarLight.Core: FolderProfile.executor": "Run"
   }
-}</component>
+}]]></component>
+  <component name="QodanaHighlightedReportService">
+    <option name="localRunNotPublishedPersistedInfo">
+      <LocalReportPersistedInfo>
+        <option name="path" value="C:\Users\z1258\AppData\Local\Temp\qodana_output\qodana.sarif.json" />
+        <option name="reportGuid" value="3c340cea-c014-473e-b54c-360408ee3649" />
+        <option name="reportName" value="StarLight.Core/qodana/2025-03-23" />
+      </LocalReportPersistedInfo>
+    </option>
+  </component>
+  <component name="QodanaIsSelectedPersistenceService">
+    <option name="selectedOrLoading" value="true" />
+  </component>
+  <component name="QodanaReportsService">
+    <option name="descriptions">
+      <ReportDescription localRun="true" path="C:\Users\z1258\AppData\Local\Temp\qodana_output\qodana.sarif.json" reportGuid="3c340cea-c014-473e-b54c-360408ee3649" reportId="StarLight.Core/qodana/2025-03-23" />
+    </option>
+  </component>
   <component name="RunManager">
     <configuration name="StarLight.Core: FolderProfile" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish publish_profile="FolderProfile.pubxml" pubxml_path="$PROJECT_DIR$/Properties/PublishProfiles/FolderProfile.pubxml" uuid_high="3566934773274922682" uuid_low="-8798903248815400877" />
@@ -534,6 +564,8 @@
       <workItem from="1742219898464" duration="12000" />
       <workItem from="1742626892625" duration="125000" />
       <workItem from="1742651241841" duration="1407000" />
+      <workItem from="1742702804930" duration="933000" />
+      <workItem from="1742711216609" duration="7860000" />
     </task>
     <task id="LOCAL-00001" summary="feat:增加从Modrinth获取一个或随机多个Mod">
       <option name="closed" value="true" />

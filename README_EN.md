@@ -48,26 +48,26 @@
 🧱: Not listed features, either not planned or will not be supported
 
 | Feature                   | Status |
-|---------------------------|--------|
-| Launch Game               | ✅      |
-| Game Finder               | ✅      |
-| Java Finder               | ✅      |
-| Offline Authenticator     | ✅      |
-| Microsoft Authenticator   | ✅      |
-| External Authenticator    | ✅      |
-| Unified Pass              | ✅      |
-| Vanilla Game Installer    | ✅      |
-| Fabric Installer          | ✅      |
-| Forge Installer           | ☑️     |
-| NeoForge Installer        | ❌      |
-| Optifine Installer        | ❌      |
-| Multi-threaded Downloader | ✅      |
-| Skin Processor            | ✅      |
-| Mod Processor             | ☑️     |
-| Modpack Processor         | ❌      |
-| CurseForge Downloader     | ❌      |
-| Modrinth Downloader       | ☑️      |
-| Error Analyzer            | ❌      |
+|---------------------------|------|
+| Launch Game               | ✅    |
+| Game Finder               | ✅    |
+| Java Finder               | ✅    |
+| Offline Authenticator     | ✅    |
+| Microsoft Authenticator   | ✅    |
+| External Authenticator    | ✅    |
+| Unified Pass              | ✅    |
+| Vanilla Game Installer    | ✅    |
+| Fabric Installer          | ✅    |
+| Forge Installer           | ☑️   |
+| NeoForge Installer        | ❌    |
+| Optifine Installer        | ❌    |
+| Multi-threaded Downloader | ✅    |
+| Skin Processor            | ✅    |
+| Mod Processor             | ✅     |
+| Modpack Processor         | ❌    |
+| CurseForge Downloader     | ❌    |
+| Modrinth Downloader       | ☑️    |
+| Error Analyzer            | ❌    |
 
 ## 📘 Documentation and Usage Guide
 

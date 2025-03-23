@@ -1,9 +1,8 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
-using StarLight_Core.Models.MinecraftMod.Enum;
-using StarLight_Core.Models.MinecraftMod.Fabric.Utils;
+using StarLight_Core.Enum;
 
-namespace StarLight_Core.Models.MinecraftMod.Fabric;
+namespace StarLight_Core.Models.Processor;
 
 
 internal class FabricModInfo : IMinecraftMod
@@ -13,7 +12,7 @@ internal class FabricModInfo : IMinecraftMod
 
 
     /*需要管理的*/
-    public ModLoaderEnum LoaderType { get; }
+    public LoaderType LoaderType { get; }
     public string Description { get;  }
     public string ModPath { get; }
     public string ModId { get; }
@@ -42,7 +41,7 @@ internal class FabricModInfo : IMinecraftMod
         Authors = modInfo.Authors.Cast<string>();
         ModVersion = modInfo.ModVersion;
         Description = modInfo.Description;
-        LoaderType = ModLoaderEnum.Fabric;
+        LoaderType = LoaderType.Fabric;
         if (modInfo.Depends is not null)
         {
             Depends = modInfo.Depends.Keys;

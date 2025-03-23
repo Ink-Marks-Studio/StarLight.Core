@@ -1,13 +1,12 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
-using StarLight_Core.Models.MinecraftMod.Enum;
-using StarLight_Core.Models.MinecraftMod.Forge.Utils;
+using StarLight_Core.Enum;
 
-namespace StarLight_Core.Models.MinecraftMod.Forge;
+namespace StarLight_Core.Models.Processor;
 
-internal class ForgeModInfoLegacy:  IMinecraftMod
+internal class ForgeModInfoLegacy : IMinecraftMod
 {
-    public ModLoaderEnum LoaderType { get; }
+    public LoaderType LoaderType { get; }
     public string Description { get; }
     public string ModPath { get; }
     public string ModId { get; }
@@ -37,7 +36,7 @@ internal class ForgeModInfoLegacy:  IMinecraftMod
         DisplayName = modInfo.DisplayName;
         ModVersion = modInfo.ModVersion;
         Authors = modInfo.Author;
-        LoaderType = ModLoaderEnum.ForgeLegacy;
+        LoaderType = LoaderType.ForgeLegacy;
         if (modInfo.Depends is not null)
         {
             Depends = modInfo.Depends;
