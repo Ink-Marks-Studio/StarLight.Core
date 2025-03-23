@@ -102,7 +102,8 @@ public interface IMinecraftMod
         {
             // TODO 识别错误
         }
-
+        
+        
         try
         {
             return ForgeModInfoLegacy.BuildAsync(filePath);
