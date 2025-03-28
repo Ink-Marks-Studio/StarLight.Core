@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using StarLight_Core.Models.Utilities;
+using System.Collections.Concurrent;
 
 namespace StarLight_Core.Utilities;
 
@@ -77,73 +78,122 @@ public class JavaUtil
         return false;
     }
 
-    public static IEnumerable<JavaInfo> GetJavas()
+    private static List<string> FindJavawPaths()
     {
-        var results = new List<string>();
-        var environmentPaths = Environment.GetEnvironmentVariable("Path").Split(Path.PathSeparator);
+        var drives = DriveInfo.GetDrives()
+            .Where(d => d.IsReady && (d.DriveType == DriveType.Fixed))
+            .Select(d => d.RootDirectory.FullName)
+            .ToList();
 
-        foreach (var path in environmentPaths)
-        {
-            var trimmedPath = path.Trim().Trim('"');
-            var fullPath = Path.Combine(trimmedPath, "javaw.exe");
-            if (File.Exists(fullPath)) results.Add(trimmedPath);
-        }
+        var results = new ConcurrentBag<string>();
+        var dirQueue = new ConcurrentQueue<string>(drives); 
 
-        foreach (var drive in DriveInfo.GetDrives()) SearchJavaInFolder(new DirectoryInfo(drive.Name), results);
-
-        SearchJavaInFolder(new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)),
-            results);
-        SearchJavaInFolder(new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase), results, true);
-
-        var filteredResults = results.Where(path => !path.Contains("javapath_target_")).ToList();
-        filteredResults.Sort();
-
-        foreach (var path in filteredResults)
-        {
-            var javaInfo = GetJavaInfo(path);
-            yield return new JavaInfo
+        var excludedSegments = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                Is64Bit = javaInfo.Is64Bit,
-                JavaLibraryPath = path,
-                JavaSlugVersion = javaInfo.JavaSlugVersion,
-                JavaVersion = javaInfo.JavaVersion,
-                JavaPath = Path.Combine(path, "javaw.exe")
+                "Windows", "Program Files (x86)\\Microsoft", "Program Files\\Microsoft",
+                "$Recycle.Bin", "Temp", "ProgramData", "Cache", "Downloads", "AppData"
             };
-        }
-
-        string ExtractDirectoryName(string path)
+        var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 };
+        var enumOptions = new EnumerationOptions
         {
-            if (path.EndsWith(":\\") || path.EndsWith(":\\\\")) return path.Substring(0, 1);
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = false, 
+            AttributesToSkip = FileAttributes.Hidden | FileAttributes.System | FileAttributes.Temporary
+        };
 
-            path = path.TrimEnd('\\', '/');
-
-            return ExtractFileName(path);
-        }
-
-        string ExtractFileName(string path)
+        Parallel.For(0, parallelOptions.MaxDegreeOfParallelism, parallelOptions, _ =>
         {
-            if (path.EndsWith("\\") || path.EndsWith("/")) throw new Exception("路径不包含文件名: " + path);
-
-            path = path.Split('?', '\\', '/').Last();
-
-            return path;
-        }
-
-
-        void SearchJavaInFolder(DirectoryInfo directory, List<string> results, bool isFullSearch = false)
-        {
-            try
+            //宽度优先搜索
+            while (dirQueue.TryDequeue(out string currentDir))
             {
-                if (!directory.Exists) return;
-
-                var javaExecutablePath = Path.Combine(directory.FullName, "javaw.exe");
-                if (File.Exists(javaExecutablePath)) results.Add(directory.FullName);
-
-                foreach (var subDirectory in directory.EnumerateDirectories())
-                    if (!subDirectory.Attributes.HasFlag(FileAttributes.ReparsePoint))
+                try
+                {
+                    if (excludedSegments.Any(ex => currentDir.Contains(ex))) continue;
+                    foreach (var file in Directory.EnumerateFiles(currentDir, "javaw.exe", enumOptions))
                     {
-                        var directoryNameLower = ExtractDirectoryName(subDirectory.Name).ToLower();
-                        var searchTerms = new List<string>
+                        results.Add(file);
+                    }
+                    var subDirs = Directory.EnumerateDirectories(currentDir, "*", enumOptions);
+                    foreach (var dir in subDirs)
+                    {
+                        dirQueue.Enqueue(dir);
+                    }
+                }
+                catch { }
+            }
+        });
+        return results.Distinct().ToList();
+    }
+
+    public static IEnumerable<JavaInfo> GetJavas(bool deepSearch = false)
+    {
+        if (!deepSearch)
+        {
+            var results = new List<string>();
+            var environmentPaths = Environment.GetEnvironmentVariable("Path").Split(Path.PathSeparator);
+
+            foreach (var path in environmentPaths)
+            {
+                var trimmedPath = path.Trim().Trim('"');
+                var fullPath = Path.Combine(trimmedPath, "javaw.exe");
+                if (File.Exists(fullPath)) results.Add(trimmedPath);
+            }
+
+            foreach (var drive in DriveInfo.GetDrives()) SearchJavaInFolder(new DirectoryInfo(drive.Name), results);
+
+            SearchJavaInFolder(new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)),
+                results);
+            SearchJavaInFolder(new DirectoryInfo(AppDomain.CurrentDomain.SetupInformation.ApplicationBase), results, true);
+
+            var filteredResults = results.Where(path => !path.Contains("javapath_target_")).ToList();
+            filteredResults.Sort();
+
+            foreach (var path in filteredResults)
+            {
+                var javaInfo = GetJavaInfo(path);
+                yield return new JavaInfo
+                {
+                    Is64Bit = javaInfo.Is64Bit,
+                    JavaLibraryPath = path,
+                    JavaSlugVersion = javaInfo.JavaSlugVersion,
+                    JavaVersion = javaInfo.JavaVersion,
+                    JavaPath = Path.Combine(path, "javaw.exe")
+                };
+            }
+
+            string ExtractDirectoryName(string path)
+            {
+                if (path.EndsWith(":\\") || path.EndsWith(":\\\\")) return path.Substring(0, 1);
+
+                path = path.TrimEnd('\\', '/');
+
+                return ExtractFileName(path);
+            }
+
+            string ExtractFileName(string path)
+            {
+                if (path.EndsWith("\\") || path.EndsWith("/")) throw new Exception("路径不包含文件名: " + path);
+
+                path = path.Split('?', '\\', '/').Last();
+
+                return path;
+            }
+
+
+            void SearchJavaInFolder(DirectoryInfo directory, List<string> results, bool isFullSearch = false)
+            {
+                try
+                {
+                    if (!directory.Exists) return;
+
+                    var javaExecutablePath = Path.Combine(directory.FullName, "javaw.exe");
+                    if (File.Exists(javaExecutablePath)) results.Add(directory.FullName);
+
+                    foreach (var subDirectory in directory.EnumerateDirectories())
+                        if (!subDirectory.Attributes.HasFlag(FileAttributes.ReparsePoint))
+                        {
+                            var directoryNameLower = ExtractDirectoryName(subDirectory.Name).ToLower();
+                            var searchTerms = new List<string>
                         {
                             "android", "bin", "cache", "client", "corretto", "craft", "data", "eclipse", "env", "file",
                             "game",
@@ -154,15 +204,33 @@ public class JavaUtil
                             "services", "新建文件夹", "我的世界", "必备", "依赖", "官启", "客户", "服务", "应用", "整合", "游戏", "环境", "软件",
                             "运行", "前置", "世界"
                         };
-                        if (isFullSearch || subDirectory.Parent?.Name.ToLower() == "users" ||
-                            searchTerms.Any(term => directoryNameLower.Contains(term)))
-                            SearchJavaInFolder(subDirectory, results);
-                    }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                // 异常处理
+                            if (isFullSearch || subDirectory.Parent?.Name.ToLower() == "users" ||
+                                searchTerms.Any(term => directoryNameLower.Contains(term)))
+                                SearchJavaInFolder(subDirectory, results);
+                        }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // 异常处理
+                }
             }
         }
+        else
+        {
+            var javas = FindJavawPaths();
+            foreach(var path in javas)
+            {
+                var javaInfo = GetJavaInfo(path);
+                yield return new JavaInfo
+                {
+                    Is64Bit = javaInfo.Is64Bit,
+                    JavaLibraryPath = path.EndsWith("javaw.exe") ? path.Remove(path.Length - 10) : path,                                            
+                    JavaSlugVersion = javaInfo.JavaSlugVersion,
+                    JavaVersion = javaInfo.JavaVersion,
+                    JavaPath = path
+                };
+            }
+        }
+        
     }
 }
