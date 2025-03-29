@@ -4,7 +4,7 @@
         <RootNamespace>StarLight_Core</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>2.0.4-Preview4</Version>
         <Title>StarLight.Core</Title>
@@ -25,6 +25,7 @@
         <FileVersion>2.0.4.4</FileVersion>
         <Copyright>Copyright (c) 2024 zhi-feng2008</Copyright>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
@@ -51,7 +52,12 @@
         <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     </PropertyGroup>
 
+
+    <PropertyGroup>
+  <PackageReadmeFile>README.md</PackageReadmeFile>
+</PropertyGroup>
     <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
         <None Update="Assets\logo.png">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
@@ -62,6 +68,8 @@
         <None Update="docs\README.md">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
+        <None Remove="ConsoleApp1\**" />
+        <None Remove="global.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -74,6 +82,14 @@
 
     <ItemGroup>
         <PackageReference Include="System.Drawing.Common" Version="8.0.7"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="ConsoleApp1\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="ConsoleApp1\**" />
     </ItemGroup>
 
 </Project>
