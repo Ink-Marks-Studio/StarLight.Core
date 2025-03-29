@@ -19,7 +19,7 @@ public interface IMinecraftMod
     /// <summary>
     /// 用于判断模组是否能识别(暂时无用)
     /// </summary>
-    bool IsOk { get;  }
+    bool IsOk { get;  } 
     
     /// <summary>
     /// 模组的模组加载器类型(可能包含多个)
