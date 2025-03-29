@@ -23,6 +23,7 @@
         <AssemblyVersion>2.0.4.4</AssemblyVersion>
         <FileVersion>2.0.4.4</FileVersion>
         <Copyright>Copyright (c) 2024 zhi-feng2008</Copyright>
+        <LangVersion>latest</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
