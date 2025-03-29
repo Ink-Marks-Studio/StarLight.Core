@@ -6,7 +6,11 @@ namespace StarLight_Core.Utilities;
 
 public class JavaUtil
 {
-    // 获取 Java 信息
+    /// <summary>
+    /// 获取指定位置 Java 信息
+    /// </summary>
+    /// <param name="javaPath">Java 路径</param>
+    /// <returns></returns>
     public static JavaInfo GetJavaInfo(string javaPath)
     {
         try
@@ -119,25 +123,28 @@ public class JavaUtil
                         dirQueue.Enqueue(dir);
                     }
                 }
-                catch { }
+                catch
+                {
+                    throw;
+                }
             }
         });
         return results.Distinct().ToList();
     }
 
+    /// <summary>
+    /// 获取存在的 Java 版本信息
+    /// </summary>
+    /// <param name="deepSearch">深度搜索</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public static IEnumerable<JavaInfo> GetJavas(bool deepSearch = false)
     {
         if (!deepSearch)
         {
-            var results = new List<string>();
             var environmentPaths = Environment.GetEnvironmentVariable("Path").Split(Path.PathSeparator);
 
-            foreach (var path in environmentPaths)
-            {
-                var trimmedPath = path.Trim().Trim('"');
-                var fullPath = Path.Combine(trimmedPath, "javaw.exe");
-                if (File.Exists(fullPath)) results.Add(trimmedPath);
-            }
+            var results = (from path in environmentPaths select path.Trim().Trim('"') into trimmedPath let fullPath = Path.Combine(trimmedPath, "javaw.exe") where File.Exists(fullPath) select trimmedPath).ToList();
 
             foreach (var drive in DriveInfo.GetDrives()) SearchJavaInFolder(new DirectoryInfo(drive.Name), results);
 
@@ -148,17 +155,23 @@ public class JavaUtil
             var filteredResults = results.Where(path => !path.Contains("javapath_target_")).ToList();
             filteredResults.Sort();
 
+            var uniqueRoots = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            
             foreach (var path in filteredResults)
             {
                 var javaInfo = GetJavaInfo(path);
-                yield return new JavaInfo
+                var rootDirectory = GetJavaRootDirectory(Path.Combine(path, "javaw.exe"));
+                if (uniqueRoots.Add(rootDirectory))
                 {
-                    Is64Bit = javaInfo.Is64Bit,
-                    JavaLibraryPath = path,
-                    JavaSlugVersion = javaInfo.JavaSlugVersion,
-                    JavaVersion = javaInfo.JavaVersion,
-                    JavaPath = Path.Combine(path, "javaw.exe")
-                };
+                    yield return new JavaInfo
+                    {
+                        Is64Bit = javaInfo.Is64Bit,
+                        JavaLibraryPath = rootDirectory,
+                        JavaSlugVersion = javaInfo.JavaSlugVersion,
+                        JavaVersion = javaInfo.JavaVersion,
+                        JavaPath = Path.Combine(path, "javaw.exe")
+                    };
+                }
             }
 
             string ExtractDirectoryName(string path)
@@ -217,20 +230,48 @@ public class JavaUtil
         }
         else
         {
+            var uniqueRoots = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var javas = FindJavawPaths();
-            foreach(var path in javas)
+            foreach (var path in javas)
             {
                 var javaInfo = GetJavaInfo(path);
-                yield return new JavaInfo
+                var rootDirectory = GetJavaRootDirectory(path);
+                if (uniqueRoots.Add(rootDirectory))
                 {
-                    Is64Bit = javaInfo.Is64Bit,
-                    JavaLibraryPath = path.EndsWith("javaw.exe") ? path.Remove(path.Length - 10) : path,                                            
-                    JavaSlugVersion = javaInfo.JavaSlugVersion,
-                    JavaVersion = javaInfo.JavaVersion,
-                    JavaPath = path
-                };
+                    yield return new JavaInfo
+                    {
+                        Is64Bit = javaInfo.Is64Bit,
+                        JavaLibraryPath = rootDirectory,
+                        JavaSlugVersion = javaInfo.JavaSlugVersion,
+                        JavaVersion = javaInfo.JavaVersion,
+                        JavaPath = path
+                    };
+                }
             }
         }
-        
+    }
+    
+    private static string GetJavaRootDirectory(string javawPath)
+    {
+        try
+        {
+            var binDirectory = Path.GetDirectoryName(javawPath);
+            var rootDirectory = Directory.GetParent(binDirectory).FullName;
+            if (Path.GetFileName(rootDirectory).Equals("jre", StringComparison.OrdinalIgnoreCase))
+            {
+                var jdkRoot = Directory.GetParent(rootDirectory).FullName;
+                if (File.Exists(Path.Combine(jdkRoot, "lib", "tools.jar")))
+                {
+                    return jdkRoot;
+                }
+            }
+            return rootDirectory;
+        }
+        catch
+        {
+            return javawPath.EndsWith("javaw.exe", StringComparison.OrdinalIgnoreCase) 
+                ? javawPath.Substring(0, javawPath.Length - "javaw.exe".Length)
+                : javawPath;
+        }
     }
 }
