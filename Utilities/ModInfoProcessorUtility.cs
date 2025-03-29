@@ -11,7 +11,7 @@ public static class ModInfoProcessorUtility
 {
     //默认的后缀名
     private static IEnumerable<string> FileExtensions { get; set; } = [".jar", ".disabled"];
-    
+     
     /// <summary>
     /// 从文件夹中获取所有可识别模组信息
     /// </summary>
