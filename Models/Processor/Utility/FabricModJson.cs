@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace StarLight_Core.Models.Processor;
+namespace StarLight_Core.Models.Processor.Utility;
 
-internal struct FabricModJson
+internal class FabricModJson
 {
     [JsonPropertyName("id")] 
     public string ModId { get; set; }
@@ -14,7 +14,7 @@ internal struct FabricModJson
     public string DisplayName { get; set; }
     
     [JsonPropertyName("authors")] 
-    public object[] Authors { get; set; }
+    public object[]? Authors { get; set; }
     
     [JsonPropertyName("icon")] 
     public string? ModIconPath { get; set; }
