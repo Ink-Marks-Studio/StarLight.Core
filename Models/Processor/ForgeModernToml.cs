@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 
-namespace StarLight_Core.Models.Processor.Utility;
+namespace StarLight_Core.Models.Processor;
 
 internal class ForgeModernToml: ForgeModLegacyJson
 {

@@ -41,40 +41,33 @@
 
 ✅: Supported features
 
-☑️: Completed features requiring developer testing to identify and report issues
-
-🧪: Functional features under continuous optimization
-
-⚠️: Unstable features, not recommended for use
-
-🎨: Being designed, soliciting feedback.
+☑️: Features under development or completed but not yet tested
 
 ❌: Features not yet started, planned for future support
 
 🧱: Not listed features, either not planned or will not be supported
 
 | Feature                   | Status |
-|---------------------------|--------|
-| Launch Game               | ✅      |
-| Game Finder               | ✅      |
-| Java Finder               | ✅      |
-| Offline Authenticator     | ✅      |
-| Microsoft Authenticator   | ✅      |
-| External Authenticator    | ✅      |
-| Unified Pass              | ✅      |
-| Vanilla Game Installer    | ✅      |
-| Fabric Installer          | ✅      |
-| Forge Installer           | ☑️     |
-| Quilt Installer           | ❌      |
-| NeoForge Installer        | 🎨     |
-| Optifine Installer        | ❌      |
-| Multi-threaded Downloader | ✅      |
-| Skin Processor            | ✅      |
-| Mod Processor             | 🧪     |
-| Modpack Processor         | ❌      |
-| CurseForge Downloader     | 🎨     |
-| Modrinth Downloader       | 🧪     |
-| Error Analyzer            | 🎨     |
+|---------------------------|------|
+| Launch Game               | ✅    |
+| Game Finder               | ✅    |
+| Java Finder               | ✅    |
+| Offline Authenticator     | ✅    |
+| Microsoft Authenticator   | ✅    |
+| External Authenticator    | ✅    |
+| Unified Pass              | ✅    |
+| Vanilla Game Installer    | ✅    |
+| Fabric Installer          | ✅    |
+| Forge Installer           | ☑️   |
+| NeoForge Installer        | ❌    |
+| Optifine Installer        | ❌    |
+| Multi-threaded Downloader | ✅    |
+| Skin Processor            | ✅    |
+| Mod Processor             | ✅     |
+| Modpack Processor         | ❌    |
+| CurseForge Downloader     | ❌    |
+| Modrinth Downloader       | ☑️    |
+| Error Analyzer            | ❌    |
 
 ## 📘 Documentation and Usage Guide
 

@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>2.0.4-Preview5</Version>
+        <Version>2.0.4-Preview4</Version>
         <Title>StarLight.Core</Title>
         <Authors>Ink Marks Studio</Authors>
         <Description>An efficient, modular, and versatile core for Minecraft launcher</Description>
@@ -17,13 +17,13 @@
         <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>Minecraft</PackageTags>
-        <PackageReleaseNotes>None</PackageReleaseNotes>
+        <PackageReleaseNotes>1.移除异常描述中的"[SL]"标识
+2.添加注释及优化部分代码</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <AssemblyName>StarLight_Core</AssemblyName>
-        <AssemblyVersion>2.0.4.5</AssemblyVersion>
-        <FileVersion>2.0.4.5</FileVersion>
+        <AssemblyVersion>2.0.4.4</AssemblyVersion>
+        <FileVersion>2.0.4.4</FileVersion>
         <Copyright>Copyright (c) 2024 zhi-feng2008</Copyright>
-        <LangVersion>latest</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
@@ -52,14 +52,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="README.md">
+        <None Update="Assets\logo.png">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
-        <None Include="Assets\logo.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
+        <None Update="README.md">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
+        <None Update="docs\README.md">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Assets\logo.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+            <Link>logo.png</Link>
+        </Resource>
     </ItemGroup>
 
     <ItemGroup>
