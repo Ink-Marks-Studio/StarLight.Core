@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations.Schema;
-using StarLight_Core.Models.Processor;
-
-namespace StarLight_Core.Utilities;
+﻿namespace StarLight_Core.Processor;
 
 /// <summary>
 /// 获取模组信息的实用工具 封装了常用的使用方法 如需定制，需自行处理 IMinecraftMod.GetModInfo(string filePath)
 /// </summary>
-public static class ModInfoProcessorUtility
+public static class ModInfoProcessor
 {
     //默认的后缀名
     private static IEnumerable<string> FileExtensions { get; set; } = [".jar", ".disabled"];

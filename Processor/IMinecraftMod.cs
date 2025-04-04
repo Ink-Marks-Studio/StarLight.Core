@@ -1,11 +1,12 @@
 ﻿using System.IO.Compression;
 using StarLight_Core.Enum;
+using StarLight_Core.Models.Processor;
 using StarLight_Core.Models.Processor.Fabric;
 using StarLight_Core.Models.Processor.Forge;
 using StarLight_Core.Models.Processor.NeoForge;
 using StarLight_Core.Models.Processor.Quick;
 
-namespace StarLight_Core.Models.Processor;
+namespace StarLight_Core.Processor;
 
 /// <summary>
 /// 单个模组信息
