@@ -17,7 +17,8 @@
         <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>Minecraft</PackageTags>
-        <PackageReleaseNotes>None</PackageReleaseNotes>
+        <PackageReleaseNotes>1.移除异常描述中的"[SL]"标识
+2.添加注释及优化部分代码</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <AssemblyName>StarLight_Core</AssemblyName>
         <AssemblyVersion>2.0.4.4</AssemblyVersion>
@@ -51,14 +52,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="README.md">
+        <None Update="Assets\logo.png">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
         </None>
-        <None Include="Assets\logo.png">
-            <Pack>True</Pack>
-            <PackagePath>\</PackagePath>
+        <None Update="README.md">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
+        <None Update="docs\README.md">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Assets\logo.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+            <Link>logo.png</Link>
+        </Resource>
     </ItemGroup>
 
     <ItemGroup>
