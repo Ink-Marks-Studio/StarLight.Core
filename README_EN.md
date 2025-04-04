@@ -41,11 +41,11 @@
 
 ✅: Supported features
 
-☑️: Completed features requiring developer testing to identify and report issues
+☑️: Features under development or completed but not yet tested
 
-🧪: Functional features under continuous optimization
+🧪: Functionality is available and will be continuously improved.(Beta)
 
-⚠️: Unstable features, not recommended for use
+⚠️: For testing purposes only, not for general use.(Alpha)
 
 🎨: Being designed, soliciting feedback.
 
@@ -65,16 +65,15 @@
 | Vanilla Game Installer    | ✅      |
 | Fabric Installer          | ✅      |
 | Forge Installer           | ☑️     |
-| Quilt Installer           | ❌      |
-| NeoForge Installer        | 🎨     |
+| NeoForge Installer        | ❌      |
 | Optifine Installer        | ❌      |
 | Multi-threaded Downloader | ✅      |
 | Skin Processor            | ✅      |
 | Mod Processor             | 🧪     |
 | Modpack Processor         | ❌      |
-| CurseForge Downloader     | 🎨     |
-| Modrinth Downloader       | 🧪     |
-| Error Analyzer            | 🎨     |
+| CurseForge Downloader     | ❌      |
+| Modrinth Downloader       | ☑️     |
+| Error Analyzer            | ❌      |
 
 ## 📘 Documentation and Usage Guide
 
