@@ -2,9 +2,18 @@
 
 namespace StarLight_Core.Utilities;
 
+/// <summary>
+/// Http 工具
+/// </summary>
 public static class HttpUtil
 {
-    // GET 请求
+    /// <summary>
+    /// GET 请求
+    /// </summary>
+    /// <param name="url">地址</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="HttpRequestException"></exception>
     public static async Task<string> SendHttpGetRequest(string url)
     {
         if (string.IsNullOrEmpty(url)) throw new ArgumentException("URL 不能为空", nameof(url));
@@ -29,7 +38,15 @@ public static class HttpUtil
         }
     }
 
-    // POST 请求
+    /// <summary>
+    /// POST 请求
+    /// </summary>
+    /// <param name="url">地址</param>
+    /// <param name="postData">数据</param>
+    /// <param name="contentType">类型</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="HttpRequestException"></exception>
     public static async Task<string> SendHttpPostRequest(string url, string postData,
         string contentType = "application/x-www-form-urlencoded")
     {
@@ -58,7 +75,14 @@ public static class HttpUtil
         }
     }
 
-    // GET 请求(带请求头)
+    /// <summary>
+    /// GET 请求(带请求头)
+    /// </summary>
+    /// <param name="url">地址</param>
+    /// <param name="customHeaders">请求头</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="HttpRequestException"></exception>
     public static async Task<string> SendHttpGetRequestWithHeaders(string url,
         Dictionary<string, string>? customHeaders = null)
     {
@@ -87,7 +111,16 @@ public static class HttpUtil
         }
     }
 
-    // POST 请求(带请求头)
+    /// <summary>
+    /// POST 请求(带请求头)
+    /// </summary>
+    /// <param name="url">地址</param>
+    /// <param name="postData">数据</param>
+    /// <param name="contentType">类型</param>
+    /// <param name="customHeaders">请求头</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="HttpRequestException"></exception>
     public static async Task<string> SendHttpPostRequestWithHeaders(string url, string postData,
         string contentType = "application/x-www-form-urlencoded", Dictionary<string, string>? customHeaders = null)
     {
@@ -131,4 +164,12 @@ public static class HttpUtil
 
         throw new HttpRequestException($"请求失败: {res.StatusCode}");
     }
+
+    /// <summary>
+    /// 异步获取 Json 数据
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    [Obsolete("use GetStringAsync instead")]
+    public static async Task<string> GetJsonAsync(string url) => await GetStringAsync(url);
 }
