@@ -355,62 +355,35 @@ public class ArgumentsBuildUtil
 
         foreach (var lib in argsLibraries.Libraries)
         {
-            if (lib == null || lib.Downloads == null)
+            if (lib == null) continue;
+
+            if (lib.Downloads == null)
             {
                 var path = BuildFromName(lib.Name, librariesPath);
                 if (path != null)
+                {
                     if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
                         optifinePaths.Add(path);
                     else
                         normalPaths.Add(path);
+                }
                 continue;
             }
 
             if (lib.Downloads.Classifiers != null && lib.Downloads.Classifiers.Count != 0) continue;
-            {
-                if (!ShouldIncludeLibrary(lib.Rule)) continue;
-                var path = BuildFromName(lib.Name, librariesPath);
-                if (path == null) continue;
-                if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
-                    optifinePaths.Add(path);
-                else
-                    normalPaths.Add(path);
-            }
+
+            if (!FileUtil.ShouldIncludeLibrary(lib.Rule)) continue;
+
+            var buildPath = BuildFromName(lib.Name, librariesPath);
+            if (buildPath == null) continue;
+
+            if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
+                optifinePaths.Add(buildPath);
+            else
+                normalPaths.Add(buildPath);
         }
 
-        foreach (var path in normalPaths)
-            yield return path;
-
-        foreach (var optifinePath in optifinePaths)
-            yield return optifinePath;
-    }
-
-    private bool ShouldIncludeLibrary(LibraryJsonRule[] rules)
-    {
-        if (rules == null || rules.Length == 0) return true;
-
-        var isAllow = false;
-        var isDisallowForOsX = false;
-        var isDisallowForLinux = false;
-
-        foreach (var rule in rules)
-            switch (rule.Action)
-            {
-                case "allow":
-                {
-                    if (rule.Os == null || (rule.Os.Name.ToLower() != "linux" && rule.Os.Name.ToLower() != "osx"))
-                        isAllow = true;
-                    break;
-                }
-                case "disallow":
-                {
-                    if (rule.Os != null && rule.Os.Name.ToLower() == "linux") isDisallowForLinux = true;
-                    if (rule.Os != null && rule.Os.Name.ToLower() == "osx") isDisallowForOsX = true;
-                    break;
-                }
-            }
-
-        return !isDisallowForLinux && (isDisallowForOsX || isAllow);
+        return normalPaths.Concat(optifinePaths);
     }
 
     private static bool ElementContainsRules(JsonElement element)

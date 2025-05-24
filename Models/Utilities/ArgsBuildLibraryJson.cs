@@ -8,7 +8,7 @@ internal class ArgsBuildLibraryJson
     public List<Library> Libraries { get; set; }
 }
 
-internal abstract class Library
+internal class Library
 {
     [JsonPropertyName("name")]
     public string Name { get; set; }
@@ -23,13 +23,13 @@ internal abstract class Library
     public Dictionary<string, string> Natives { get; set; }
 }
 
-internal abstract class Os
+internal class Os
 {
     [JsonPropertyName("name")]
     public string Name { get; set; }
 }
 
-internal abstract class Download
+internal class Download
 {
     [JsonPropertyName("artifact")]
     public Artifact Artifact { get; set; }
@@ -38,7 +38,7 @@ internal abstract class Download
     public Dictionary<string, Native> Classifiers { get; set; }
 }
 
-internal abstract class Native
+internal class Native
 {
     [JsonPropertyName("path")]
     public string Path { get; set; }
@@ -53,7 +53,7 @@ internal abstract class Native
     public string Url { get; set; }
 }
 
-internal abstract class Artifact
+internal class Artifact
 {
     [JsonPropertyName("path")]
     public string Path { get; set; }

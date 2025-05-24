@@ -4,11 +4,11 @@ using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Models.Installer;
 
-internal abstract class FabricLauncherMetaEntity
+internal class FabricLauncherMetaEntity
 {
     [JsonPropertyName("mainClass")]
-    internal abstract JsonNode MainClass { get; set; }
+    public JsonNode MainClass { get; set; }
 
     [JsonPropertyName("libraries")]
-    internal abstract Dictionary<string, List<Library>> Libraries { get; set; }
+    public Dictionary<string, List<Library>> Libraries { get; set; }
 }

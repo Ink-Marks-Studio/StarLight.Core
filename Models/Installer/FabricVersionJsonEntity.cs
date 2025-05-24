@@ -2,14 +2,14 @@ using System.Text.Json.Serialization;
 
 namespace StarLight_Core.Models.Installer;
 
-internal abstract class FabricVersionJsonEntity
+internal class FabricVersionJsonEntity
 {
     [JsonPropertyName("intermediary")]
-    internal abstract FabricMavenItem Intermediary { get; set; }
+    public FabricMavenItem Intermediary { get; set; }
 
     [JsonPropertyName("loader")]
-    internal abstract FabricMavenItem Loader { get; set; }
+    public FabricMavenItem Loader { get; set; }
 
     [JsonPropertyName("launcherMeta")]
-    internal abstract FabricLauncherMetaEntity LauncherMetaEntity { get; set; }
+    public FabricLauncherMetaEntity LauncherMetaEntity { get; set; }
 }

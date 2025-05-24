@@ -13,5 +13,5 @@ public static class StarLightInfo
     /// <summary>
     /// 类型 Preview / Release
     /// </summary>
-    public const string Type = "Preview";
+    public const string Type = "Release";
 }

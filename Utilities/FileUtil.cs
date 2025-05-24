@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -292,26 +293,38 @@ public static class FileUtil
                 }
     }
 
-    private static bool ShouldIncludeLibrary(LibraryJsonRule[] rules)
+    internal static bool ShouldIncludeLibrary(LibraryJsonRule[] rules)
     {
         if (rules == null || rules.Length == 0) return true;
 
-        var isAllow = false;
-        var isDisallowForOsX = false;
-        var isDisallowForLinux = false;
-
+        bool isAllowed = false;
         foreach (var rule in rules)
-            if (rule.Action == "allow")
+        {
+            // 检查当前规则是否匹配操作系统
+            bool isRuleMatched = CheckIfRuleMatchesCurrentOs(rule.Os);
+            if (isRuleMatched)
             {
-                if (rule.Os == null || (rule.Os.Name.ToLower() != "linux" && rule.Os.Name.ToLower() != "osx"))
-                    isAllow = true;
+                // 匹配的规则直接决定结果（最后一个匹配的规则生效）
+                isAllowed = (rule.Action == "allow");
             }
-            else if (rule.Action == "disallow")
-            {
-                if (rule.Os != null && rule.Os.Name.ToLower() == "linux") isDisallowForLinux = true;
-                if (rule.Os != null && rule.Os.Name.ToLower() == "osx") isDisallowForOsX = true;
-            }
+        }
 
-        return !isDisallowForLinux && (isDisallowForOsX || isAllow);
+        return isAllowed;
+    }
+
+    private static bool CheckIfRuleMatchesCurrentOs(Os osRule)
+    {
+        if (osRule == null) return true; // 无 OS 限制的规则始终匹配
+
+        string currentOs = GetCurrentOsName(); // 返回小写的 "windows", "linux", "osx"
+        return osRule.Name.ToLower() == currentOs;
+    }
+
+    private static string GetCurrentOsName()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return "windows";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return "linux";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return "osx";
+        return "unknown";
     }
 }
