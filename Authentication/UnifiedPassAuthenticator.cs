@@ -96,19 +96,18 @@ public class UnifiedPassAuthenticator
             clientToken,
             requestUser = true
         };
-
-        var jsonData = JsonSerializer.Serialize(refreshPostData);
+        
         string response;
         try
         {
-            response = await HttpUtil.SendHttpPostRequest(BaseUrl + "authserver/refresh", jsonData, "application/json");
+            response = await HttpUtil.SendHttpPostRequest(BaseUrl + "authserver/refresh", refreshPostData.Serialize(), "application/json");
         }
         catch (Exception ex)
         {
             throw new ApplicationException("刷新令牌时出错: ", ex);
         }
 
-        var authResponse = JsonSerializer.Deserialize<UnifiedPassRefreshResponse>(response);
+        var authResponse = response.ToJsonEntry<UnifiedPassRefreshResponse>();
         return new UnifiedPassAccount
         {
             Name = authResponse.SelectedProfile.Name,
@@ -117,6 +116,33 @@ public class UnifiedPassAuthenticator
             ClientToken = authResponse.ClientToken,
             ServerId = ServerId
         };
+    }
+    
+    /// <summary>
+    /// 销毁当前令牌
+    /// </summary>
+    /// <param name="accessToken">资源令牌</param>
+    /// <param name="clientToken">客户端令牌</param>
+    public static async Task InvalidateUnifiedPass(string accessToken, string clientToken)
+    {
+        var InvalidatePostData = new
+        {
+            accessToken,
+            clientToken
+        };
+        
+        await HttpUtil.SendHttpPostRequest(UnifiedPassBaseUrl + "authserver/invalidate", InvalidatePostData.Serialize(), "application/json");
+    }
+    
+    public static async Task SignOutUnifiedPass(string username, string password)
+    {
+        var SignOutPostData = new
+        {
+            username,
+            password
+        };
+        
+        await HttpUtil.SendHttpPostRequest(UnifiedPassBaseUrl + "authserver/signout", SignOutPostData.Serialize(), "application/json");
     }
 
     /// <summary>
